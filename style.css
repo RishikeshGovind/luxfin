@@ -919,6 +919,7 @@ h1, h2, h3, h4, h5 {
   font-size: .58rem; font-weight: 700; text-transform: uppercase;
   letter-spacing: .08em; padding: .22rem .6rem; border-radius: 4px;
   flex-shrink: 0; margin-top: .15rem; white-space: nowrap;
+  min-width: 126px; text-align: center;
 }
 .rr-implemented { background: #dcfce7; color: #15803d; }
 .rr-prototype    { background: #dbeafe; color: #1e40af; }

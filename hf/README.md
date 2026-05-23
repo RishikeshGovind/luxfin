@@ -7,7 +7,7 @@ sdk: docker
 app_port: 7860
 pinned: false
 license: mit
-short_description: Heuristic fiscal stress API for Luxembourg communes (PhD research)
+short_description: Luxembourg fiscal stress heuristic API
 ---
 
 # LuxFin Fiscal Early-Warning API
