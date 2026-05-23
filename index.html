@@ -2234,8 +2234,7 @@ function initMap() {
   mapInstance.on('load', () => {
     mapLoaded = true;
     mapInstance.resize();
-    mapInstance.setCenter(MAP_CENTER_LU);
-    mapInstance.setZoom(MAP_ZOOM_LU);
+    mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PAD, animate: false });
     loadCommuneGeoJSON();
   });
   document.getElementById('map-reset-btn').addEventListener('click', () => { mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PAD }); });
