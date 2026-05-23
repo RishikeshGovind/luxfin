@@ -2084,7 +2084,7 @@ function renderStressComponentCharts() {
 function initMap() {
   if (mapInitialised) return;
   mapInitialised = true;
-  mapInstance = new maplibregl.Map({ container: 'map', style: 'https://tiles.openfreemap.org/styles/bright', center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, minZoom: 7, maxZoom: 14 });
+  mapInstance = new maplibregl.Map({ container: 'map', style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json', center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, minZoom: 7, maxZoom: 14 });
   mapInstance.on('load', () => {
     mapLoaded = true;
     mapInstance.resize();
