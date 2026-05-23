@@ -14,5 +14,5 @@ venv/
 # macOS
 .DS_Store
 
-# Data panel (generated, not committed until obtained)
-data/panel_dataset.csv
+# Data panel — commit prototype; add to .gitignore if it contains restricted BCL data
+# data/panel_dataset.csv
