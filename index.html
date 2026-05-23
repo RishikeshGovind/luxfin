@@ -1779,6 +1779,8 @@ let communeYearData  = {};          // keyed by year; populated as data loads
 let mapInstance      = null;
 let mapSourcesReady = false;
 let mapInitialised  = false;
+const LU_BOUNDS      = [[5.73, 49.44], [6.53, 50.18]];
+const LU_FIT_PAD     = { top: 30, bottom: 30, left: 252, right: 30 };
 let stressInitialized = false;
 
 // ── Utilities ─────────────────────────────────────────────────────────────
@@ -1831,7 +1833,10 @@ document.querySelectorAll('.nav-tab').forEach(btn => {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.getElementById('panel-' + panel).classList.add('active');
     activePanel = panel;
-    if (panel === 'map') initMap();
+    if (panel === 'map') {
+      initMap();
+      requestAnimationFrame(() => { if (mapInstance) { mapInstance.resize(); mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PAD, duration: 0 }); } });
+    }
   });
 });
 
@@ -2078,11 +2083,9 @@ function renderStressComponentCharts() {
 function initMap() {
   if (mapInitialised) return;
   mapInitialised = true;
-  const LU_BOUNDS = [[5.73, 49.44], [6.53, 50.18]];
-  const LU_FIT_PADDING = { top: 30, bottom: 30, left: 250, right: 30 };
   mapInstance = new maplibregl.Map({ container: 'map', style: 'https://tiles.openfreemap.org/styles/bright', center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, minZoom: 7, maxZoom: 14, maxBounds: [[5.5, 49.2], [6.9, 50.4]] });
-  mapInstance.on('load', () => { mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PADDING, duration: 0 }); loadCommuneGeoJSON(); });
-  document.getElementById('map-reset-btn').addEventListener('click', () => { mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PADDING, duration: 1000 }); });
+  mapInstance.on('load', () => { mapInstance.resize(); mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PAD, duration: 0 }); loadCommuneGeoJSON(); });
+  document.getElementById('map-reset-btn').addEventListener('click', () => { mapInstance.resize(); mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PAD, duration: 1000 }); });
   document.getElementById('indicator-select').addEventListener('change', e => { activeIndicator = e.target.value; if (mapSourcesReady) updateChoropleth(); renderLegend(); });
   document.getElementById('geo-level-select').addEventListener('change', e => {
     if (e.target.value === 'cantons') {
