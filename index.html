@@ -765,326 +765,176 @@
     <div class="pi-question">How should a three-layer ML pipeline — from a deterministic heuristic baseline through a prototype commune panel to a supervised XGBoost model — be designed to turn subnational fiscal signals into actionable early-warning scores?</div>
   </div>
 
-  <div class="section-block">
+  <div class="prose">
+    <p class="prose-eyebrow">ML Early-Warning System · Research Design</p>
+    <h2 class="prose-h2">A three-layer architecture built before data access</h2>
+    <p class="prose-p">This section specifies the machine-learning pipeline for H3. No model has been trained yet — this is a pre-registered design developed before data access, following best practice for computational social science reproducibility.</p>
+    <div class="prose-note"><strong>Three distinct layers:</strong> (1) <strong>Heuristic baseline</strong> (implemented) — deterministic 4-component stress index, live in the Evidence panel and API. (2) <strong>Prototype panel</strong> (built) — 102-commune socioeconomic panel with proxy labels, useful for pipeline mechanics only. (3) <strong>Supervised ML</strong> (planned WP3) — XGBoost + SHAP trained on labelled fiscal events; requires commune financial accounts and BCL supervisory data.</div>
+    <div class="prose-note" style="border-color:#f59e0b;background:#fffbeb"><strong>Proxy label warning:</strong> <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">panel_dataset.csv</code> uses socioeconomic indicators as a proxy for fiscal distress. Useful for testing pipeline mechanics — it is <em>not</em> a measure of fiscal distress and must be replaced by commune financial account events before any ML results are reportable.</div>
+  </div>
 
-    <h2 class="section-heading">
-      <span class="sec-num">§5</span> ML Early-Warning System — Research Design
-      <span class="status-badge design" style="margin-left:.5rem">Research Design / Prototype Pipeline</span>
-    </h2>
-    <p class="section-intro">
-      This section specifies the machine-learning pipeline for H3.
-      No model has been trained yet — this is a pre-registered design, developed before data access,
-      following best practice for computational social science reproducibility.
-      The pipeline architecture follows the same pattern used in AreaStat AT,
-      a companion regional fiscal analysis platform, and is adapted to the Luxembourg commune-bank context.
-    </p>
-
-    <div class="data-note" style="margin:0 0 1rem">
-      <span class="data-note-icon">ℹ</span>
-      <span>
-        <strong>Model status — three distinct layers:</strong>
-        (1) <strong>Heuristic baseline</strong> (implemented): deterministic 4-component stress index, visible in the Evidence panel and served live by the API.
-        (2) <strong>Prototype panel</strong> (built): 102-commune socioeconomic panel with proxy distress labels — useful for verifying pipeline mechanics only, not for estimating true fiscal distress.
-        (3) <strong>Supervised ML</strong> (planned WP3): XGBoost + SHAP model trained on labelled fiscal events — not started; requires commune financial accounts and BCL supervisory data.
-      </span>
-    </div>
-
-    <div class="data-note" style="margin:0 0 1.5rem;border-color:#f59e0b;background:#fffbeb">
-      <span class="data-note-icon">⚠</span>
-      <span>
-        <strong>Proxy label warning:</strong> The current <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">panel_dataset.csv</code>
-        uses socioeconomic indicators (unemployment rate, income index, employment rate) as a proxy for fiscal distress.
-        This label is useful for testing pipeline mechanics and feature engineering workflows — it is
-        <em>not</em> a measure of fiscal distress and should not be interpreted as one.
-        It will be replaced by binary events derived from commune financial accounts (STATEC) and bank exposure data (BCL) in WP1.
-      </span>
-    </div>
-
-    <!-- Prototype panel summary -->
-    <h3 class="section-subheading">Prototype Panel — Current State</h3>
-    <div class="two-col" style="margin-bottom:1.5rem;gap:1rem">
-      <div class="rtable-wrap">
-        <table class="rtable">
-          <thead><tr><th>Dimension</th><th>Value</th><th>Source</th></tr></thead>
-          <tbody>
-            <tr><td>Communes</td><td>102</td><td>STATEC LUSTAT / Eurostat LAU 2021</td></tr>
-            <tr><td>Years</td><td>2021 only</td><td>Single snapshot — time series pending</td></tr>
-            <tr><td>Rows</td><td>102 (commune × year)</td><td><code>data/panel_dataset.csv</code></td></tr>
-            <tr><td>Implemented features</td><td>13 socioeconomic + 7 national context</td><td>STATEC LUSTAT + ECB/Eurostat</td></tr>
-            <tr><td>Placeholder columns</td><td>6 (commune revenue, debt, bank exposure)</td><td>Require BCL/STATEC access</td></tr>
-            <tr><td>Proxy distress flags</td><td>22 / 102 (21.6%)</td><td>Socioeconomic proxy only — not fiscal events</td></tr>
-            <tr><td>Reproduce</td><td colspan="2"><code>python3 scripts/build_panel.py</code></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div>
-        <div class="data-note" style="margin:0 0 .75rem;border-color:#a78bfa;background:#f5f3ff">
-          <span class="data-note-icon">→</span>
-          <span>
-            <strong>What the proxy panel enables now:</strong> verifying that the Python/R pipeline parses all 102 communes, that feature engineering code runs end-to-end, that the API loads the panel at startup, and that column schemas match what XGBoost will expect.
-          </span>
-        </div>
-        <div class="data-note" style="margin:0;border-color:#ef4444;background:#fef2f2">
-          <span class="data-note-icon">→</span>
-          <span>
-            <strong>What it does not enable:</strong> any claim about true fiscal distress prevalence, model performance, or the H3 hypothesis. The proxy label must be replaced before any ML results are reportable.
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Prediction target -->
-    <h3 class="section-subheading">Prediction Target</h3>
-    <div class="two-col" style="margin-bottom:1.5rem">
-      <div>
-        <div class="rtable-wrap">
-          <table class="rtable">
-            <thead><tr><th>Target</th><th>Definition</th><th>Horizon</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><strong>Primary (H3)</strong></td>
-                <td>Binary: commune enters fiscal stress at t+1<br><small style="color:var(--text-xmuted)">stress = deficit &gt; 15% of revenues OR deficit_streak ≥ 2</small></td>
-                <td>t+1 (1 year ahead)</td>
-              </tr>
-              <tr>
-                <td><strong>Secondary</strong></td>
-                <td>Continuous: distress probability score ∈ [0,1]<br><small style="color:var(--text-xmuted)">calibrated via Platt scaling</small></td>
-                <td>t+1 / t+2</td>
-              </tr>
-              <tr>
-                <td><strong>Aspirational</strong></td>
-                <td>Bank credit contraction to exposed commune (if BCL data)<br><small style="color:var(--text-xmuted)">requires bank-commune panel</small></td>
-                <td>t+1</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="data-note" style="margin:0;align-self:start">
-        <span class="data-note-icon">⚠</span>
-        <span>
-          <strong>Labelling challenge:</strong> Luxembourg communes have not experienced formal default or
-          supervisory intervention in the available data period. The distress label must be operationalised
-          from fiscal balance thresholds rather than observed events — a common limitation in early-warning
-          systems for jurisdictions with historically strong fiscal positions. Robustness to alternative
-          threshold definitions will be reported.
-        </span>
-      </div>
-    </div>
-
-    <!-- Pipeline diagram -->
-    <h3 class="section-subheading">Model Pipeline</h3>
-    <div class="ml-pipeline-diagram">
-      <div class="ml-pipe-node">
-        <div class="ml-pipe-node-title">Data Layer</div>
-        <div class="ml-pipe-node-sub">STATEC commune accounts · BCL supervisory · Eurostat GFS · spatial adjacency matrix</div>
-      </div>
-      <div class="ml-pipe-arrow">→</div>
-      <div class="ml-pipe-node">
-        <div class="ml-pipe-node-title">Feature Engineering</div>
-        <div class="ml-pipe-node-sub">Fiscal ratios · deficit streaks · YoY growth · HHI exposure · spatial lags · demographic pressure</div>
-      </div>
-      <div class="ml-pipe-arrow">→</div>
-      <div class="ml-pipe-node">
-        <div class="ml-pipe-node-title">XGBoost Model</div>
-        <div class="ml-pipe-node-sub">Gradient boosting · temporal train/test split · rolling-origin CV · early stopping</div>
-      </div>
-      <div class="ml-pipe-arrow">→</div>
-      <div class="ml-pipe-node">
-        <div class="ml-pipe-node-title">SHAP Layer</div>
-        <div class="ml-pipe-node-sub">TreeExplainer · global feature importance · local per-commune explanations · feature groups</div>
-      </div>
-      <div class="ml-pipe-arrow">→</div>
-      <div class="ml-pipe-node">
-        <div class="ml-pipe-node-title">EWS Output</div>
-        <div class="ml-pipe-node-sub">Distress probability · warning flag · top-3 drivers · API endpoint</div>
-      </div>
-    </div>
-
-    <!-- Feature table -->
-    <h3 class="section-subheading">Feature Architecture</h3>
-    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">Prototype Panel</p>
+    <h2 class="prose-h2">Current state of the commune panel</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap" style="margin-bottom:.75rem">
       <table class="rtable">
-        <thead><tr><th>Feature Group</th><th>Features</th><th>Data Source</th><th>Availability</th></tr></thead>
+        <thead><tr><th>Dimension</th><th>Value</th><th>Source</th></tr></thead>
         <tbody>
-          <tr>
-            <td><strong>Fiscal balance</strong></td>
-            <td>Balance/revenue ratio, balance trend (3yr), deficit streak (consecutive deficit years)</td>
-            <td>STATEC commune accounts</td>
-            <td><span class="status-badge prototype">Partial (LUSTAT)</span></td>
-          </tr>
-          <tr>
-            <td><strong>Revenue structure</strong></td>
-            <td>Per-capita revenue, transfer-dependence ratio, tax revenue growth (YoY)</td>
-            <td>STATEC commune accounts</td>
-            <td><span class="status-badge prototype">Partial (LUSTAT)</span></td>
-          </tr>
-          <tr>
-            <td><strong>Expenditure pressure</strong></td>
-            <td>Per-capita expenditure, primary expenditure growth, debt-service ratio</td>
-            <td>STATEC commune accounts</td>
-            <td><span class="status-badge required">Data request required</span></td>
-          </tr>
-          <tr>
-            <td><strong>Debt</strong></td>
-            <td>Debt/revenue, debt trend, new borrowing per capita</td>
-            <td>STATEC commune accounts</td>
-            <td><span class="status-badge required">Data request required</span></td>
-          </tr>
-          <tr>
-            <td><strong>Local economy</strong></td>
-            <td>Income index, employment rate, population growth rate</td>
-            <td>STATEC LUSTAT (census + annual)</td>
-            <td><span class="status-badge implemented">Available (2021)</span></td>
-          </tr>
-          <tr>
-            <td><strong>Demographics</strong></td>
-            <td>% population &gt;65, population density, household size</td>
-            <td>STATEC LUSTAT</td>
-            <td><span class="status-badge implemented">Available</span></td>
-          </tr>
-          <tr>
-            <td><strong>Bank exposure</strong></td>
-            <td>HHI of commune credit per bank, loan/deposit ratio to public sector, exposure concentration quintile</td>
-            <td>BCL supervisory data</td>
-            <td><span class="status-badge required">BCL MOU required</span></td>
-          </tr>
-          <tr>
-            <td><strong>Spatial</strong></td>
-            <td>Neighbours' fiscal stress score, cantonal mean deficit, spatial lag (queen contiguity)</td>
-            <td>Derived from panel + GeoJSON</td>
-            <td><span class="status-badge design">Derivable once panel exists</span></td>
-          </tr>
+          <tr><td>Communes</td><td>102</td><td>STATEC LUSTAT / Eurostat LAU 2021</td></tr>
+          <tr><td>Years</td><td>2021 only</td><td>Single snapshot — time series pending</td></tr>
+          <tr><td>Rows</td><td>102 (commune × year)</td><td><code>data/panel_dataset.csv</code></td></tr>
+          <tr><td>Implemented features</td><td>13 socioeconomic + 7 national context</td><td>STATEC LUSTAT + ECB/Eurostat</td></tr>
+          <tr><td>Placeholder columns</td><td>6 (commune revenue, debt, bank exposure)</td><td>Require BCL/STATEC access</td></tr>
+          <tr><td>Proxy distress flags</td><td>22 / 102 (21.6%)</td><td>Socioeconomic proxy only — not fiscal events</td></tr>
+          <tr><td>Reproduce</td><td colspan="2"><code>python3 scripts/build_panel.py</code></td></tr>
         </tbody>
       </table>
     </div>
+  </div>
 
-    <!-- Model comparison -->
-    <h3 class="section-subheading">Model Comparison Plan</h3>
-    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">Prediction Target</p>
+    <h2 class="prose-h2">What the model will predict</h2>
+    <div class="prose-note" style="border-color:#f59e0b;background:#fffbeb"><strong>Labelling challenge:</strong> Luxembourg communes have not experienced formal default or supervisory intervention. The distress label must be operationalised from fiscal balance thresholds rather than observed events. Robustness to alternative threshold definitions will be reported.</div>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap">
+      <table class="rtable">
+        <thead><tr><th>Target</th><th>Definition</th><th>Horizon</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Primary (H3)</strong></td><td>Binary: commune enters fiscal stress at t+1 — deficit &gt; 15% of revenues OR deficit_streak ≥ 2</td><td>t+1</td></tr>
+          <tr><td><strong>Secondary</strong></td><td>Continuous: distress probability ∈ [0,1], calibrated via Platt scaling</td><td>t+1 / t+2</td></tr>
+          <tr><td><strong>Aspirational</strong></td><td>Bank credit contraction to exposed commune — requires bank-commune panel (BCL)</td><td>t+1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p class="prose-eyebrow">Model Pipeline</p>
+    <h2 class="prose-h2">Five-stage processing architecture</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="ml-pipeline-diagram">
+      <div class="ml-pipe-node"><div class="ml-pipe-node-title">Data Layer</div><div class="ml-pipe-node-sub">STATEC commune accounts · BCL supervisory · Eurostat GFS · spatial adjacency matrix</div></div>
+      <div class="ml-pipe-arrow">→</div>
+      <div class="ml-pipe-node"><div class="ml-pipe-node-title">Feature Engineering</div><div class="ml-pipe-node-sub">Fiscal ratios · deficit streaks · YoY growth · HHI exposure · spatial lags · demographic pressure</div></div>
+      <div class="ml-pipe-arrow">→</div>
+      <div class="ml-pipe-node"><div class="ml-pipe-node-title">XGBoost Model</div><div class="ml-pipe-node-sub">Gradient boosting · temporal train/test split · rolling-origin CV · early stopping</div></div>
+      <div class="ml-pipe-arrow">→</div>
+      <div class="ml-pipe-node"><div class="ml-pipe-node-title">SHAP Layer</div><div class="ml-pipe-node-sub">TreeExplainer · global feature importance · local per-commune explanations · feature groups</div></div>
+      <div class="ml-pipe-arrow">→</div>
+      <div class="ml-pipe-node"><div class="ml-pipe-node-title">EWS Output</div><div class="ml-pipe-node-sub">Distress probability · warning flag · top-3 drivers · API endpoint</div></div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p class="prose-eyebrow">Feature Architecture</p>
+    <h2 class="prose-h2">Eight feature groups across four data tiers</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap">
+      <table class="rtable">
+        <thead><tr><th>Feature Group</th><th>Features</th><th>Source</th><th>Availability</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Fiscal balance</strong></td><td>Balance/revenue ratio, balance trend (3yr), deficit streak</td><td>STATEC commune accounts</td><td><span class="status-badge prototype">Partial (LUSTAT)</span></td></tr>
+          <tr><td><strong>Revenue structure</strong></td><td>Per-capita revenue, transfer-dependence ratio, tax revenue growth</td><td>STATEC commune accounts</td><td><span class="status-badge prototype">Partial (LUSTAT)</span></td></tr>
+          <tr><td><strong>Expenditure pressure</strong></td><td>Per-capita expenditure, primary expenditure growth, debt-service ratio</td><td>STATEC commune accounts</td><td><span class="status-badge required">Data request required</span></td></tr>
+          <tr><td><strong>Debt</strong></td><td>Debt/revenue, debt trend, new borrowing per capita</td><td>STATEC commune accounts</td><td><span class="status-badge required">Data request required</span></td></tr>
+          <tr><td><strong>Local economy</strong></td><td>Income index, employment rate, population growth rate</td><td>STATEC LUSTAT</td><td><span class="status-badge implemented">Available (2021)</span></td></tr>
+          <tr><td><strong>Demographics</strong></td><td>% population &gt;65, population density, household size</td><td>STATEC LUSTAT</td><td><span class="status-badge implemented">Available</span></td></tr>
+          <tr><td><strong>Bank exposure</strong></td><td>HHI commune credit per bank, loan/deposit ratio, exposure quintile</td><td>BCL supervisory</td><td><span class="status-badge required">BCL MOU required</span></td></tr>
+          <tr><td><strong>Spatial</strong></td><td>Neighbours' stress score, cantonal mean deficit, spatial lag (queen contiguity)</td><td>Derived from panel + GeoJSON</td><td><span class="status-badge design">Derivable once panel exists</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p class="prose-eyebrow">Model Comparison</p>
+    <h2 class="prose-h2">Baseline ladder from heuristic to XGBoost</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap">
       <table class="rtable">
         <thead><tr><th>Model</th><th>Type</th><th>Forward-looking</th><th>Interpretable</th><th>Status</th></tr></thead>
         <tbody>
-          <tr>
-            <td><strong>Rule-based heuristic</strong></td>
-            <td>Deterministic index (4 components, fixed weights)</td>
-            <td>No — contemporaneous</td>
-            <td>Yes — fully transparent</td>
-            <td><span class="status-badge implemented">Implemented (this platform)</span></td>
-          </tr>
-          <tr>
-            <td><strong>Logit / Probit</strong></td>
-            <td>Parametric binary classification</td>
-            <td>Yes — t+1 target</td>
-            <td>Yes — marginal effects</td>
-            <td><span class="status-badge planned">Planned (WP2)</span></td>
-          </tr>
-          <tr>
-            <td><strong>Random Forest</strong></td>
-            <td>Ensemble bagging</td>
-            <td>Yes</td>
-            <td>Partial — permutation importance</td>
-            <td><span class="status-badge planned">Planned (WP3)</span></td>
-          </tr>
-          <tr>
-            <td><strong>XGBoost + SHAP</strong></td>
-            <td>Gradient boosting</td>
-            <td>Yes</td>
-            <td>Yes — SHAP TreeExplainer</td>
-            <td><span class="status-badge planned">Planned (WP3 · primary model)</span></td>
-          </tr>
+          <tr><td><strong>Rule-based heuristic</strong></td><td>Deterministic index, 4 components, fixed weights</td><td>No — contemporaneous</td><td>Yes — fully transparent</td><td><span class="status-badge implemented">Implemented</span></td></tr>
+          <tr><td><strong>Logit / Probit</strong></td><td>Parametric binary classification</td><td>Yes — t+1 target</td><td>Yes — marginal effects</td><td><span class="status-badge planned">Planned WP2</span></td></tr>
+          <tr><td><strong>Random Forest</strong></td><td>Ensemble bagging</td><td>Yes</td><td>Partial — permutation importance</td><td><span class="status-badge planned">Planned WP3</span></td></tr>
+          <tr><td><strong>XGBoost + SHAP</strong></td><td>Gradient boosting</td><td>Yes</td><td>Yes — SHAP TreeExplainer</td><td><span class="status-badge planned">Planned WP3 · primary</span></td></tr>
         </tbody>
       </table>
     </div>
+  </div>
 
-    <h3 class="section-subheading">API Contract — Live &amp; Planned</h3>
-    <p style="font-size:.8rem;color:var(--text-muted);margin:.25rem 0 .85rem">
-      Run locally: <code style="font-family:'JetBrains Mono',monospace;font-size:.9em;background:#f1f5f9;padding:.1em .4em;border-radius:3px">uvicorn api.fiscal_ml_api:app --reload</code>
-      · Interactive docs at <code style="font-family:'JetBrains Mono',monospace;font-size:.9em;background:#f1f5f9;padding:.1em .4em;border-radius:3px">/docs</code>
-    </p>
-    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">API Contract</p>
+    <h2 class="prose-h2">Live endpoints and planned WP3 additions</h2>
+    <p class="prose-p">Run locally: <code style="font-family:'JetBrains Mono',monospace;font-size:.85em;background:#f1f5f9;padding:.1em .4em;border-radius:3px">uvicorn api.fiscal_ml_api:app --reload</code> · docs at <code style="font-family:'JetBrains Mono',monospace;font-size:.85em;background:#f1f5f9;padding:.1em .4em;border-radius:3px">/docs</code></p>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap">
       <table class="rtable">
-        <thead><tr><th>Endpoint</th><th>Purpose</th><th>Output</th><th>Status</th></tr></thead>
+        <thead><tr><th>Endpoint</th><th>Purpose</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td><code>GET /health</code></td><td>Service readiness, data vintage, panel status</td><td>Model layer, available years, latest stress level</td><td><span class="status-badge implemented">Live — heuristic</span></td></tr>
-          <tr><td><code>GET /stress_score</code></td><td>Heuristic composite score for a given year</td><td>Composite [0,1], level, 4-component breakdown</td><td><span class="status-badge implemented">Live — heuristic</span></td></tr>
-          <tr><td><code>GET /stress_history</code></td><td>Full 2014–2023 heuristic time series</td><td>Series + methodology object</td><td><span class="status-badge implemented">Live — heuristic</span></td></tr>
-          <tr><td><code>GET /panel_summary</code></td><td>Prototype commune panel statistics</td><td>102 rows, proxy prevalence, at-risk list, placeholder columns</td><td><span class="status-badge implemented">Live — prototype panel</span></td></tr>
-          <tr><td><code>GET /model_performance</code></td><td>Benchmark and planned ML metrics</td><td>Heuristic benchmark + TBD metric targets for WP3</td><td><span class="status-badge implemented">Live — heuristic only</span></td></tr>
-          <tr><td><code>GET /feature_importance</code></td><td>Component weights + planned feature groups</td><td>Heuristic weights (live) + XGBoost group design (planned)</td><td><span class="status-badge implemented">Live — heuristic only</span></td></tr>
-          <tr><td><code>POST /predict_distress</code></td><td>t+1 fiscal stress prediction per commune</td><td>Probability, warning flag, threshold band</td><td><span class="status-badge planned">WP3 — XGBoost model required</span></td></tr>
-          <tr><td><code>POST /shap_explain</code></td><td>Local SHAP explanations for flagged communes</td><td>Top positive/negative SHAP drivers per commune</td><td><span class="status-badge planned">WP3 — trained model required</span></td></tr>
+          <tr><td><code>GET /health</code></td><td>Service readiness, data vintage, panel status</td><td><span class="status-badge implemented">Live</span></td></tr>
+          <tr><td><code>GET /stress_score</code></td><td>Heuristic composite score for a given year</td><td><span class="status-badge implemented">Live</span></td></tr>
+          <tr><td><code>GET /stress_history</code></td><td>Full 2014–2023 heuristic time series</td><td><span class="status-badge implemented">Live</span></td></tr>
+          <tr><td><code>GET /panel_summary</code></td><td>Prototype commune panel statistics</td><td><span class="status-badge implemented">Live</span></td></tr>
+          <tr><td><code>GET /model_performance</code></td><td>Benchmark and planned ML metrics</td><td><span class="status-badge implemented">Live</span></td></tr>
+          <tr><td><code>GET /feature_importance</code></td><td>Component weights + planned feature groups</td><td><span class="status-badge implemented">Live</span></td></tr>
+          <tr><td><code>POST /predict_distress</code></td><td>t+1 fiscal stress prediction per commune</td><td><span class="status-badge planned">WP3</span></td></tr>
+          <tr><td><code>POST /shap_explain</code></td><td>Local SHAP explanations for flagged communes</td><td><span class="status-badge planned">WP3</span></td></tr>
         </tbody>
       </table>
     </div>
+  </div>
 
-    <!-- Validation -->
-    <h3 class="section-subheading">Temporal Validation Strategy</h3>
-    <div class="two-col" style="margin-bottom:1.5rem">
-      <div>
-        <div class="rtable-wrap">
-          <table class="rtable">
-            <thead><tr><th>Split</th><th>Years</th><th>Observations (est.)</th></tr></thead>
-            <tbody>
-              <tr><td>Training</td><td>2010–2018</td><td>~918 commune-years</td></tr>
-              <tr><td>Validation (rolling-origin)</td><td>2019–2020</td><td>~204 commune-years</td></tr>
-              <tr><td>Test (held-out)</td><td>2021–2023</td><td>~306 commune-years</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div style="margin-top:.75rem;font-size:.78rem;color:var(--text-muted);line-height:1.6">
-          Rolling-origin cross-validation is used to respect the time structure of the panel.
-          Standard k-fold cross-validation is excluded as it would introduce lookahead bias.
-          The test set is not examined until model selection is complete.
-        </div>
-      </div>
-      <div>
-        <h4 style="font-size:.84rem;font-weight:700;color:var(--accent-dark);margin-bottom:.75rem">Evaluation Metrics</h4>
-        <div class="metric-grid">
-          <div class="metric-card tbd"><div class="metric-name">AUC-ROC</div><div class="metric-value">TBD</div><div class="metric-note">Target ≥ 0.75</div></div>
-          <div class="metric-card tbd"><div class="metric-name">PR-AUC</div><div class="metric-value">TBD</div><div class="metric-note">Preferred for imbalanced labels</div></div>
-          <div class="metric-card tbd"><div class="metric-name">Brier Score</div><div class="metric-value">TBD</div><div class="metric-note">Calibration quality</div></div>
-          <div class="metric-card tbd"><div class="metric-name">F1 @ 0.5</div><div class="metric-value">TBD</div><div class="metric-note">Precision–recall balance</div></div>
-          <div class="metric-card tbd"><div class="metric-name">Lead Time</div><div class="metric-value">TBD</div><div class="metric-note">Avg months before stress onset</div></div>
-          <div class="metric-card tbd"><div class="metric-name">FAR</div><div class="metric-value">TBD</div><div class="metric-note">False-alarm rate at policy threshold</div></div>
-        </div>
-      </div>
+  <div class="prose">
+    <p class="prose-eyebrow">Temporal Validation</p>
+    <h2 class="prose-h2">Train / validate / test split</h2>
+    <p class="prose-p">Rolling-origin cross-validation respects the time structure of the panel. Standard k-fold is excluded as it would introduce lookahead bias. The test set is not examined until model selection is complete.</p>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap" style="margin-bottom:1.25rem">
+      <table class="rtable">
+        <thead><tr><th>Split</th><th>Years</th><th>Observations (est.)</th></tr></thead>
+        <tbody>
+          <tr><td>Training</td><td>2010–2018</td><td>~918 commune-years</td></tr>
+          <tr><td>Validation (rolling-origin)</td><td>2019–2020</td><td>~204 commune-years</td></tr>
+          <tr><td>Test (held-out)</td><td>2021–2023</td><td>~306 commune-years</td></tr>
+        </tbody>
+      </table>
     </div>
-
-    <!-- SHAP design -->
-    <h3 class="section-subheading">SHAP Interpretability Design</h3>
-    <div class="two-col">
-      <div>
-        <p style="font-size:.84rem;color:var(--text-muted);line-height:1.65;margin-bottom:.85rem">
-          SHAP (SHapley Additive exPlanations) TreeExplainer will be applied to the trained XGBoost model
-          to produce two layers of interpretability:
-        </p>
-        <ul style="font-size:.84rem;color:var(--text-muted);line-height:1.85;padding-left:1.25rem">
-          <li><strong>Global:</strong> Mean |SHAP value| per feature group — identifies which dimensions (fiscal, economic, demographic, bank exposure) drive the model's predictions across the full commune panel.</li>
-          <li><strong>Local (per-commune):</strong> Top-3 SHAP drivers for each flagged commune in a given year — actionable explanation for macroprudential reporting.</li>
-        </ul>
-        <p style="font-size:.84rem;color:var(--text-muted);line-height:1.65;margin-top:.85rem">
-          The FastAPI endpoint <code style="font-family:'JetBrains Mono',monospace;font-size:.8em;background:#f1f5f9;padding:.1em .35em;border-radius:3px">/shap_explain</code>
-          will return per-commune SHAP vectors for integration into this frontend (planned in WP3).
-        </p>
-      </div>
-      <div>
-        <div style="background:var(--accent-dark);border-radius:8px;padding:1.1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.8;color:rgba(255,255,255,.85)">
-          <div style="color:#4ade80;margin-bottom:.4rem"># Example SHAP output (planned)</div>
-          <div>commune: <span style="color:#fbbf24">"Esch-sur-Alzette"</span></div>
-          <div>year: <span style="color:#60a5fa">2024</span></div>
-          <div>distress_probability: <span style="color:#f87171">0.71</span></div>
-          <div>base_rate: <span style="color:#94a3b8">0.18</span></div>
-          <div style="margin-top:.4rem">top_shap_drivers:</div>
-          <div>&nbsp;&nbsp;deficit_streak=3 → <span style="color:#f87171">+0.18</span></div>
-          <div>&nbsp;&nbsp;transfer_dep=62% → <span style="color:#f87171">+0.12</span></div>
-          <div>&nbsp;&nbsp;income_index=84 → <span style="color:#f87171">+0.09</span></div>
-          <div>&nbsp;&nbsp;emp_rate=64.2% → <span style="color:#4ade80">−0.05</span></div>
-          <div style="color:#94a3b8;margin-top:.4rem"># Planned: /shap_explain API endpoint</div>
-        </div>
-      </div>
+    <div class="metric-grid">
+      <div class="metric-card tbd"><div class="metric-name">AUC-ROC</div><div class="metric-value">TBD</div><div class="metric-note">Target ≥ 0.75</div></div>
+      <div class="metric-card tbd"><div class="metric-name">PR-AUC</div><div class="metric-value">TBD</div><div class="metric-note">Imbalanced labels</div></div>
+      <div class="metric-card tbd"><div class="metric-name">Brier Score</div><div class="metric-value">TBD</div><div class="metric-note">Calibration quality</div></div>
+      <div class="metric-card tbd"><div class="metric-name">F1 @ 0.5</div><div class="metric-value">TBD</div><div class="metric-note">Precision–recall balance</div></div>
+      <div class="metric-card tbd"><div class="metric-name">Lead Time</div><div class="metric-value">TBD</div><div class="metric-note">Months before stress onset</div></div>
+      <div class="metric-card tbd"><div class="metric-name">FAR</div><div class="metric-value">TBD</div><div class="metric-note">False-alarm rate</div></div>
     </div>
+  </div>
 
+  <div class="prose">
+    <p class="prose-eyebrow">SHAP Interpretability</p>
+    <h2 class="prose-h2">Two layers: global feature importance and per-commune explanations</h2>
+    <p class="prose-p">SHAP TreeExplainer will produce global mean |SHAP| per feature group — identifying which dimensions (fiscal, economic, demographic, bank exposure) drive predictions — and local top-3 SHAP drivers per flagged commune for macroprudential reporting.</p>
+  </div>
+  <div class="prose-wide" style="padding-bottom:2.5rem">
+    <div style="background:var(--accent-dark);border-radius:8px;padding:1.1rem 1.5rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.9;color:rgba(255,255,255,.85);max-width:540px">
+      <div style="color:#4ade80;margin-bottom:.4rem"># Example SHAP output (planned WP3)</div>
+      <div>commune: <span style="color:#fbbf24">"Esch-sur-Alzette"</span></div>
+      <div>distress_probability: <span style="color:#f87171">0.71</span> &nbsp; base_rate: <span style="color:#94a3b8">0.18</span></div>
+      <div style="margin-top:.35rem">top_shap_drivers:</div>
+      <div>&nbsp;&nbsp;deficit_streak=3 → <span style="color:#f87171">+0.18</span></div>
+      <div>&nbsp;&nbsp;transfer_dep=62% → <span style="color:#f87171">+0.12</span></div>
+      <div>&nbsp;&nbsp;income_index=84 → <span style="color:#f87171">+0.09</span></div>
+      <div>&nbsp;&nbsp;emp_rate=64.2% → <span style="color:#4ade80">−0.05</span></div>
+    </div>
   </div>
 
   <div class="chapter-connector" data-next="empirical">
@@ -1110,19 +960,19 @@
     <div class="pi-question">What identification strategy, fixed-effects structure, and robustness tests can credibly estimate the sovereign-bank nexus at commune level — and what is the minimum viable design before supervisory data is obtained?</div>
   </div>
 
-  <div class="section-block">
+  <div class="prose">
+    <p class="prose-eyebrow">Empirical Programme</p>
+    <h2 class="prose-h2">Three hypotheses, one commune-year panel</h2>
+    <p class="prose-lede">The empirical programme tests three nested hypotheses using a commune-year panel for Luxembourg. The estimation strategy scales with data availability: a minimum viable design uses publicly available STATEC/Eurostat aggregates; the full design adds BCL supervisory bank-commune exposure data.</p>
+  </div>
+  <hr class="prose-divider">
 
-    <h2 class="section-heading">
-      <span class="sec-num">§6</span> Empirical Strategy
-    </h2>
-    <p class="section-intro">
-      The empirical programme tests three nested hypotheses using a commune-year panel for Luxembourg.
-      The estimation strategy scales with data availability: a minimum viable design uses publicly available
-      STATEC/Eurostat aggregates; the full design adds BCL supervisory bank-commune exposure data.
-    </p>
-
-    <h3 class="section-subheading">Research Design Matrix</h3>
-    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">Research Design Matrix</p>
+    <h2 class="prose-h2">Hypothesis · outcome · model mapping</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap" style="margin-bottom:2rem">
       <table class="rtable">
         <thead><tr><th>Hypothesis</th><th>Outcome</th><th>Key Treatment / Predictor</th><th>Model</th><th>Decision Criterion</th></tr></thead>
         <tbody>
@@ -1150,10 +1000,15 @@
         </tbody>
       </table>
     </div>
+  </div>
+  <hr class="prose-divider">
 
-    <!-- Unit of analysis -->
-    <h3 class="section-subheading">Unit of Analysis</h3>
-    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">Unit of Analysis</p>
+    <h2 class="prose-h2">Commune-year, scaling to bank-commune-year</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap" style="margin-bottom:2rem">
       <table class="rtable">
         <thead><tr><th>Design tier</th><th>Unit</th><th>Observations (est.)</th><th>Data requirement</th><th>Status</th></tr></thead>
         <tbody>
@@ -1174,10 +1029,15 @@
         </tbody>
       </table>
     </div>
+  </div>
+  <hr class="prose-divider">
 
-    <!-- Dependent variables -->
-    <h3 class="section-subheading">Dependent Variables</h3>
-    <div class="var-group" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">Dependent Variables</p>
+    <h2 class="prose-h2">Three outcome measures across H1–H3</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="var-group" style="margin-bottom:2rem">
       <div class="var-card">
         <div class="var-name">FiscalStress<sub>i,t</sub></div>
         <div class="var-desc">Binary: commune i runs a deficit exceeding 15% of revenues in year t, OR has a deficit streak ≥ 2 consecutive years. Primary outcome for H3.
@@ -1197,10 +1057,15 @@
         </div>
       </div>
     </div>
+  </div>
+  <hr class="prose-divider">
 
-    <!-- Key regressors -->
-    <h3 class="section-subheading">Key Explanatory Variables</h3>
-    <div class="var-group" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">Key Explanatory Variables</p>
+    <h2 class="prose-h2">Exposure, fiscal, and spatial regressors</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="var-group" style="margin-bottom:2rem">
       <div class="var-card">
         <div class="var-name">HHI<sub>b,i,t-1</sub></div>
         <div class="var-desc">Herfindahl–Hirschman Index of bank b's credit to commune i as a share of all commune credits — measures borrower concentration. Lagged one period to address reverse causality.
@@ -1226,11 +1091,16 @@
         </div>
       </div>
     </div>
+  </div>
+  <hr class="prose-divider">
 
-    <!-- Fixed effects + controls -->
-    <h3 class="section-subheading">Fixed Effects &amp; Controls</h3>
-    <div class="two-col" style="margin-bottom:1.5rem">
-      <div class="rtable-wrap">
+  <div class="prose">
+    <p class="prose-eyebrow">Fixed Effects &amp; Controls</p>
+    <h2 class="prose-h2">What each fixed effect absorbs</h2>
+  </div>
+  <div class="prose-wide">
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:2rem">
+      <div class="rtable-wrap" style="flex:1;min-width:280px">
         <table class="rtable">
           <thead><tr><th>Effect</th><th>What it absorbs</th></tr></thead>
           <tbody>
@@ -1241,7 +1111,7 @@
           </tbody>
         </table>
       </div>
-      <div class="rtable-wrap">
+      <div class="rtable-wrap" style="flex:1;min-width:240px">
         <table class="rtable">
           <thead><tr><th>Control variable</th><th>Source</th></tr></thead>
           <tbody>
@@ -1254,52 +1124,64 @@
         </table>
       </div>
     </div>
+  </div>
+  <hr class="prose-divider">
 
-    <!-- Identification -->
-    <h3 class="section-subheading">Identification Challenges</h3>
-    <div class="risk-grid" style="margin-bottom:1.25rem">
-      <div class="risk-card">
-        <div class="risk-label">Data Availability</div>
-        <div class="risk-text">Commune fiscal accounts and bank-commune credit registers are not publicly available. The minimum viable design uses STATEC aggregates; the full design requires two separate MOU negotiations.</div>
-      </div>
-      <div class="risk-card">
-        <div class="risk-label">Endogeneity</div>
-        <div class="risk-text">Fiscal stress and credit contraction are simultaneous: banks may tighten credit <em>in anticipation</em> of fiscal deterioration, biasing OLS estimates of the nexus coefficient.</div>
-      </div>
-      <div class="risk-card">
-        <div class="risk-label">Reverse Causality</div>
-        <div class="risk-text">Credit contraction (H1) may cause fiscal stress (H2) rather than the reverse. Granger causality tests and instrumental variable designs address this, but require sufficient panel depth.</div>
-      </div>
-      <div class="risk-card">
-        <div class="risk-label">Spatial Autocorrelation</div>
-        <div class="risk-text">Communes in the same canton face correlated shocks. Standard errors must be clustered at the canton level or modelled explicitly via spatial lag / spatial error specifications.</div>
-      </div>
-      <div class="risk-card">
-        <div class="risk-label">Small Sample</div>
-        <div class="risk-text">102 communes × 14 years = ~1,400 commune-years. Some stress events will be rare, creating class imbalance for ML and limited power for IV designs.</div>
-      </div>
+  <div class="prose">
+    <p class="prose-eyebrow">Identification</p>
+    <h2 class="prose-h2">Five challenges, four strategies</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+      <table class="rtable">
+        <thead><tr><th>Challenge</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Data availability</strong></td>
+            <td>Commune fiscal accounts and bank-commune credit registers are not publicly available. The minimum viable design uses STATEC aggregates; the full design requires two separate MOU negotiations.</td>
+          </tr>
+          <tr>
+            <td><strong>Endogeneity</strong></td>
+            <td>Fiscal stress and credit contraction are simultaneous: banks may tighten credit <em>in anticipation</em> of fiscal deterioration, biasing OLS estimates of the nexus coefficient.</td>
+          </tr>
+          <tr>
+            <td><strong>Reverse causality</strong></td>
+            <td>Credit contraction (H1) may cause fiscal stress (H2) rather than the reverse. Granger causality tests and instrumental variable designs address this, but require sufficient panel depth.</td>
+          </tr>
+          <tr>
+            <td><strong>Spatial autocorrelation</strong></td>
+            <td>Communes in the same canton face correlated shocks. Standard errors must be clustered at the canton level or modelled explicitly via spatial lag / spatial error specifications.</td>
+          </tr>
+          <tr>
+            <td><strong>Small sample</strong></td>
+            <td>102 communes × 14 years ≈ 1,400 commune-years. Rare stress events create class imbalance for ML and limited power for IV designs.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <h3 class="section-subheading">Identification Strategies</h3>
-    <div class="risk-grid">
-      <div class="strat-card">
-        <div class="strat-label">Lagged Instruments</div>
-        <div class="strat-text">Use HHI<sub>b,i,t-2</sub> (two-year lag) as instrument for current-year bank exposure concentration, conditional on commune and bank fixed effects.</div>
-      </div>
-      <div class="strat-card">
-        <div class="strat-label">Pre-sample Specialisation</div>
-        <div class="strat-text">Banks' pre-sample (2008–2009) share of local-government credit as instrument for current exposure — exogenous to commune fiscal outcomes during the study period.</div>
-      </div>
-      <div class="strat-card">
-        <div class="strat-label">Event Study Design</div>
-        <div class="strat-text">Compare communes with ≥2 consecutive deficits vs. matched controls, examining credit availability in the two years surrounding the onset of the deficit streak.</div>
-      </div>
-      <div class="strat-card">
-        <div class="strat-label">Spatial Econometrics</div>
-        <div class="strat-text">Spatial lag model (SLM) and spatial error model (SEM) to test whether H1 effects propagate across commune borders — identifying the geographic scope of the nexus.</div>
-      </div>
+    <div class="rtable-wrap" style="margin-bottom:2rem">
+      <table class="rtable">
+        <thead><tr><th>Strategy</th><th>Mechanism</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Lagged instruments</strong></td>
+            <td>Use HHI<sub>b,i,t-2</sub> (two-year lag) as instrument for current-year bank exposure concentration, conditional on commune and bank fixed effects.</td>
+          </tr>
+          <tr>
+            <td><strong>Pre-sample specialisation</strong></td>
+            <td>Banks' pre-sample (2008–2009) share of local-government credit as instrument for current exposure — exogenous to commune fiscal outcomes during the study period.</td>
+          </tr>
+          <tr>
+            <td><strong>Event study design</strong></td>
+            <td>Compare communes with ≥2 consecutive deficits vs. matched controls, examining credit availability in the two years surrounding the onset of the deficit streak.</td>
+          </tr>
+          <tr>
+            <td><strong>Spatial econometrics</strong></td>
+            <td>Spatial lag model (SLM) and spatial error model (SEM) to test whether H1 effects propagate across commune borders — identifying the geographic scope of the nexus.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
   </div>
 
   <div class="chapter-connector" data-next="map">
@@ -1428,20 +1310,18 @@
     <div class="pi-question">How is the five-layer research platform structured — from public data APIs through the ML service to the supervisory data extensions — and what work packages remain before full execution?</div>
   </div>
 
-  <div class="section-block">
+  <div class="prose">
+    <p class="prose-eyebrow">Research Platform</p>
+    <h2 class="prose-h2">Five-layer architecture — two layers live, three planned</h2>
+    <p class="prose-lede">The full research platform is designed in five layers, modelled on the AreaStat AT architecture. The current LuxFin implementation covers the frontend and static data layers. The R pipeline, Python ML service, and R Plumber API are scaffolded as design targets for WP1–WP3.</p>
+  </div>
+  <hr class="prose-divider">
 
-    <h2 class="section-heading">
-      <span class="sec-num">§7</span> Technical Architecture &amp; Research Roadmap
-    </h2>
-    <p class="section-intro">
-      The full research platform is designed in five layers, modelled on the AreaStat AT architecture.
-      The current LuxFin implementation covers the frontend and static data layers.
-      The R pipeline, Python ML service, and R Plumber API are scaffolded as design targets
-      for WP1–WP3. Items marked as pending require data access negotiations before implementation.
-    </p>
-
-    <!-- Architecture stack -->
-    <h3 class="section-subheading">Technical Stack</h3>
+  <div class="prose">
+    <p class="prose-eyebrow">Technical Stack</p>
+    <h2 class="prose-h2">Data sources through to the frontend</h2>
+  </div>
+  <div class="prose-wide">
     <div class="arch-stack" style="margin-bottom:1.5rem">
 
       <div class="arch-layer sources">
@@ -1510,10 +1390,15 @@
       </div>
 
     </div>
+  </div>
+  <hr class="prose-divider">
 
-    <!-- Data requirements -->
-    <h3 class="section-subheading">Data Access Requirements</h3>
-    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">Data Access Requirements</p>
+    <h2 class="prose-h2">Public APIs to supervisory MOUs</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap" style="margin-bottom:2rem">
       <table class="rtable">
         <thead><tr><th>Dataset</th><th>Provider</th><th>Coverage</th><th>Status</th><th>Access path</th></tr></thead>
         <tbody>
@@ -1526,9 +1411,15 @@
         </tbody>
       </table>
     </div>
+  </div>
+  <hr class="prose-divider">
 
-    <h3 class="section-subheading">Repository Artifacts — Current State</h3>
-    <div class="artifact-grid" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">Repository Artifacts</p>
+    <h2 class="prose-h2">Current implementation state</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="artifact-grid" style="margin-bottom:2rem">
       <div class="artifact-card">
         <div class="artifact-status"><span class="status-badge implemented">Implemented</span></div>
         <div class="artifact-name"><code>index.html</code> · <code>style.css</code> · <code>js/shared.js</code></div>
@@ -1550,21 +1441,16 @@
         <div class="artifact-text">Data requirements, empirical strategy, ML pipeline plan, and R panel-builder mirror. R script produces identical schema for comparison; Python is the canonical pipeline for API integration.</div>
       </div>
     </div>
+  </div>
+  <hr class="prose-divider">
 
-    <!-- API Readiness block -->
-    <h3 class="section-subheading">API Readiness</h3>
-    <div class="data-note" style="margin:0 0 .85rem;font-size:.8rem">
-      <span class="data-note-icon">ℹ</span>
-      <span>
-        <strong>Live:</strong>
-        <a href="https://aetherno-luxfin-api.hf.space/docs" target="_blank" rel="noopener" style="color:var(--accent)">aetherno-luxfin-api.hf.space/docs</a>
-        · Hosted on Hugging Face Spaces (Docker · CPU Basic · free tier).
-        First request after inactivity may take ~30s to wake.
-        <br>
-        <strong>Local:</strong> <code style="font-family:'JetBrains Mono',monospace">uvicorn api.fiscal_ml_api:app --reload</code>
-      </span>
-    </div>
-    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+  <div class="prose">
+    <p class="prose-eyebrow">API Readiness</p>
+    <h2 class="prose-h2">Live endpoints and planned WP3 additions</h2>
+    <div class="prose-note"><strong>Live:</strong> <a href="https://aetherno-luxfin-api.hf.space/docs" target="_blank" rel="noopener" style="color:var(--accent)">aetherno-luxfin-api.hf.space/docs</a> · Hosted on Hugging Face Spaces (Docker · CPU Basic · free tier). First request after inactivity may take ~30s to wake.<br><strong>Local:</strong> <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">uvicorn api.fiscal_ml_api:app --reload</code></div>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap" style="margin-bottom:2rem">
       <table class="rtable">
         <thead><tr><th>Endpoint</th><th>Layer</th><th>Data source</th><th>Returns</th><th>Status</th></tr></thead>
         <tbody>
@@ -1627,10 +1513,15 @@
         </tbody>
       </table>
     </div>
+  </div>
+  <hr class="prose-divider">
 
-    <!-- Work packages -->
-    <h3 class="section-subheading">Work Packages &amp; Timeline</h3>
-    <div class="wp-grid">
+  <div class="prose">
+    <p class="prose-eyebrow">Work Packages &amp; Timeline</p>
+    <h2 class="prose-h2">36-month execution plan across four work packages</h2>
+  </div>
+  <div class="prose-wide">
+    <div class="wp-grid" style="margin-bottom:2rem">
 
       <div class="wp-card">
         <div class="wp-header">
@@ -1696,7 +1587,6 @@
       </div>
 
     </div>
-
   </div>
 
   <div class="chapter-connector" data-next="overview">
