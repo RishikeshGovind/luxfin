@@ -1441,10 +1441,8 @@
         <div class="mcc-label">Reference Year</div>
         <div class="year-toggle-group">
           <button class="year-toggle-btn active" data-year="2021">2021</button>
-          <button class="year-toggle-btn" data-year="2022" disabled title="Pending STATEC release">2022</button>
-          <button class="year-toggle-btn" data-year="2023" disabled title="Pending STATEC release">2023</button>
         </div>
-        <div class="year-toggle-note" id="year-toggle-note">STATEC LUSTAT · 2022–2023 pending release</div>
+        <div class="year-toggle-note" id="year-toggle-note">STATEC LUSTAT · 2021 · 2022–2023 pending release</div>
       </div>
 
       <div class="mcc-section">
@@ -2080,9 +2078,11 @@ function renderStressComponentCharts() {
 function initMap() {
   if (mapInitialised) return;
   mapInitialised = true;
+  const LU_BOUNDS = [[5.73, 49.44], [6.53, 50.18]];
+  const LU_FIT_PADDING = { top: 30, bottom: 30, left: 250, right: 30 };
   mapInstance = new maplibregl.Map({ container: 'map', style: 'https://tiles.openfreemap.org/styles/bright', center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, minZoom: 7, maxZoom: 14, maxBounds: [[5.5, 49.2], [6.9, 50.4]] });
-  mapInstance.on('load', () => { loadCommuneGeoJSON(); });
-  document.getElementById('map-reset-btn').addEventListener('click', () => { mapInstance.easeTo({ center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, duration: 1500 }); });
+  mapInstance.on('load', () => { mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PADDING, duration: 0 }); loadCommuneGeoJSON(); });
+  document.getElementById('map-reset-btn').addEventListener('click', () => { mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PADDING, duration: 1000 }); });
   document.getElementById('indicator-select').addEventListener('change', e => { activeIndicator = e.target.value; if (mapSourcesReady) updateChoropleth(); renderLegend(); });
   document.getElementById('geo-level-select').addEventListener('change', e => {
     if (e.target.value === 'cantons') {
