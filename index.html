@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LuxFin – Luxembourg Banking &amp; Public Finance Dashboard</title>
+  <title>LuxFin — Subnational Sovereign-Bank Nexus · PhD Research Platform</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Research dashboard for bank-sovereign linkages and financial intermediation in Luxembourg">
-
+  <meta name="description" content="Interactive PhD research platform — subnational sovereign-bank nexus and ML-based fiscal early-warning for Luxembourg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -13,288 +12,1263 @@
   <link rel="stylesheet" href="style.css">
   <script src="js/shared.js"></script>
 </head>
-
 <body>
 
-<!-- ══ HEADER ══════════════════════════════════════════════════════════════════ -->
+<!-- ══ HEADER ══════════════════════════════════════════════════════════════ -->
 <header id="app-header">
   <div class="header-brand">
     ◈ LuxFin
-    <span class="header-brand-badge">Research</span>
+    <span class="header-brand-badge">PhD Research</span>
   </div>
 
   <nav id="header-nav">
-    <button class="nav-tab active" data-panel="banking">
-      <span class="nav-tab-icon">🏦</span> Banking Exposure
+    <button class="nav-tab active" data-panel="overview">
+      <span class="nav-tab-icon">◎</span> Overview
     </button>
-    <button class="nav-tab" data-panel="fiscal">
-      <span class="nav-tab-icon">📊</span> Public Finance
+    <button class="nav-tab" data-panel="nexus">
+      <span class="nav-tab-icon">⇄</span> Nexus
+    </button>
+    <button class="nav-tab" data-panel="evidence">
+      <span class="nav-tab-icon">▦</span> Evidence
+    </button>
+    <button class="nav-tab" data-panel="ml">
+      <span class="nav-tab-icon">◆</span> ML Design
+    </button>
+    <button class="nav-tab" data-panel="empirical">
+      <span class="nav-tab-icon">≡</span> Empirical
     </button>
     <button class="nav-tab" data-panel="map">
-      <span class="nav-tab-icon">🗺</span> Commune Map
+      <span class="nav-tab-icon">⬡</span> Map
     </button>
-    <button class="nav-tab" data-panel="stress">
-      <span class="nav-tab-icon">⚠</span> Stress Indicators
+    <button class="nav-tab" data-panel="roadmap">
+      <span class="nav-tab-icon">⬕</span> Architecture
     </button>
   </nav>
 
   <div class="header-data-status">
     <span class="data-static-dot"></span>
-    Static data · ECB SDW / Eurostat / STATEC
+    Static · ECB / Eurostat / STATEC
   </div>
 </header>
 
-<!-- ══ PANEL: BANKING EXPOSURE ════════════════════════════════════════════════ -->
-<section id="panel-banking" class="panel active">
 
-  <div class="panel-header">
-    <div class="panel-header-left">
-      <div class="panel-title">Banking Sector Exposure to Public Sector</div>
-      <div class="panel-desc">Luxembourg MFI balance sheet — government bond holdings, credit allocation, and crowding-out dynamics · Data: ECB SDW BSI / BCL MFI statistics</div>
-    </div>
-    <div class="panel-actions">
-      <button class="live-fetch-btn" id="btn-fetch-banking">
-        ↻ Refresh from ECB SDW
-      </button>
-      <span class="source-badge">BSI statistics</span>
+<!-- ══ PANEL 1: OVERVIEW ════════════════════════════════════════════════════ -->
+<section id="panel-overview" class="panel active">
+
+  <!-- Hero -->
+  <div class="proposal-hero">
+    <div class="proposal-hero-inner">
+      <div class="proposal-pretitle">PhD Research Proposal · University of Luxembourg · Department of Finance</div>
+      <h1 class="proposal-question">
+        Does concentrated banking sector exposure to local government borrowers create a subnational sovereign-bank nexus?
+      </h1>
+      <p class="proposal-subq">
+        And can forward-looking ML-based fiscal risk indicators serve as an early warning system for regional financial stability in Luxembourg?
+      </p>
+      <div class="proposal-meta-strip">
+        <div class="proposal-meta-item"><strong>Geography</strong> Luxembourg · 102 communes · 12 cantons</div>
+        <div class="proposal-meta-item"><strong>Period</strong> 2010–2023 (panel) · forecast horizon t+1/t+2</div>
+        <div class="proposal-meta-item"><strong>Methods</strong> Panel regression · ML (XGBoost) · SHAP · Spatial econometrics</div>
+        <div class="proposal-meta-item"><strong>Data</strong> ECB BSI · Eurostat GFS · STATEC LUSTAT · BCL supervisory</div>
+      </div>
     </div>
   </div>
 
-  <!-- KPI strip -->
-  <div class="kpi-strip" id="banking-kpis"></div>
+  <!-- Hypotheses -->
+  <div class="section-block">
+    <h2 class="section-heading">
+      <span class="sec-num">H</span> Core Hypotheses
+    </h2>
+    <p class="section-intro">
+      Three nested hypotheses structure the empirical programme.
+      H1 establishes whether the nexus exists. H2 tests its causal direction.
+      H3 asks whether ML can operationalise it as an actionable early-warning signal.
+    </p>
 
-  <!-- Charts -->
-  <div class="charts-grid">
+    <div class="hyp-grid">
 
-    <div class="chart-card wide">
-      <div class="chart-card-header">
+      <div class="hyp-card">
         <div>
-          <div class="chart-card-title">Government Bond Holdings &amp; Credit to Public Sector (€ bn)</div>
-          <div class="chart-card-subtitle">Total EA sovereign bonds held by Luxembourg-resident MFIs vs. direct credit to general government</div>
-          <div class="chart-card-source">Source: ECB SDW BSI · Series: BSI/A.LU.N.A.A51 (debt secs) &amp; BSI/A.LU.N.A.A20 (claims on govt)</div>
+          <div class="hyp-number">H1</div>
+          <div class="hyp-label">Subnational Nexus</div>
+        </div>
+        <p class="hyp-text">
+          Concentrated bank lending to specific Luxembourg communes creates measurable subnational feedback loops:
+          fiscal stress in borrowing communes constrains credit supply from exposed banks,
+          amplifying local economic downturns beyond what national aggregates reveal.
+        </p>
+        <div class="hyp-footer">
+          <span class="hyp-method">Panel regression · commune + bank FE · lagged exposure</span>
+          <span class="status-badge design">Empirical Design</span>
         </div>
       </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap tall"><canvas id="chart-bonds"></canvas></div>
-      </div>
-    </div>
 
-    <div class="chart-card">
-      <div class="chart-card-header">
+      <div class="hyp-card">
         <div>
-          <div class="chart-card-title">Credit Allocation: Government vs. Private</div>
-          <div class="chart-card-subtitle">Share of total credit extended to public sector vs. private non-financial sector</div>
-          <div class="chart-card-source">Source: ECB SDW BSI · Annual</div>
+          <div class="hyp-number">H2</div>
+          <div class="hyp-label">Fiscal–Credit Causality</div>
+        </div>
+        <p class="hyp-text">
+          Commune-level fiscal indicators — balance deterioration, revenue transfer-dependence,
+          expenditure overruns — Granger-cause changes in bank credit supply to the local public sector
+          at a 1–2 year lag, with the direction running from fiscal to credit rather than the reverse.
+        </p>
+        <div class="hyp-footer">
+          <span class="hyp-method">Granger causality · panel VAR · event study</span>
+          <span class="status-badge design">Empirical Design</span>
         </div>
       </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap"><canvas id="chart-credit-ratio"></canvas></div>
-      </div>
-    </div>
 
-    <div class="chart-card">
-      <div class="chart-card-header">
+      <div class="hyp-card">
         <div>
-          <div class="chart-card-title">Crowding-Out Indicator</div>
-          <div class="chart-card-subtitle">YoY growth differential: government credit vs. private credit (pp). Positive = government credit growing faster.</div>
-          <div class="chart-card-source">Computed from BSI annual credit series</div>
+          <div class="hyp-number">H3</div>
+          <div class="hyp-label">ML Early Warning</div>
+        </div>
+        <p class="hyp-text">
+          An XGBoost-based early-warning model trained on the commune-year fiscal panel
+          can classify fiscal distress events at a t+1 horizon with AUC-ROC ≥ 0.75
+          and Precision–Recall AUC sufficient for operational use in macroprudential monitoring.
+        </p>
+        <div class="hyp-footer">
+          <span class="hyp-method">XGBoost · temporal CV · SHAP interpretability</span>
+          <span class="status-badge planned">Planned Implementation</span>
         </div>
       </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap"><canvas id="chart-crowding"></canvas></div>
-      </div>
-    </div>
 
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">Banking Sector Size vs. GDP</div>
-          <div class="chart-card-subtitle">Total MFI assets as multiple of nominal GDP — structural systemic risk proxy</div>
-          <div class="chart-card-source">BSI total assets / Eurostat GDP (ESA 2010)</div>
-        </div>
-      </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap"><canvas id="chart-sector-size"></canvas></div>
-      </div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">Number of Resident Banks</div>
-          <div class="chart-card-subtitle">Total authorised credit institutions in Luxembourg (structural consolidation trend)</div>
-          <div class="chart-card-source">BCL / CSSF annual register</div>
-        </div>
-      </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap"><canvas id="chart-num-banks"></canvas></div>
-      </div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">Luxembourg Sovereign Bond Holdings</div>
-          <div class="chart-card-subtitle">Domestic banks' estimated holdings of LU government bonds (subset of all govt bond holdings)</div>
-          <div class="chart-card-source">BCL SHSS / ECB Securities Holdings Statistics</div>
-        </div>
-      </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap"><canvas id="chart-lu-bonds"></canvas></div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="data-note">
-    <span class="data-note-icon">ℹ</span>
-    <span>
-      Luxembourg's banking sector is unusually large at ~12–13× GDP (2023), reflecting its role as a global financial centre for investment fund custody and cross-border lending.
-      The government bond holdings shown include <em>all</em> EA sovereign bonds held by Luxembourg-resident MFIs — not just Luxembourg government debt.
-      Luxembourg sovereign debt is among the lowest in the euro area (~25% of GDP), so the domestic home-bias sovereign-bank loop is less relevant than the broader EA sovereign exposure channel.
-    </span>
-  </div>
-
-  <div class="panel-source-footer">
-    <strong>Sources:</strong>
-    <a href="https://sdw.ecb.europa.eu" target="_blank" rel="noopener">ECB Statistical Data Warehouse</a> ·
-    <a href="https://www.bcl.lu/en/statistics" target="_blank" rel="noopener">Banque Centrale du Luxembourg</a> ·
-    <a href="https://www.cssf.lu/en/statistics/" target="_blank" rel="noopener">CSSF Banking Statistics</a>
-    <span style="margin-left:auto">Data vintage: 2023 (annual) · Static snapshot · Click "Refresh from ECB SDW" for live data</span>
-  </div>
-
-</section>
-
-<!-- ══ PANEL: PUBLIC FINANCE ══════════════════════════════════════════════════ -->
-<section id="panel-fiscal" class="panel">
-
-  <div class="panel-header">
-    <div class="panel-header-left">
-      <div class="panel-title">Luxembourg Public Finance Overview</div>
-      <div class="panel-desc">General government (S13) fiscal aggregates · ESA 2010 methodology · Data: Eurostat GFS / STATEC</div>
-    </div>
-    <div class="panel-actions">
-      <button class="live-fetch-btn" id="btn-fetch-fiscal">
-        ↻ Refresh from Eurostat
-      </button>
-      <span class="source-badge">ESA 2010</span>
     </div>
   </div>
 
-  <!-- KPI strip -->
-  <div class="kpi-strip" id="fiscal-kpis"></div>
+  <hr class="section-divider">
 
-  <!-- Charts -->
-  <div class="charts-grid">
+  <!-- Motivation -->
+  <div class="section-block">
+    <h2 class="section-heading">
+      <span class="sec-num">§1</span> Motivation &amp; Policy Relevance
+    </h2>
 
-    <div class="chart-card wide">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">Revenue &amp; Expenditure Trajectory (% of GDP)</div>
-          <div class="chart-card-subtitle">General government total revenue and expenditure as share of nominal GDP · ESA 2010 (S13)</div>
-          <div class="chart-card-source">Source: Eurostat gov_10q_ggnfa · Luxembourg (LU) · Annual</div>
+    <div class="two-col">
+      <div>
+        <h3 class="section-subheading">Why Luxembourg?</h3>
+        <p class="section-intro" style="margin-bottom:.9rem">
+          Luxembourg occupies a structurally exceptional position in European finance.
+          Its banking sector stands at approximately 12× GDP — the largest ratio in the euro area —
+          while its 102 communes display markedly heterogeneous fiscal capacity,
+          with per-capita income indices ranging from 70 to over 130 (LU = 100)
+          and populations from under 1,000 to 130,000.
+          This combination of a concentrated financial sector and a fragmented local government layer
+          creates the conditions for a subnational sovereign-bank nexus that has not been empirically documented.
+        </p>
+        <p class="section-intro" style="margin-bottom:.9rem">
+          Post-COVID fiscal consolidation has placed new pressure on smaller communes dependent on
+          central government transfers, while the 2022–2023 rate cycle increased debt-servicing costs
+          for communes that borrowed at floating rates. These dynamics create a natural quasi-experiment
+          to study whether commune fiscal stress transmits to the banking institutions most exposed to them.
+        </p>
+      </div>
+      <div>
+        <h3 class="section-subheading">Why Now?</h3>
+        <p class="section-intro" style="margin-bottom:.9rem">
+          The ECB's macroprudential framework monitors sovereign-bank linkages at the national level.
+          The June 2023 FSB/IMF review of systemic risk identified subnational public finance as an
+          understudied transmission channel, particularly in small financial centres where a handful
+          of banks may hold concentrated local-government exposures.
+        </p>
+        <p class="section-intro" style="margin-bottom:.9rem">
+          Machine learning techniques now offer the ability to build early-warning indicators from
+          high-dimensional commune panels without over-fitting — provided temporal validation is
+          rigorously respected. No such system exists for Luxembourg's subnational public finance.
+          The BCL and CSSF supervisory data, if accessible via MOU, would make this one of the most
+          granular bank-commune nexus studies in the academic literature.
+        </p>
+        <div class="data-note" style="margin: 0">
+          <span class="data-note-icon">ℹ</span>
+          <span>
+            The research design is developed in advance of full data access.
+            BCL supervisory micro-data require a formal MOU. The empirical pipeline is designed
+            to operate at different data tiers — from publicly available STATEC / Eurostat aggregates
+            up to full bank-commune credit registers if access is granted.
+          </span>
         </div>
       </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap tall"><canvas id="chart-fiscal-trajectory"></canvas></div>
-      </div>
     </div>
-
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">Fiscal Balance (% of GDP)</div>
-          <div class="chart-card-subtitle">Net lending/borrowing (B.9) — positive = surplus</div>
-          <div class="chart-card-source">Eurostat: B9, S13, LU · Annual</div>
-        </div>
-      </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap"><canvas id="chart-balance"></canvas></div>
-      </div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">Government Debt-to-GDP Trajectory</div>
-          <div class="chart-card-subtitle">Maastricht debt (% of GDP) · One of the lowest in the euro area</div>
-          <div class="chart-card-source">Eurostat: gov_10dd_edpt1 · LU · Annual</div>
-        </div>
-      </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap"><canvas id="chart-debt"></canvas></div>
-      </div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">Government by Sub-Sector (%)</div>
-          <div class="chart-card-subtitle">Share of expenditure: central government, local government (communes), social security funds</div>
-          <div class="chart-card-source">Eurostat GFS · Subsectors S1311, S1313, S1314</div>
-        </div>
-      </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap"><canvas id="chart-subsectors"></canvas></div>
-      </div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">Expenditure by Function (COFOG) — 2023</div>
-          <div class="chart-card-subtitle">Functional breakdown of general government expenditure</div>
-          <div class="chart-card-source">Eurostat gov_10a_exp · COFOG 2009 · LU · 2023</div>
-        </div>
-      </div>
-      <div class="chart-card-body">
-        <div id="cofog-chart-area"></div>
-      </div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-card-header">
-        <div>
-          <div class="chart-card-title">Nominal GDP &amp; Debt Stock (€ bn)</div>
-          <div class="chart-card-subtitle">Nominal GDP trajectory alongside Maastricht debt stock</div>
-          <div class="chart-card-source">Eurostat / STATEC</div>
-        </div>
-      </div>
-      <div class="chart-card-body">
-        <div class="chart-wrap"><canvas id="chart-gdp-debt-nominal"></canvas></div>
-      </div>
-    </div>
-
   </div>
 
-  <div class="research-note">
-    <div class="research-note-title">Research Context</div>
-    Luxembourg's general government has historically maintained surpluses (pre-COVID: ~2.5–3% of GDP),
-    reflecting strong financial centre tax revenues (financial services, holding companies) and conservative fiscal management.
-    The COVID shock (2020) produced a rare near-zero balance (0.3% surplus), swiftly reversed.
-    The <em>communal</em> layer (~11% of total expenditure) is relevant for subnational fiscal analysis:
-    communes depend heavily on transfers from the central government and on local business taxes,
-    creating fiscal linkages that can be studied using STATEC LAU-level data.
+  <hr class="section-divider">
+
+  <!-- Literature Gap -->
+  <div class="section-block">
+    <h2 class="section-heading">
+      <span class="sec-num">§2</span> Literature Gap
+    </h2>
+    <p class="section-intro">
+      The research sits at the intersection of four bodies of literature, each of which leaves a specific gap
+      that this proposal addresses.
+    </p>
+
+    <div class="three-col" style="margin-bottom:.5rem">
+
+      <div class="lit-card">
+        <div class="lit-card-title">Sovereign-Bank Doom Loop</div>
+        <div class="lit-card-ref">Acharya, Drechsler &amp; Schnabl (2014) · Diabolic loop literature</div>
+        <div class="lit-card-contribution">Establishes the national-level feedback: sovereign stress impairs bank capital; bank distress raises sovereign risk via bail-out expectations.</div>
+        <div class="lit-card-gap">Documents the mechanism at the national level only. Subnational heterogeneity — bank exposure to individual local governments — is unexplored.</div>
+      </div>
+
+      <div class="lit-card">
+        <div class="lit-card-title">Municipal Fiscal Distress</div>
+        <div class="lit-card-ref">Hendrick (2011) · Honadle et al. (2004) · Kloha et al. (2005)</div>
+        <div class="lit-card-contribution">Operationalises fiscal stress for municipalities using balance, debt, revenue composition and expenditure indicators. Validates early-warning scoring rules.</div>
+        <div class="lit-card-gap">Does not model the banking sector counterpart. Fiscal stress is treated as a purely public-finance phenomenon with no credit-market feedback.</div>
+      </div>
+
+      <div class="lit-card">
+        <div class="lit-card-title">Credit Procyclicality</div>
+        <div class="lit-card-ref">Jordà, Schularick &amp; Taylor (2016) · Drehmann &amp; Tsatsaronis (2014)</div>
+        <div class="lit-card-contribution">Documents that credit booms predict financial crises; establishes credit-to-GDP gap as the Basel III countercyclical capital buffer indicator.</div>
+        <div class="lit-card-gap">Analysis is at the national or bank-sector level. Does not decompose by borrower type (private vs. local government) or by geographic sub-unit.</div>
+      </div>
+
+      <div class="lit-card">
+        <div class="lit-card-title">Fiscal Decentralisation</div>
+        <div class="lit-card-ref">Blöchliger &amp; King (2006) · Oates (1999) · Rodden et al. (2003)</div>
+        <div class="lit-card-contribution">Analyses intergovernmental fiscal transfers, soft budget constraints, and fiscal risk in decentralised systems.</div>
+        <div class="lit-card-gap">Focuses on government-side behaviour. The banking sector exposure to subnational borrowers and its financial-stability implications are not modelled.</div>
+      </div>
+
+      <div class="lit-card">
+        <div class="lit-card-title">ML Early-Warning Systems</div>
+        <div class="lit-card-ref">Holopainen &amp; Sarlin (2017) · Alessi &amp; Detken (2018) · ECB BEAST model</div>
+        <div class="lit-card-contribution">Applies gradient boosting, neural networks and SHAP to predict national banking crises and systemic risk events with lead times of 1–3 years.</div>
+        <div class="lit-card-gap">Uses national aggregate features (credit-to-GDP, house prices, CA deficit). No subnational commune-level panel has been used as feature input for a banking EWS.</div>
+      </div>
+
+    </div>
   </div>
 
-  <div class="panel-source-footer">
-    <strong>Sources:</strong>
-    <a href="https://ec.europa.eu/eurostat/databrowser/product/view/gov_10q_ggnfa" target="_blank" rel="noopener">Eurostat GFS (ESA 2010)</a> ·
-    <a href="https://lustat.statec.lu" target="_blank" rel="noopener">STATEC LUSTAT</a> ·
-    <a href="https://www.bcl.lu" target="_blank" rel="noopener">BCL Annual Reports</a>
-    <span style="margin-left:auto">Data vintage: 2023 · ESA 2010 / COFOG 2009</span>
+  <hr class="section-divider">
+
+  <!-- Section nav -->
+  <div class="section-block">
+    <h2 class="section-heading">
+      <span class="sec-num">→</span> Explore This Proposal
+    </h2>
+    <div class="snav-grid">
+      <div class="snav-card" data-goto="nexus">
+        <div class="snav-icon">⇄</div>
+        <div class="snav-title">Nexus Framework</div>
+        <div class="snav-desc">Mechanism diagram, transmission channels, Luxembourg structural context</div>
+      </div>
+      <div class="snav-card" data-goto="evidence">
+        <div class="snav-icon">▦</div>
+        <div class="snav-title">Evidence Explorer</div>
+        <div class="snav-desc">Banking exposure, public finance, and baseline stress index — prototype data</div>
+      </div>
+      <div class="snav-card" data-goto="ml">
+        <div class="snav-icon">◆</div>
+        <div class="snav-title">ML Design</div>
+        <div class="snav-desc">Feature architecture, model pipeline, validation strategy, SHAP design</div>
+      </div>
+      <div class="snav-card" data-goto="empirical">
+        <div class="snav-icon">≡</div>
+        <div class="snav-title">Empirical Strategy</div>
+        <div class="snav-desc">Units of analysis, variables, identification, and estimation approach</div>
+      </div>
+      <div class="snav-card" data-goto="map">
+        <div class="snav-icon">⬡</div>
+        <div class="snav-title">Commune Map</div>
+        <div class="snav-desc">Interactive subnational vulnerability explorer — 102 Luxembourg communes</div>
+      </div>
+      <div class="snav-card" data-goto="roadmap">
+        <div class="snav-icon">⬕</div>
+        <div class="snav-title">Architecture &amp; Roadmap</div>
+        <div class="snav-desc">Technical stack, data requirements, work packages, and timeline</div>
+      </div>
+    </div>
   </div>
 
 </section>
 
-<!-- ══ PANEL: COMMUNE MAP ═════════════════════════════════════════════════════ -->
+
+<!-- ══ PANEL 2: NEXUS FRAMEWORK ══════════════════════════════════════════════ -->
+<section id="panel-nexus" class="panel">
+
+  <div class="section-block">
+    <h2 class="section-heading">
+      <span class="sec-num">§3</span> Sovereign-Bank Nexus — Conceptual Framework
+    </h2>
+    <p class="section-intro">
+      The sovereign-bank nexus describes the mutual reinforcement between sovereign fiscal weakness
+      and bank balance-sheet stress. This research extends the concept to the <em>subnational</em> level:
+      the feedback between individual local governments (communes) and the banks most concentrated in lending to them.
+      The two transmission channels below operate simultaneously but at different scales and with different data requirements.
+    </p>
+
+    <!-- Mechanism diagram -->
+    <div class="nexus-diagram-wrap">
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:1.1rem">
+        Subnational Nexus — Feedback Mechanism
+      </div>
+      <div class="nexus-flow">
+        <div class="nexus-node fiscal">Commune Fiscal Stress<br><small style="font-weight:400;opacity:.8">deficit, debt overhang, transfer dependency</small></div>
+        <div class="nexus-arrow">→</div>
+        <div class="nexus-node bank">Bank Credit Loss<br><small style="font-weight:400;opacity:.8">NPL provisioning, capital pressure</small></div>
+        <div class="nexus-arrow">→</div>
+        <div class="nexus-node credit">Credit Contraction<br><small style="font-weight:400;opacity:.8">reduced lending to local public sector</small></div>
+        <div class="nexus-arrow">→</div>
+        <div class="nexus-node economy">Reduced Local Investment<br><small style="font-weight:400;opacity:.8">weaker tax base, higher transfer demand</small></div>
+      </div>
+      <div class="nexus-feedback">
+        ↑ Feedback: weakened local economy amplifies commune fiscal stress → reinforcing loop ↑
+      </div>
+    </div>
+
+    <!-- Two channels -->
+    <h3 class="section-subheading">Two Transmission Channels</h3>
+    <div class="channel-grid">
+
+      <div class="channel-card primary">
+        <span class="channel-tag">Channel 1 · Primary Research Focus</span>
+        <div class="channel-title">Domestic Local-Government Channel</div>
+        <div class="channel-body">
+          Luxembourg banks extend direct credit to communes — project loans, revolving facilities, and bond subscriptions.
+          When a commune's fiscal position deteriorates, the exposed bank faces credit risk concentration:
+          a single borrower (the commune) accounts for a disproportionate share of a smaller bank's public-sector book.
+          <br><br>
+          This channel is the <strong>original contribution</strong> of the research design.
+          It requires bank-by-commune exposure data (BCL supervisory, MOU required).
+          The key question is whether commune-level fiscal stress Granger-causes changes in credit supply
+          from the exposed institution — a testable, falsifiable causal claim.
+          <br><br>
+          <strong>Operationalisation:</strong> Herfindahl–Hirschman Index (HHI) of commune credit per bank;
+          threshold events (commune deficit streak ≥ 2 years); credit growth differentials in exposed vs. unexposed banks.
+        </div>
+      </div>
+
+      <div class="channel-card secondary">
+        <span class="channel-tag">Channel 2 · Contextual / Documented</span>
+        <div class="channel-title">Euro-Area Sovereign Bond Channel</div>
+        <div class="channel-body">
+          Luxembourg MFIs hold approximately €64 bn in EA sovereign bonds (primarily French, Belgian,
+          Italian and Spanish), representing ~6.5% of total assets. This is the dominant transmission channel
+          for Luxembourg as a financial hub: EA sovereign stress impairs bank balance sheets through
+          mark-to-market losses and collateral haircuts.
+          <br><br>
+          This channel is <strong>well-documented</strong> in the existing literature (Acharya et al. 2014;
+          De Grauwe &amp; Ji 2013) and is visible in the ECB BSI data in this platform.
+          It provides important context but is <em>not the original contribution</em> of this research —
+          it is the backdrop against which the subnational domestic channel operates.
+          <br><br>
+          <strong>Role in the proposal:</strong> Establishes why Luxembourg banks are already exposed to
+          sovereign risk at the EA level, making the additional subnational domestic exposure analytically meaningful.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Why subnational -->
+    <h3 class="section-subheading">Why the Subnational Dimension Matters</h3>
+    <div class="two-col">
+      <div>
+        <p class="section-intro" style="margin-bottom:.85rem">
+          National fiscal aggregates mask substantial heterogeneity across Luxembourg's 102 communes.
+          Luxembourg City accounts for roughly 30% of the country's population and generates a large
+          share of local tax revenue. Smaller rural communes — particularly in the Oesling (north) —
+          depend on intergovernmental transfers for 40–60% of revenues, have ageing populations,
+          and face structurally higher per-capita expenditure pressures.
+        </p>
+        <p class="section-intro" style="margin-bottom:.85rem">
+          The national aggregate fiscal position (surplus ~1–3% GDP) is therefore a poor guide to
+          the fiscal risk profile of individual communes. An ML model trained only on national indicators
+          would miss this heterogeneity entirely. The subnational panel is the key enabling dataset.
+        </p>
+      </div>
+      <div>
+        <div class="rtable-wrap">
+          <table class="rtable">
+            <thead>
+              <tr><th>Dimension</th><th>National Level</th><th>Subnational (Commune) Level</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Fiscal balance</td><td>+0.8% GDP (2023)</td><td>Range: −8% to +12% of revenues</td></tr>
+              <tr><td>Debt / GDP</td><td>~25% (Maastricht)</td><td>N/A — commune debt not publicly consolidated</td></tr>
+              <tr><td>Revenue dependence</td><td>Low transfer share</td><td>Some communes 40–60% transfer-dependent</td></tr>
+              <tr><td>Population</td><td>660,000</td><td>1,000 – 130,000 per commune</td></tr>
+              <tr><td>Income index</td><td>100 (LU=100)</td><td>70 – 130+ across communes (STATEC 2021)</td></tr>
+              <tr><td>Bank credit data</td><td>Public (ECB BSI)</td><td><span class="status-badge required">BCL MOU required</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data gap note -->
+    <div class="data-note">
+      <span class="data-note-icon">⚠</span>
+      <span>
+        <strong>Critical data gap:</strong> No public data source currently links individual bank balance sheets to commune-level borrowers in Luxembourg.
+        The BCL publishes aggregate MFI credit to "general government" (central + local combined) in the ECB BSI series.
+        Decomposing this into bank-by-commune exposure matrices requires access to BCL supervisory data under a formal MOU.
+        The research design is pre-specified to allow estimation at the aggregate tier while the MOU is pursued.
+      </span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ PANEL 3: EVIDENCE EXPLORER ════════════════════════════════════════════ -->
+<section id="panel-evidence" class="panel">
+
+  <!-- Sub-nav -->
+  <div class="evidence-sub-nav">
+    <button class="evidence-sub-tab active" data-sub="banking">▦ Banking Exposure</button>
+    <button class="evidence-sub-tab" data-sub="fiscal">◎ Public Finance</button>
+    <button class="evidence-sub-tab" data-sub="stress">⚠ Baseline Stress Index</button>
+  </div>
+
+  <!-- ── SUB-PANEL: BANKING ─────────────────────────────────────────────── -->
+  <div id="sub-banking" class="sub-panel active">
+
+    <div class="panel-header" style="background:var(--surface)">
+      <div class="panel-header-left">
+        <div class="panel-title">Banking Sector Exposure to Public Sector</div>
+        <div class="panel-desc">Luxembourg MFI balance sheet data — government bond holdings, credit allocation, sector size · ECB BSI statistics · <span class="status-badge implemented">Implemented Prototype</span></div>
+      </div>
+      <div class="panel-actions">
+        <button class="live-fetch-btn" id="btn-fetch-banking">↻ Refresh from ECB</button>
+        <span class="source-badge">BSI / BCL</span>
+      </div>
+    </div>
+
+    <div class="evidence-intro-block">
+      <strong>Evidence role:</strong> These series establish the macro-level baseline for H1 —
+      how much credit does the Luxembourg banking sector allocate to the public sector, and how has that share evolved?
+      They calibrate the <em>scale</em> of the domestic nexus and reveal the structural dominance of the EA sovereign bond channel.
+      The limitation is that these are national aggregates: no bank-by-commune decomposition is publicly available.
+      That decomposition — the core data requirement for H1 — requires BCL supervisory access.
+    </div>
+
+    <div class="kpi-strip" id="banking-kpis"></div>
+
+    <div class="charts-grid">
+
+      <div class="chart-card wide">
+        <div class="evidence-frame">
+          <div class="ev-note ev-why"><div class="ev-note-label">Why this matters</div>Combined EA sovereign bond holdings (~€64 bn) and direct credit to government (~€30 bn) show the banking sector's aggregate public-sector exposure. This sets the denominator for all concentration calculations in H1.</div>
+          <div class="ev-note ev-tests"><div class="ev-note-label">What it tests</div>H1 precondition: is there sufficient public-sector exposure in the Luxembourg MFI sector to create meaningful feedback dynamics if individual borrowers face stress?</div>
+          <div class="ev-note ev-needed"><div class="ev-note-label">Data still needed</div>Bank-level decomposition (BCL supervisory MOU) to separate EA sovereign bond holdings from Luxembourg commune-level direct credit by individual institution.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Government Bond Holdings &amp; Credit to Public Sector (€ bn)</div>
+            <div class="chart-card-subtitle">Total EA sovereign bonds held by Luxembourg-resident MFIs vs. direct credit to general government</div>
+            <div class="chart-card-source">ECB Data Portal · BSI/A.LU.N.A.A51 (debt secs) &amp; BSI/A.LU.N.A.A20 (claims on govt) · Annual</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap tall"><canvas id="chart-bonds"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-why"><div class="ev-note-label">Why this matters</div>The government credit share (8–11%) is the macro-level counterpart to bank-commune concentration. If this share rose sharply, crowding-out of private credit would be a H1 mechanism to test.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Credit Allocation: Government vs. Private</div>
+            <div class="chart-card-subtitle">Share of total credit extended to public sector vs. private non-financial sector</div>
+            <div class="chart-card-source">ECB Data Portal · BSI · Annual</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap"><canvas id="chart-credit-ratio"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-tests"><div class="ev-note-label">What it tests</div>Year-on-year growth differential reveals whether public credit is expanding faster than private credit — the H2 crowding-out mechanism. Positive values signal potential displacement.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Crowding-Out Indicator (pp)</div>
+            <div class="chart-card-subtitle">YoY growth differential: government credit minus private credit. Positive = government credit growing faster.</div>
+            <div class="chart-card-source">Computed from BSI annual credit series</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap"><canvas id="chart-crowding"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-why"><div class="ev-note-label">Why this matters</div>A sector of ~12× GDP amplifies any sovereign-bank feedback loop at the EA level. Sector size is the structural multiplier — it informs stress index weighting and systemic risk framing.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Banking Sector Size vs. GDP</div>
+            <div class="chart-card-subtitle">Total MFI assets as multiple of nominal GDP — structural systemic risk proxy</div>
+            <div class="chart-card-source">BSI total assets / Eurostat GDP (ESA 2010)</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap"><canvas id="chart-sector-size"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-needed"><div class="ev-note-label">Data still needed</div>Sector consolidation (148 → 121 banks, 2014–2023) affects concentration. Bank-level HHI of commune exposure would reveal whether the remaining banks are <em>more</em> or <em>less</em> concentrated in local government lending.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Number of Resident Banks</div>
+            <div class="chart-card-subtitle">Authorised credit institutions — structural consolidation trend (2014–2023)</div>
+            <div class="chart-card-source">BCL / CSSF annual register</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap"><canvas id="chart-num-banks"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-tests"><div class="ev-note-label">What it tests</div>Luxembourg sovereign bond holdings are the domestic-currency component of the EA bond channel. Their growth post-PSPP/PEPP illustrates the policy-driven increase in public-sector exposure.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Luxembourg Sovereign Bond Holdings (€ bn)</div>
+            <div class="chart-card-subtitle">Domestic banks' estimated holdings of LU government bonds — subset of total bond holdings</div>
+            <div class="chart-card-source">BCL SHSS / ECB Securities Holdings Statistics</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap"><canvas id="chart-lu-bonds"></canvas></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="research-note">
+      <div class="research-note-title">Structural Context</div>
+      Luxembourg's banking sector (~12×GDP) is dominated by the EA sovereign bond channel:
+      MFIs hold ~€64bn in EA sovereign debt (primarily FR, BE, IT, ES) versus ~€6.4bn in Luxembourg sovereign bonds.
+      Domestic sovereign risk is therefore a second-order concern. The <em>subnational</em> channel —
+      direct credit to 102 communes — is the under-documented, analytically original dimension.
+      National BSI aggregates cannot reveal commune-level concentration; only BCL supervisory data can.
+    </div>
+
+    <div class="panel-source-footer">
+      <strong>Sources:</strong>
+      <a href="https://data-api.ecb.europa.eu" target="_blank" rel="noopener">ECB Data Portal (BSI)</a> ·
+      <a href="https://www.bcl.lu/en/statistics" target="_blank" rel="noopener">Banque Centrale du Luxembourg</a> ·
+      <a href="https://www.cssf.lu/en/statistics/" target="_blank" rel="noopener">CSSF Banking Statistics</a>
+      <span style="margin-left:auto">Vintage: 2023 annual · Click Refresh for live ECB data</span>
+    </div>
+  </div>
+
+  <!-- ── SUB-PANEL: FISCAL ─────────────────────────────────────────────── -->
+  <div id="sub-fiscal" class="sub-panel">
+
+    <div class="panel-header" style="background:var(--surface)">
+      <div class="panel-header-left">
+        <div class="panel-title">Luxembourg Public Finance Overview</div>
+        <div class="panel-desc">General government (S13) fiscal aggregates · ESA 2010 · Eurostat GFS / STATEC · <span class="status-badge implemented">Implemented Prototype</span></div>
+      </div>
+      <div class="panel-actions">
+        <button class="live-fetch-btn" id="btn-fetch-fiscal">↻ Refresh from Eurostat</button>
+        <span class="source-badge">ESA 2010</span>
+      </div>
+    </div>
+
+    <div class="evidence-intro-block">
+      <strong>Evidence role:</strong> These series characterise the fiscal counterpart of the sovereign-bank relationship.
+      Luxembourg's structural surplus and low Maastricht debt (~25% GDP) make it unusual: <em>national</em> sovereign risk is minimal.
+      The research question therefore pivots to the <em>communal sub-sector</em> (local government, S1313, ~11% of total expenditure),
+      where fiscal heterogeneity across 102 communes is substantially higher than the national aggregate implies.
+      The COFOG breakdown establishes which expenditure categories are most rigid — important for H2 (revenue-expenditure imbalance as H1 predictor).
+    </div>
+
+    <div class="kpi-strip" id="fiscal-kpis"></div>
+
+    <div class="charts-grid">
+
+      <div class="chart-card wide">
+        <div class="evidence-frame">
+          <div class="ev-note ev-why"><div class="ev-note-label">Why this matters</div>Revenue and expenditure trajectories establish Luxembourg's general-government structural position. The near-convergence in 2020 (COVID) is the only episode of fiscal stress in the sample — useful as a stress test benchmark.</div>
+          <div class="ev-note ev-tests"><div class="ev-note-label">What it tests</div>H2 background: at the national level, fiscal balance is strong. The commune-level equivalent — which STATEC publishes separately — will show much more variance, enabling H2 regression tests.</div>
+          <div class="ev-note ev-needed"><div class="ev-note-label">Data still needed</div>STATEC commune-level annual accounts (revenue, expenditure by category) to build the commune-year panel. Partially available via LUSTAT; full time-series requires data request.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Revenue &amp; Expenditure Trajectory (% of GDP)</div>
+            <div class="chart-card-subtitle">General government total revenue and expenditure — S13 (central + local + social security) · ESA 2010</div>
+            <div class="chart-card-source">Eurostat gov_10q_ggnfa · LU · Annual</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap tall"><canvas id="chart-fiscal-trajectory"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-why"><div class="ev-note-label">Why this matters</div>The national fiscal balance is the macro control variable in all H1/H2 regressions. Its persistent surplus (except 2020) confirms that commune-level stress, not national sovereign risk, is the primary identification strategy.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Fiscal Balance (% of GDP)</div>
+            <div class="chart-card-subtitle">Net lending/borrowing B.9 — general government (S13) · positive = surplus</div>
+            <div class="chart-card-source">Eurostat · B9 · S13 · LU · Annual</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap"><canvas id="chart-balance"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-needed"><div class="ev-note-label">Data still needed</div>Maastricht debt is a central-government measure. Commune-level debt stocks — the key predictor in H3 — require STATEC's communal financial accounts, which are not consolidated in the Eurostat series.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Government Debt-to-GDP</div>
+            <div class="chart-card-subtitle">Maastricht debt (% of GDP) · among the lowest in the euro area</div>
+            <div class="chart-card-source">Eurostat gov_10dd_edpt1 · LU · Annual</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap"><canvas id="chart-debt"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-tests"><div class="ev-note-label">What it tests</div>The local government share (~11%) is stable but non-trivial. Variation in this share over time may reflect fiscal consolidation pressure on communes — the precursor condition for H1 nexus activation.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Government by Sub-Sector (%)</div>
+            <div class="chart-card-subtitle">Expenditure share: central government (S1311), local government / communes (S1313), social security (S1314)</div>
+            <div class="chart-card-source">Eurostat GFS · Sub-sectors · Annual</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap"><canvas id="chart-subsectors"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-why"><div class="ev-note-label">Why this matters</div>COFOG breakdown identifies expenditure rigidity: social protection (32%) and education (16%) are politically difficult to cut, meaning fiscal stress must be absorbed by capital cuts or revenue increases — increasing default risk.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Expenditure by Function (COFOG) — 2023</div>
+            <div class="chart-card-subtitle">Functional breakdown of general government expenditure — social protection dominates</div>
+            <div class="chart-card-source">Eurostat gov_10a_exp · COFOG 2009 · LU · 2023</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div id="cofog-chart-area"></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="evidence-frame" style="grid-template-columns:1fr">
+          <div class="ev-note ev-tests"><div class="ev-note-label">What it tests</div>GDP growth is the macro control for all panel regressions. The nominal debt stock (€20bn) relative to GDP establishes that Luxembourg does not face a debt-sustainability problem — isolating commune-level fiscal heterogeneity as the key research variable.</div>
+        </div>
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Nominal GDP &amp; Debt Stock (€ bn)</div>
+            <div class="chart-card-subtitle">GDP trajectory alongside Maastricht debt stock in nominal euros</div>
+            <div class="chart-card-source">Eurostat / STATEC</div>
+          </div>
+        </div>
+        <div class="chart-card-body">
+          <div class="chart-wrap"><canvas id="chart-gdp-debt-nominal"></canvas></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="research-note">
+      <div class="research-note-title">Research Context — Why National Aggregates Are Insufficient</div>
+      Luxembourg's general government fiscal position is structurally strong.
+      The communal layer (~11% of expenditure) is the research-relevant sub-sector.
+      STATEC LUSTAT publishes commune-level population and economic indicators,
+      but commune financial accounts (revenues, expenditures, debt by category) require a targeted data request.
+      The panel_dataset for the ML pipeline will be built from these commune-level accounts — not the national GFS series shown here.
+    </div>
+
+    <div class="panel-source-footer">
+      <strong>Sources:</strong>
+      <a href="https://ec.europa.eu/eurostat/databrowser/product/view/gov_10q_ggnfa" target="_blank" rel="noopener">Eurostat GFS (ESA 2010)</a> ·
+      <a href="https://lustat.statec.lu" target="_blank" rel="noopener">STATEC LUSTAT</a> ·
+      <a href="https://www.bcl.lu" target="_blank" rel="noopener">BCL Annual Reports</a>
+      <span style="margin-left:auto">Vintage: 2023 · ESA 2010 / COFOG 2009</span>
+    </div>
+  </div>
+
+  <!-- ── SUB-PANEL: STRESS INDEX ────────────────────────────────────────── -->
+  <div id="sub-stress" class="sub-panel">
+
+    <div class="panel-header" style="background:var(--surface)">
+      <div class="panel-header-left">
+        <div class="panel-title">Sovereign-Bank Nexus — Baseline Heuristic Stress Index</div>
+        <div class="panel-desc">
+          Deterministic composite of four banking and fiscal indicators · ECB BSI + Eurostat GFS ·
+          <span class="status-badge prototype">Baseline Heuristic — Not a Predictive Model</span>
+        </div>
+      </div>
+      <div class="panel-actions">
+        <label class="year-range" style="gap:.5rem">
+          Year:
+          <input type="range" id="stress-year-slider" min="0" max="9" value="9" step="1" style="width:120px">
+          <span id="stress-year-display" style="font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:600;min-width:36px">2023</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="evidence-intro-block">
+      <strong>Status — Baseline Heuristic:</strong>
+      This index is a <em>deterministic normalised composite</em> with fixed weights and static thresholds.
+      It is NOT forward-looking, NOT machine-learning, and has NOT been validated as an early-warning system.
+      It serves as the <strong>proof-of-concept baseline</strong> that the ML pipeline (see ML Design tab) is designed to supersede.
+      A score below 0.25 indicates low stress; Luxembourg has remained in this zone throughout 2014–2023,
+      consistent with its structural fiscal strength. Converting this into a validated early-warning system
+      requires: labelled stress events, a forecasting model, temporal cross-validation, calibration,
+      lead-time tests, and false-alarm rate analysis — all specified in the ML Design section.
+    </div>
+
+    <div class="stress-layout">
+      <div class="stress-summary">
+        <div class="stress-gauge-wrap">
+          <div class="stress-gauge-label">Composite Stress Score</div>
+          <svg id="stress-gauge-svg" width="160" height="100" viewBox="0 0 160 100"></svg>
+          <div class="stress-score-display" id="stress-score-num">–</div>
+          <div class="stress-level-badge" id="stress-level-badge">–</div>
+          <div style="font-size:.7rem;color:#94a3b8;text-align:center;margin-top:.5rem">0 = no stress · 1 = extreme stress</div>
+        </div>
+
+        <div>
+          <div class="mcc-label" style="margin-bottom:.5rem">Component Scores</div>
+          <div class="stress-components-list" id="stress-components-list"></div>
+        </div>
+
+        <div>
+          <div class="mcc-label" style="margin-bottom:.5rem">Methodology</div>
+          <div style="font-size:.72rem;color:#64748b;line-height:1.65">
+            Each component is normalised to [0,1] using domain-specific thresholds,
+            then aggregated with fixed weights:
+            Bond concentration (30%), Public credit share (30%),
+            Fiscal balance (25%), Sector size (15%).
+            <br><br>
+            <strong style="color:#92400e">Scope limitation:</strong>
+            This is a <em>descriptive heuristic index</em>.
+            To become a forward-looking early-warning system (as proposed in H3),
+            it requires: labelled distress events, a forecasting model,
+            out-of-sample validation, calibration, lead-time tests, and false-alarm analysis.
+          </div>
+        </div>
+      </div>
+
+      <div class="stress-charts-area">
+        <div class="stress-history-card">
+          <div class="stress-history-header">
+            <div class="stress-history-title">Composite Stress Score — Historical (2014–2023)</div>
+          </div>
+          <div class="stress-history-body">
+            <div class="chart-wrap"><canvas id="chart-stress-history"></canvas></div>
+          </div>
+        </div>
+
+        <div class="charts-grid" style="padding:0;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
+          <div class="chart-card">
+            <div class="chart-card-header"><div>
+              <div class="chart-card-title">Bond Concentration</div>
+              <div class="chart-card-subtitle">Govt bond holdings / total bank assets (%)</div>
+            </div></div>
+            <div class="chart-card-body"><div class="chart-wrap" style="height:160px"><canvas id="chart-sc-bond-conc"></canvas></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header"><div>
+              <div class="chart-card-title">Public Credit Share</div>
+              <div class="chart-card-subtitle">Credit to govt / total credit (%)</div>
+            </div></div>
+            <div class="chart-card-body"><div class="chart-wrap" style="height:160px"><canvas id="chart-sc-credit-shr"></canvas></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header"><div>
+              <div class="chart-card-title">Fiscal Balance</div>
+              <div class="chart-card-subtitle">General government B.9 (% of GDP)</div>
+            </div></div>
+            <div class="chart-card-body"><div class="chart-wrap" style="height:160px"><canvas id="chart-sc-fiscal"></canvas></div></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header"><div>
+              <div class="chart-card-title">Banking Sector Size</div>
+              <div class="chart-card-subtitle">Total bank assets / GDP (×)</div>
+            </div></div>
+            <div class="chart-card-body"><div class="chart-wrap" style="height:160px"><canvas id="chart-sc-sector-sz"></canvas></div></div>
+          </div>
+        </div>
+
+        <div class="research-note">
+          <div class="research-note-title">Why Luxembourg Scores Low — and Why That Matters</div>
+          Luxembourg's composite stress score remains below 0.25 throughout 2014–2023.
+          This reflects structural fiscal strength (persistent surpluses, low debt) and a banking sector
+          that, while large, is not excessively concentrated in domestic public-sector credit.
+          The <em>subnational</em> stress that H1 hypothesises would not be visible in this national-aggregate index —
+          it requires commune-level data and bank-level exposure decomposition.
+          This index therefore illustrates both the <em>baseline</em> condition and the <em>data gap</em>
+          that motivates the full research design.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ PANEL 4: ML EARLY-WARNING DESIGN ══════════════════════════════════════ -->
+<section id="panel-ml" class="panel">
+  <div class="section-block">
+
+    <h2 class="section-heading">
+      <span class="sec-num">§5</span> ML Early-Warning System — Research Design
+      <span class="status-badge design" style="margin-left:.5rem">Research Design / Prototype Pipeline</span>
+    </h2>
+    <p class="section-intro">
+      This section specifies the machine-learning pipeline for H3.
+      No model has been trained yet — this is a pre-registered design, developed before data access,
+      following best practice for computational social science reproducibility.
+      The architecture is modelled on the AreaStat AT XGBoost fiscal distress system
+      (Govind 2024) and adapted to the Luxembourg commune-bank context.
+    </p>
+
+    <!-- Prediction target -->
+    <h3 class="section-subheading">Prediction Target</h3>
+    <div class="two-col" style="margin-bottom:1.5rem">
+      <div>
+        <div class="rtable-wrap">
+          <table class="rtable">
+            <thead><tr><th>Target</th><th>Definition</th><th>Horizon</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Primary (H3)</strong></td>
+                <td>Binary: commune enters fiscal stress at t+1<br><small style="color:var(--text-xmuted)">stress = deficit &gt; 15% of revenues OR deficit_streak ≥ 2</small></td>
+                <td>t+1 (1 year ahead)</td>
+              </tr>
+              <tr>
+                <td><strong>Secondary</strong></td>
+                <td>Continuous: distress probability score ∈ [0,1]<br><small style="color:var(--text-xmuted)">calibrated via Platt scaling</small></td>
+                <td>t+1 / t+2</td>
+              </tr>
+              <tr>
+                <td><strong>Aspirational</strong></td>
+                <td>Bank credit contraction to exposed commune (if BCL data)<br><small style="color:var(--text-xmuted)">requires bank-commune panel</small></td>
+                <td>t+1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="data-note" style="margin:0;align-self:start">
+        <span class="data-note-icon">⚠</span>
+        <span>
+          <strong>Labelling challenge:</strong> Luxembourg communes have not experienced formal default or
+          supervisory intervention in the available data period. The distress label must be operationalised
+          from fiscal balance thresholds rather than observed events — a common limitation in early-warning
+          systems for jurisdictions with historically strong fiscal positions. Robustness to alternative
+          threshold definitions will be reported.
+        </span>
+      </div>
+    </div>
+
+    <!-- Pipeline diagram -->
+    <h3 class="section-subheading">Model Pipeline</h3>
+    <div class="ml-pipeline-diagram">
+      <div class="ml-pipe-node">
+        <div class="ml-pipe-node-title">Data Layer</div>
+        <div class="ml-pipe-node-sub">STATEC commune accounts · BCL supervisory · Eurostat GFS · spatial adjacency matrix</div>
+      </div>
+      <div class="ml-pipe-arrow">→</div>
+      <div class="ml-pipe-node">
+        <div class="ml-pipe-node-title">Feature Engineering</div>
+        <div class="ml-pipe-node-sub">Fiscal ratios · deficit streaks · YoY growth · HHI exposure · spatial lags · demographic pressure</div>
+      </div>
+      <div class="ml-pipe-arrow">→</div>
+      <div class="ml-pipe-node">
+        <div class="ml-pipe-node-title">XGBoost Model</div>
+        <div class="ml-pipe-node-sub">Gradient boosting · temporal train/test split · rolling-origin CV · early stopping</div>
+      </div>
+      <div class="ml-pipe-arrow">→</div>
+      <div class="ml-pipe-node">
+        <div class="ml-pipe-node-title">SHAP Layer</div>
+        <div class="ml-pipe-node-sub">TreeExplainer · global feature importance · local per-commune explanations · feature groups</div>
+      </div>
+      <div class="ml-pipe-arrow">→</div>
+      <div class="ml-pipe-node">
+        <div class="ml-pipe-node-title">EWS Output</div>
+        <div class="ml-pipe-node-sub">Distress probability · warning flag · top-3 drivers · API endpoint</div>
+      </div>
+    </div>
+
+    <!-- Feature table -->
+    <h3 class="section-subheading">Feature Architecture</h3>
+    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+      <table class="rtable">
+        <thead><tr><th>Feature Group</th><th>Features</th><th>Data Source</th><th>Availability</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Fiscal balance</strong></td>
+            <td>Balance/revenue ratio, balance trend (3yr), deficit streak (consecutive deficit years)</td>
+            <td>STATEC commune accounts</td>
+            <td><span class="status-badge prototype">Partial (LUSTAT)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Revenue structure</strong></td>
+            <td>Per-capita revenue, transfer-dependence ratio, tax revenue growth (YoY)</td>
+            <td>STATEC commune accounts</td>
+            <td><span class="status-badge prototype">Partial (LUSTAT)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Expenditure pressure</strong></td>
+            <td>Per-capita expenditure, primary expenditure growth, debt-service ratio</td>
+            <td>STATEC commune accounts</td>
+            <td><span class="status-badge required">Data request required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Debt</strong></td>
+            <td>Debt/revenue, debt trend, new borrowing per capita</td>
+            <td>STATEC commune accounts</td>
+            <td><span class="status-badge required">Data request required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Local economy</strong></td>
+            <td>Income index, employment rate, population growth rate</td>
+            <td>STATEC LUSTAT (census + annual)</td>
+            <td><span class="status-badge implemented">Available (2021)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Demographics</strong></td>
+            <td>% population &gt;65, population density, household size</td>
+            <td>STATEC LUSTAT</td>
+            <td><span class="status-badge implemented">Available</span></td>
+          </tr>
+          <tr>
+            <td><strong>Bank exposure</strong></td>
+            <td>HHI of commune credit per bank, loan/deposit ratio to public sector, exposure concentration quintile</td>
+            <td>BCL supervisory data</td>
+            <td><span class="status-badge required">BCL MOU required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Spatial</strong></td>
+            <td>Neighbours' fiscal stress score, cantonal mean deficit, spatial lag (queen contiguity)</td>
+            <td>Derived from panel + GeoJSON</td>
+            <td><span class="status-badge design">Derivable once panel exists</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Model comparison -->
+    <h3 class="section-subheading">Model Comparison Plan</h3>
+    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+      <table class="rtable">
+        <thead><tr><th>Model</th><th>Type</th><th>Forward-looking</th><th>Interpretable</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Rule-based heuristic</strong></td>
+            <td>Deterministic index (4 components, fixed weights)</td>
+            <td>No — contemporaneous</td>
+            <td>Yes — fully transparent</td>
+            <td><span class="status-badge implemented">Implemented (this platform)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Logit / Probit</strong></td>
+            <td>Parametric binary classification</td>
+            <td>Yes — t+1 target</td>
+            <td>Yes — marginal effects</td>
+            <td><span class="status-badge planned">Planned (WP2)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Random Forest</strong></td>
+            <td>Ensemble bagging</td>
+            <td>Yes</td>
+            <td>Partial — permutation importance</td>
+            <td><span class="status-badge planned">Planned (WP3)</span></td>
+          </tr>
+          <tr>
+            <td><strong>XGBoost + SHAP</strong></td>
+            <td>Gradient boosting</td>
+            <td>Yes</td>
+            <td>Yes — SHAP TreeExplainer</td>
+            <td><span class="status-badge planned">Planned (WP3 · primary model)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Validation -->
+    <h3 class="section-subheading">Temporal Validation Strategy</h3>
+    <div class="two-col" style="margin-bottom:1.5rem">
+      <div>
+        <div class="rtable-wrap">
+          <table class="rtable">
+            <thead><tr><th>Split</th><th>Years</th><th>Observations (est.)</th></tr></thead>
+            <tbody>
+              <tr><td>Training</td><td>2010–2018</td><td>~918 commune-years</td></tr>
+              <tr><td>Validation (rolling-origin)</td><td>2019–2020</td><td>~204 commune-years</td></tr>
+              <tr><td>Test (held-out)</td><td>2021–2023</td><td>~306 commune-years</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:.75rem;font-size:.78rem;color:var(--text-muted);line-height:1.6">
+          Rolling-origin cross-validation is used to respect the time structure of the panel.
+          Standard k-fold cross-validation is excluded as it would introduce lookahead bias.
+          The test set is not examined until model selection is complete.
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:.84rem;font-weight:700;color:var(--accent-dark);margin-bottom:.75rem">Evaluation Metrics</h4>
+        <div class="metric-grid">
+          <div class="metric-card tbd"><div class="metric-name">AUC-ROC</div><div class="metric-value">TBD</div><div class="metric-note">Target ≥ 0.75</div></div>
+          <div class="metric-card tbd"><div class="metric-name">PR-AUC</div><div class="metric-value">TBD</div><div class="metric-note">Preferred for imbalanced labels</div></div>
+          <div class="metric-card tbd"><div class="metric-name">Brier Score</div><div class="metric-value">TBD</div><div class="metric-note">Calibration quality</div></div>
+          <div class="metric-card tbd"><div class="metric-name">F1 @ 0.5</div><div class="metric-value">TBD</div><div class="metric-note">Precision–recall balance</div></div>
+          <div class="metric-card tbd"><div class="metric-name">Lead Time</div><div class="metric-value">TBD</div><div class="metric-note">Avg months before stress onset</div></div>
+          <div class="metric-card tbd"><div class="metric-name">FAR</div><div class="metric-value">TBD</div><div class="metric-note">False-alarm rate at policy threshold</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHAP design -->
+    <h3 class="section-subheading">SHAP Interpretability Design</h3>
+    <div class="two-col">
+      <div>
+        <p style="font-size:.84rem;color:var(--text-muted);line-height:1.65;margin-bottom:.85rem">
+          SHAP (SHapley Additive exPlanations) TreeExplainer will be applied to the trained XGBoost model
+          to produce two layers of interpretability:
+        </p>
+        <ul style="font-size:.84rem;color:var(--text-muted);line-height:1.85;padding-left:1.25rem">
+          <li><strong>Global:</strong> Mean |SHAP value| per feature group — identifies which dimensions (fiscal, economic, demographic, bank exposure) drive the model's predictions across the full commune panel.</li>
+          <li><strong>Local (per-commune):</strong> Top-3 SHAP drivers for each flagged commune in a given year — actionable explanation for macroprudential reporting.</li>
+        </ul>
+        <p style="font-size:.84rem;color:var(--text-muted);line-height:1.65;margin-top:.85rem">
+          The FastAPI endpoint <code style="font-family:'JetBrains Mono',monospace;font-size:.8em;background:#f1f5f9;padding:.1em .35em;border-radius:3px">/shap_explain</code>
+          will return per-commune SHAP vectors for integration into this frontend (planned in WP3).
+        </p>
+      </div>
+      <div>
+        <div style="background:var(--accent-dark);border-radius:8px;padding:1.1rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.8;color:rgba(255,255,255,.85)">
+          <div style="color:#4ade80;margin-bottom:.4rem"># Example SHAP output (planned)</div>
+          <div>commune: <span style="color:#fbbf24">"Esch-sur-Alzette"</span></div>
+          <div>year: <span style="color:#60a5fa">2024</span></div>
+          <div>distress_probability: <span style="color:#f87171">0.71</span></div>
+          <div>base_rate: <span style="color:#94a3b8">0.18</span></div>
+          <div style="margin-top:.4rem">top_shap_drivers:</div>
+          <div>&nbsp;&nbsp;deficit_streak=3 → <span style="color:#f87171">+0.18</span></div>
+          <div>&nbsp;&nbsp;transfer_dep=62% → <span style="color:#f87171">+0.12</span></div>
+          <div>&nbsp;&nbsp;income_index=84 → <span style="color:#f87171">+0.09</span></div>
+          <div>&nbsp;&nbsp;emp_rate=64.2% → <span style="color:#4ade80">−0.05</span></div>
+          <div style="color:#94a3b8;margin-top:.4rem"># Planned: /shap_explain API endpoint</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ PANEL 5: EMPIRICAL STRATEGY ═══════════════════════════════════════════ -->
+<section id="panel-empirical" class="panel">
+  <div class="section-block">
+
+    <h2 class="section-heading">
+      <span class="sec-num">§6</span> Empirical Strategy
+    </h2>
+    <p class="section-intro">
+      The empirical programme tests three nested hypotheses using a commune-year panel for Luxembourg.
+      The estimation strategy scales with data availability: a minimum viable design uses publicly available
+      STATEC/Eurostat aggregates; the full design adds BCL supervisory bank-commune exposure data.
+    </p>
+
+    <!-- Unit of analysis -->
+    <h3 class="section-subheading">Unit of Analysis</h3>
+    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+      <table class="rtable">
+        <thead><tr><th>Design tier</th><th>Unit</th><th>Observations (est.)</th><th>Data requirement</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Minimum viable</strong></td>
+            <td>Commune-year (i,t)</td>
+            <td>~1,400 (102 communes × 14 years)</td>
+            <td>STATEC commune accounts + Eurostat macro</td>
+            <td><span class="status-badge prototype">Feasible with data request</span></td>
+          </tr>
+          <tr>
+            <td><strong>Full design</strong></td>
+            <td>Bank-commune-year (b,i,t)</td>
+            <td>~5,000–15,000 depending on coverage</td>
+            <td>BCL supervisory bank-by-commune credit register</td>
+            <td><span class="status-badge required">BCL MOU required</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Dependent variables -->
+    <h3 class="section-subheading">Dependent Variables</h3>
+    <div class="var-group" style="margin-bottom:1.5rem">
+      <div class="var-card">
+        <div class="var-name">FiscalStress<sub>i,t</sub></div>
+        <div class="var-desc">Binary: commune i runs a deficit exceeding 15% of revenues in year t, OR has a deficit streak ≥ 2 consecutive years. Primary outcome for H3.
+          <span class="var-source">Source: STATEC commune accounts (annual revenue/expenditure)</span>
+        </div>
+      </div>
+      <div class="var-card">
+        <div class="var-name">ΔCredit<sub>b,i,t</sub></div>
+        <div class="var-desc">Year-on-year growth in bank b's credit to commune i in year t. Primary outcome for H1 and H2 (credit contraction channel).
+          <span class="var-source">Source: BCL supervisory register (MOU required) · <span class="status-badge required" style="font-size:.62rem">BCL MOU</span></span>
+        </div>
+      </div>
+      <div class="var-card">
+        <div class="var-name">Balance<sub>i,t</sub> / Revenue<sub>i,t</sub></div>
+        <div class="var-desc">Continuous: fiscal balance as a share of total revenues for commune i in year t. Used in panel regressions for H2 (Granger causality test).
+          <span class="var-source">Source: STATEC commune accounts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key regressors -->
+    <h3 class="section-subheading">Key Explanatory Variables</h3>
+    <div class="var-group" style="margin-bottom:1.5rem">
+      <div class="var-card">
+        <div class="var-name">HHI<sub>b,i,t-1</sub></div>
+        <div class="var-desc">Herfindahl–Hirschman Index of bank b's credit to commune i as a share of all commune credits — measures borrower concentration. Lagged one period to address reverse causality.
+          <span class="var-source">BCL supervisory (MOU) · <span class="status-badge required" style="font-size:.62rem">BCL MOU</span></span>
+        </div>
+      </div>
+      <div class="var-card">
+        <div class="var-name">TransferDep<sub>i,t-1</sub></div>
+        <div class="var-desc">Share of commune revenues from central-government transfers — structural fiscal vulnerability indicator. Lagged one period.
+          <span class="var-source">STATEC commune accounts</span>
+        </div>
+      </div>
+      <div class="var-card">
+        <div class="var-name">DeficitStreak<sub>i,t-1</sub></div>
+        <div class="var-desc">Consecutive years in deficit for commune i as of t-1 — persistence measure adapted from municipal finance literature (Kloha et al. 2005).
+          <span class="var-source">Derived from STATEC balance series</span>
+        </div>
+      </div>
+      <div class="var-card">
+        <div class="var-name">SpatialLag<sub>i,t-1</sub></div>
+        <div class="var-desc">Population-weighted mean of neighbouring communes' fiscal stress score — tests spillover / contagion channel. Defined using queen contiguity on the LAU GeoJSON boundary.
+          <span class="var-source">Derived from panel + GeoJSON adjacency matrix</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fixed effects + controls -->
+    <h3 class="section-subheading">Fixed Effects &amp; Controls</h3>
+    <div class="two-col" style="margin-bottom:1.5rem">
+      <div class="rtable-wrap">
+        <table class="rtable">
+          <thead><tr><th>Effect</th><th>What it absorbs</th></tr></thead>
+          <tbody>
+            <tr><td><code>α_i</code> Commune FE</td><td>Time-invariant commune characteristics: geography, size, historical fiscal culture</td></tr>
+            <tr><td><code>γ_t</code> Year FE</td><td>Macro shocks common to all communes: ECB rate cycle, COVID, Luxembourg national budget</td></tr>
+            <tr><td><code>δ_b</code> Bank FE (if BCL)</td><td>Bank-level lending policies, capital ratios, ownership structure</td></tr>
+            <tr><td><code>λ_c×t</code> Canton × Year FE</td><td>Regional business cycle heterogeneity across Luxembourg's 12 cantons</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="rtable-wrap">
+        <table class="rtable">
+          <thead><tr><th>Control variable</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>Population growth (commune)</td><td>STATEC annual</td></tr>
+            <tr><td>Income index (commune)</td><td>STATEC LUSTAT</td></tr>
+            <tr><td>Luxembourg GDP growth (macro)</td><td>Eurostat / STATEC</td></tr>
+            <tr><td>ECB policy rate</td><td>ECB Data Portal</td></tr>
+            <tr><td>Bank capital ratio (if BCL)</td><td>BCL / CSSF COREP</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Identification -->
+    <h3 class="section-subheading">Identification Challenges</h3>
+    <div class="risk-grid" style="margin-bottom:1.25rem">
+      <div class="risk-card">
+        <div class="risk-label">Data Availability</div>
+        <div class="risk-text">Commune fiscal accounts and bank-commune credit registers are not publicly available. The minimum viable design uses STATEC aggregates; the full design requires two separate MOU negotiations.</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-label">Endogeneity</div>
+        <div class="risk-text">Fiscal stress and credit contraction are simultaneous: banks may tighten credit <em>in anticipation</em> of fiscal deterioration, biasing OLS estimates of the nexus coefficient.</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-label">Reverse Causality</div>
+        <div class="risk-text">Credit contraction (H1) may cause fiscal stress (H2) rather than the reverse. Granger causality tests and instrumental variable designs address this, but require sufficient panel depth.</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-label">Spatial Autocorrelation</div>
+        <div class="risk-text">Communes in the same canton face correlated shocks. Standard errors must be clustered at the canton level or modelled explicitly via spatial lag / spatial error specifications.</div>
+      </div>
+      <div class="risk-card">
+        <div class="risk-label">Small Sample</div>
+        <div class="risk-text">102 communes × 14 years = ~1,400 commune-years. Some stress events will be rare, creating class imbalance for ML and limited power for IV designs.</div>
+      </div>
+    </div>
+
+    <h3 class="section-subheading">Identification Strategies</h3>
+    <div class="risk-grid">
+      <div class="strat-card">
+        <div class="strat-label">Lagged Instruments</div>
+        <div class="strat-text">Use HHI<sub>b,i,t-2</sub> (two-year lag) as instrument for current-year bank exposure concentration, conditional on commune and bank fixed effects.</div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-label">Pre-sample Specialisation</div>
+        <div class="strat-text">Banks' pre-sample (2008–2009) share of local-government credit as instrument for current exposure — exogenous to commune fiscal outcomes during the study period.</div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-label">Event Study Design</div>
+        <div class="strat-text">Compare communes with ≥2 consecutive deficits vs. matched controls, examining credit availability in the two years surrounding the onset of the deficit streak.</div>
+      </div>
+      <div class="strat-card">
+        <div class="strat-label">Spatial Econometrics</div>
+        <div class="strat-text">Spatial lag model (SLM) and spatial error model (SEM) to test whether H1 effects propagate across commune borders — identifying the geographic scope of the nexus.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ PANEL 6: MAP ═══════════════════════════════════════════════════════════ -->
 <section id="panel-map" class="panel">
 
+  <div class="map-panel-header">
+    <div>
+      <div class="map-panel-title">Subnational Vulnerability Explorer — Luxembourg Communes</div>
+      <div class="map-panel-desc">
+        Socio-economic indicators across 102 Luxembourg communes (LAU 2021).
+        This map provides the spatial context for H1 and H3: commune-level heterogeneity in income, employment,
+        and demographics is the structural foundation of subnational fiscal risk differentiation.
+      </div>
+    </div>
+    <div class="map-panel-badges">
+      <span class="status-badge implemented">Prototype · STATEC 2021</span>
+      <span class="status-badge required">Fiscal accounts layer requires data request</span>
+    </div>
+  </div>
+
   <div id="map-layout">
-    <!-- MapLibre GL map fills the area -->
     <div id="map"></div>
 
-    <!-- Floating control card -->
     <div id="map-control-card">
       <div class="mcc-header">◈ LuxFin · Commune Map</div>
 
@@ -330,10 +1304,8 @@
       </div>
     </div>
 
-    <!-- Legend -->
     <div id="map-legend"></div>
 
-    <!-- Commune/canton profile popup -->
     <div id="commune-popup">
       <div class="commune-popup-header">
         <div>
@@ -348,163 +1320,205 @@
 
 </section>
 
-<!-- ══ PANEL: STRESS INDICATORS ══════════════════════════════════════════════ -->
-<section id="panel-stress" class="panel">
 
-  <div class="panel-header">
-    <div class="panel-header-left">
-      <div class="panel-title">Sovereign-Bank Nexus — Baseline Heuristic Stress Index</div>
-      <div class="panel-desc">Descriptive composite index of bank exposure to government borrowing and fiscal vulnerability · Based on ECB BSI + Eurostat GFS · <em>Baseline heuristic only — not a validated early-warning or ML model</em></div>
+<!-- ══ PANEL 7: ARCHITECTURE & ROADMAP ══════════════════════════════════════ -->
+<section id="panel-roadmap" class="panel">
+  <div class="section-block">
+
+    <h2 class="section-heading">
+      <span class="sec-num">§7</span> Technical Architecture &amp; Research Roadmap
+    </h2>
+    <p class="section-intro">
+      The full research platform is designed in five layers, modelled on the AreaStat AT architecture.
+      The current LuxFin implementation covers the frontend and static data layers.
+      The R pipeline, Python ML service, and R Plumber API are scaffolded as design targets
+      for WP1–WP3. Items marked as pending require data access negotiations before implementation.
+    </p>
+
+    <!-- Architecture stack -->
+    <h3 class="section-subheading">Technical Stack</h3>
+    <div class="arch-stack" style="margin-bottom:1.5rem">
+
+      <div class="arch-layer sources">
+        <div><div class="arch-layer-name">Data Sources</div><div class="arch-layer-sub">External APIs &amp; supervised access</div></div>
+        <div class="arch-nodes">
+          <div class="arch-node">ECB Data Portal (BSI)</div>
+          <div class="arch-node">Eurostat GFS API</div>
+          <div class="arch-node">STATEC LUSTAT</div>
+          <div class="arch-node pending">BCL supervisory (MOU)</div>
+          <div class="arch-node pending">CSSF COREP (MOU)</div>
+        </div>
+      </div>
+
+      <div class="arch-connector">↓</div>
+
+      <div class="arch-layer pipeline">
+        <div><div class="arch-layer-name">R Data Pipeline</div><div class="arch-layer-sub"><code style="opacity:.7">create-lu/</code> · planned WP1</div></div>
+        <div class="arch-nodes">
+          <div class="arch-node pending">fetch_bcl_data.R</div>
+          <div class="arch-node pending">build_panel.R</div>
+          <div class="arch-node pending">create_data.R</div>
+          <div class="arch-node">static data.json (current)</div>
+          <div class="arch-node">lu_communes.geojson</div>
+        </div>
+      </div>
+
+      <div class="arch-connector">↓</div>
+
+      <div class="arch-layer ml">
+        <div><div class="arch-layer-name">Python ML Service</div><div class="arch-layer-sub"><code style="opacity:.7">ml-service/</code> · planned WP3 · FastAPI + XGBoost + SHAP</div></div>
+        <div class="arch-nodes">
+          <div class="arch-node pending">train_model.py</div>
+          <div class="arch-node pending">ml_api.py</div>
+          <div class="arch-node pending">/predict endpoint</div>
+          <div class="arch-node pending">/shap_explain endpoint</div>
+          <div class="arch-node pending">/feature_importance</div>
+          <div class="arch-node pending">/model_performance</div>
+        </div>
+      </div>
+
+      <div class="arch-connector">↓</div>
+
+      <div class="arch-layer plumber">
+        <div><div class="arch-layer-name">R Plumber API</div><div class="arch-layer-sub"><code style="opacity:.7">plumber-api/</code> · planned WP2 · fiscal clustering &amp; summaries</div></div>
+        <div class="arch-nodes">
+          <div class="arch-node pending">/cluster_fiscal</div>
+          <div class="arch-node pending">/commune_profile</div>
+          <div class="arch-node pending">/cantonal_summary</div>
+          <div class="arch-node pending">/fiscal_timeseries</div>
+        </div>
+      </div>
+
+      <div class="arch-connector">↓</div>
+
+      <div class="arch-layer frontend">
+        <div><div class="arch-layer-name">Frontend (GitHub Pages)</div><div class="arch-layer-sub">Current implementation — static + live ECB/Eurostat API calls</div></div>
+        <div class="arch-nodes">
+          <div class="arch-node">index.html (this platform)</div>
+          <div class="arch-node">js/shared.js</div>
+          <div class="arch-node">data/banking.json</div>
+          <div class="arch-node">data/fiscal.json</div>
+          <div class="arch-node">data/communes.json</div>
+          <div class="arch-node">data/lu_communes.geojson</div>
+        </div>
+      </div>
+
     </div>
-    <div class="panel-actions">
-      <label class="year-range" style="gap:.5rem">
-        Year:
-        <input type="range" id="stress-year-slider" min="0" max="9" value="9" step="1" style="width:120px">
-        <span id="stress-year-display" style="font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:600;min-width:36px">2023</span>
-      </label>
+
+    <!-- Data requirements -->
+    <h3 class="section-subheading">Data Access Requirements</h3>
+    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+      <table class="rtable">
+        <thead><tr><th>Dataset</th><th>Provider</th><th>Coverage</th><th>Status</th><th>Access path</th></tr></thead>
+        <tbody>
+          <tr><td>MFI balance sheets (BSI)</td><td>ECB Data Portal</td><td>2014–present · annual</td><td><span class="status-badge implemented">Available — public API</span></td><td>ECB Data Portal REST</td></tr>
+          <tr><td>GFS fiscal aggregates</td><td>Eurostat</td><td>2000–present · annual</td><td><span class="status-badge implemented">Available — public API</span></td><td>Eurostat REST API</td></tr>
+          <tr><td>Commune socio-economic indicators</td><td>STATEC LUSTAT</td><td>2021 snapshot</td><td><span class="status-badge implemented">Available — download</span></td><td>LUSTAT open data portal</td></tr>
+          <tr><td>Commune financial accounts</td><td>STATEC</td><td>Annual, 2010–present</td><td><span class="status-badge prototype">Partial — data request</span></td><td>STATEC micro-data request</td></tr>
+          <tr><td>Bank-by-commune credit register</td><td>BCL supervisory</td><td>Quarterly, bank-level</td><td><span class="status-badge required">BCL MOU required</span></td><td>Formal MOU negotiation</td></tr>
+          <tr><td>Bank capital ratios (COREP)</td><td>CSSF / BCL</td><td>Quarterly, bank-level</td><td><span class="status-badge required">CSSF/BCL MOU required</span></td><td>Formal MOU negotiation</td></tr>
+        </tbody>
+      </table>
     </div>
+
+    <!-- Work packages -->
+    <h3 class="section-subheading">Work Packages &amp; Timeline</h3>
+    <div class="wp-grid">
+
+      <div class="wp-card">
+        <div class="wp-header">
+          <div class="wp-number">WP1</div>
+          <div class="wp-months">Months 1–8</div>
+        </div>
+        <div class="wp-title">Data Architecture &amp; Panel Construction</div>
+        <ul class="wp-tasks">
+          <li>Negotiate BCL and CSSF data access MOU</li>
+          <li>Build commune-year fiscal panel from STATEC accounts</li>
+          <li>Construct R ingestion pipeline (<code>create-lu/</code>)</li>
+          <li>Validate commune matching (LAU codes, name harmonisation)</li>
+          <li>Build spatial adjacency matrix (queen contiguity)</li>
+        </ul>
+        <div class="wp-deliverable">Deliverable: <code>panel_dataset.csv</code> + data documentation</div>
+      </div>
+
+      <div class="wp-card">
+        <div class="wp-header">
+          <div class="wp-number">WP2</div>
+          <div class="wp-months">Months 6–20</div>
+        </div>
+        <div class="wp-title">Empirical Analysis (H1 &amp; H2)</div>
+        <ul class="wp-tasks">
+          <li>Descriptive statistics and exploratory analysis</li>
+          <li>Panel regression: bank exposure → fiscal outcomes (H1)</li>
+          <li>Granger causality: fiscal stress → credit (H2)</li>
+          <li>Spatial econometrics (spillover tests)</li>
+          <li>Robustness: IV design, event study</li>
+        </ul>
+        <div class="wp-deliverable">Deliverable: Working Paper 1 (H1 + H2)</div>
+      </div>
+
+      <div class="wp-card">
+        <div class="wp-header">
+          <div class="wp-number">WP3</div>
+          <div class="wp-months">Months 14–28</div>
+        </div>
+        <div class="wp-title">ML Early-Warning Pipeline (H3)</div>
+        <ul class="wp-tasks">
+          <li>Feature engineering on commune panel</li>
+          <li>Temporal train/test split and rolling-origin CV</li>
+          <li>Model training: logit → RF → XGBoost</li>
+          <li>SHAP analysis and API deployment</li>
+          <li>Threshold calibration for policy use</li>
+        </ul>
+        <div class="wp-deliverable">Deliverable: Working Paper 2 + deployed ML API</div>
+      </div>
+
+      <div class="wp-card">
+        <div class="wp-header">
+          <div class="wp-number">WP4</div>
+          <div class="wp-months">Months 26–36</div>
+        </div>
+        <div class="wp-title">Policy Integration &amp; Dissemination</div>
+        <ul class="wp-tasks">
+          <li>BCL / CSSF policy brief on early-warning design</li>
+          <li>Journal submission (Papers 1 &amp; 2)</li>
+          <li>Integrate ML API into this research platform</li>
+          <li>PhD thesis compilation and defence</li>
+        </ul>
+        <div class="wp-deliverable">Deliverable: 2 journal papers + BCL policy note + thesis</div>
+      </div>
+
+    </div>
+
   </div>
-
-  <div class="stress-layout">
-    <!-- Left: summary + components -->
-    <div class="stress-summary">
-      <div class="stress-gauge-wrap">
-        <div class="stress-gauge-label">Composite Stress Score</div>
-        <svg id="stress-gauge-svg" width="160" height="100" viewBox="0 0 160 100"></svg>
-        <div class="stress-score-display" id="stress-score-num">–</div>
-        <div class="stress-level-badge" id="stress-level-badge">–</div>
-        <div style="font-size:.7rem;color:#94a3b8;text-align:center;margin-top:.5rem">0 = no stress · 1 = extreme stress</div>
-      </div>
-
-      <div>
-        <div class="mcc-label" style="margin-bottom:.5rem">Component Scores</div>
-        <div class="stress-components-list" id="stress-components-list"></div>
-      </div>
-
-      <div>
-        <div class="mcc-label" style="margin-bottom:.5rem">Methodology</div>
-        <div style="font-size:.72rem;color:#64748b;line-height:1.65">
-          Each component is normalised to [0,1] using domain-specific thresholds,
-          then aggregated with fixed weights:
-          Bond concentration (30%), Public credit share (30%),
-          Fiscal balance (25%), Sector size (15%).
-          A score below 0.25 is classified as <em>Low</em> stress.
-          <br><br>
-          <strong style="color:#92400e">Scope limitation:</strong>
-          This is a <em>deterministic descriptive index</em> with static weights and no prediction horizon.
-          Converting it to a forward-looking early-warning system (as proposed in the PhD research design)
-          requires: labelled stress events, a forecasting model, out-of-sample validation,
-          calibration, lead-time tests, and false-alarm rate analysis.
-        </div>
-      </div>
-    </div>
-
-    <!-- Right: historical charts -->
-    <div class="stress-charts-area">
-
-      <div class="stress-history-card">
-        <div class="stress-history-header">
-          <div class="stress-history-title">Composite Stress Score — Historical (2014–2023)</div>
-        </div>
-        <div class="stress-history-body">
-          <div class="chart-wrap"><canvas id="chart-stress-history"></canvas></div>
-        </div>
-      </div>
-
-      <div class="charts-grid" style="padding:0;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">
-
-        <div class="chart-card">
-          <div class="chart-card-header">
-            <div>
-              <div class="chart-card-title">Bond Concentration</div>
-              <div class="chart-card-subtitle">Govt bond holdings / total bank assets (%)</div>
-            </div>
-          </div>
-          <div class="chart-card-body">
-            <div class="chart-wrap" style="height:160px"><canvas id="chart-sc-bond-conc"></canvas></div>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-card-header">
-            <div>
-              <div class="chart-card-title">Public Credit Share</div>
-              <div class="chart-card-subtitle">Credit to govt / total credit (%)</div>
-            </div>
-          </div>
-          <div class="chart-card-body">
-            <div class="chart-wrap" style="height:160px"><canvas id="chart-sc-credit-shr"></canvas></div>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-card-header">
-            <div>
-              <div class="chart-card-title">Fiscal Balance</div>
-              <div class="chart-card-subtitle">General government B.9 (% of GDP)</div>
-            </div>
-          </div>
-          <div class="chart-card-body">
-            <div class="chart-wrap" style="height:160px"><canvas id="chart-sc-fiscal"></canvas></div>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-card-header">
-            <div>
-              <div class="chart-card-title">Banking Sector Size</div>
-              <div class="chart-card-subtitle">Total bank assets / GDP (x)</div>
-            </div>
-          </div>
-          <div class="chart-card-body">
-            <div class="chart-wrap" style="height:160px"><canvas id="chart-sc-sector-sz"></canvas></div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="research-note">
-        <div class="research-note-title">Research Note — Bank-Sovereign Nexus in Luxembourg</div>
-        Luxembourg presents a <em>structurally atypical</em> case: despite a large banking sector (~12× GDP),
-        domestic sovereign risk is minimal (Maastricht debt ~25% GDP, AAA/Aaa rating, persistent surpluses).
-        The dominant transmission channel is therefore <em>outward</em> — Luxembourg banks hold EA sovereign bonds
-        (primarily French, Belgian, Italian, Spanish), and are exposed to contagion through the European sovereign risk channel.
-        The ECB's PSPP/PEPP programmes significantly increased government bond holdings post-2015,
-        a pattern visible in the bond concentration series.
-        The composite stress score remaining below 0.25 throughout the sample period reflects Luxembourg's
-        structural fiscal strength, though the large banking sector creates systemic risk at the EA level.
-      </div>
-
-    </div>
-  </div>
-
 </section>
 
-<!-- ══ SCRIPTS ═══════════════════════════════════════════════════════════════ -->
+
+<!-- ══ SCRIPTS ══════════════════════════════════════════════════════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
-
 <script>
 'use strict';
 
-// ─── Global state ─────────────────────────────────────────────────────────────
-let bankingData  = null;
-let fiscalData   = null;
-let communeData  = null;
-let stressScores = null;
+// ── Global state ──────────────────────────────────────────────────────────
+let bankingData    = null;
+let fiscalData     = null;
+let communeData    = null;
+let stressScores   = null;
 let chartInstances = {};
-let activePanel = 'banking';
+let activePanel    = 'overview';
 let communeGeoJSON = null;
 let selectedCommune = null;
 let activeIndicator = 'employment_rate';
-let mapInstance = null;
+let mapInstance     = null;
 let mapSourcesReady = false;
+let mapInitialised  = false;
+let stressInitialized = false;
 
-// ─── Utility ──────────────────────────────────────────────────────────────────
+// ── Utilities ─────────────────────────────────────────────────────────────
 function destroyChart(id) {
   if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
 }
-
 function makeChart(id, config) {
   destroyChart(id);
   const canvas = document.getElementById(id);
@@ -513,14 +1527,13 @@ function makeChart(id, config) {
   return chartInstances[id];
 }
 
-// Default Chart.js config overrides
 Chart.defaults.font.family = "'Inter', sans-serif";
 Chart.defaults.font.size   = 11;
 Chart.defaults.color       = '#64748b';
 Chart.defaults.plugins.legend.labels.boxWidth = 10;
 Chart.defaults.plugins.legend.labels.padding  = 12;
 
-// ─── Panel navigation ─────────────────────────────────────────────────────────
+// ── Panel navigation ──────────────────────────────────────────────────────
 document.querySelectorAll('.nav-tab').forEach(btn => {
   btn.addEventListener('click', () => {
     const panel = btn.dataset.panel;
@@ -530,11 +1543,33 @@ document.querySelectorAll('.nav-tab').forEach(btn => {
     document.getElementById('panel-' + panel).classList.add('active');
     activePanel = panel;
     if (panel === 'map') initMap();
-    if (panel === 'stress') renderStressPanel();
   });
 });
 
-// ─── Data loading ─────────────────────────────────────────────────────────────
+// ── Section quick-nav cards ───────────────────────────────────────────────
+document.querySelectorAll('.snav-card[data-goto]').forEach(card => {
+  card.addEventListener('click', () => {
+    const tab = document.querySelector(`.nav-tab[data-panel="${card.dataset.goto}"]`);
+    if (tab) tab.click();
+  });
+});
+
+// ── Evidence sub-tab navigation ───────────────────────────────────────────
+document.querySelectorAll('.evidence-sub-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sub = btn.dataset.sub;
+    document.querySelectorAll('.evidence-sub-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#panel-evidence .sub-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('sub-' + sub).classList.add('active');
+    if (sub === 'stress') {
+      if (!stressInitialized) { renderStressPanel(); stressInitialized = true; }
+      else refreshStressCharts();
+    }
+  });
+});
+
+// ── Data loading ──────────────────────────────────────────────────────────
 async function loadAllData() {
   const [bData, fData, cData] = await Promise.all([
     fetch('./data/banking.json').then(r => r.json()),
@@ -549,551 +1584,272 @@ async function loadAllData() {
   renderFiscalPanel();
 }
 
-// ─── ─── BANKING PANEL ─── ───────────────────────────────────────────────────
-
+// ── Banking panel ─────────────────────────────────────────────────────────
 function renderBankingPanel() {
   const b = bankingData.annual;
   const f = fiscalData.annual;
   const lastIdx = b.years.length - 1;
 
-  // ── KPIs
-  const totalAssets  = b.total_assets[lastIdx];
-  const govtBonds    = b.govt_bonds_held[lastIdx];
-  const creditGovt   = b.credit_govt[lastIdx];
-  const creditPriv   = b.credit_private[lastIdx];
-  const gdp          = b.gdp[lastIdx];
-  const numBanks     = b.num_banks[lastIdx];
-  const bondPct      = (govtBonds / totalAssets * 100).toFixed(1);
-  const creditShr    = (creditGovt / (creditGovt + creditPriv) * 100).toFixed(1);
-  const sectorRatio  = (totalAssets / gdp).toFixed(1);
+  const totalAssets = b.total_assets[lastIdx];
+  const govtBonds   = b.govt_bonds_held[lastIdx];
+  const creditGovt  = b.credit_govt[lastIdx];
+  const creditPriv  = b.credit_private[lastIdx];
+  const gdp         = b.gdp[lastIdx];
+  const numBanks    = b.num_banks[lastIdx];
+  const bondPct     = (govtBonds / totalAssets * 100).toFixed(1);
+  const creditShr   = (creditGovt / (creditGovt + creditPriv) * 100).toFixed(1);
+  const sectorRatio = (totalAssets / gdp).toFixed(1);
 
   document.getElementById('banking-kpis').innerHTML = `
-    <div class="kpi-card">
-      <div class="kpi-label">Total MFI Assets</div>
-      <div class="kpi-value">€${totalAssets}bn</div>
-      <div class="kpi-subtext">${sectorRatio}× nominal GDP (${b.years[lastIdx]})</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Govt Bond Holdings</div>
-      <div class="kpi-value">€${govtBonds}bn</div>
-      <div class="kpi-subtext">${bondPct}% of total assets</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Credit to Govt</div>
-      <div class="kpi-value">€${creditGovt}bn</div>
-      <div class="kpi-subtext">${creditShr}% of total credit</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Credit to Private Sector</div>
-      <div class="kpi-value">€${creditPriv}bn</div>
-      <div class="kpi-subtext">${(100 - +creditShr).toFixed(1)}% of total credit</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Resident Banks</div>
-      <div class="kpi-value">${numBanks}</div>
-      <div class="kpi-subtext">Down from 148 in 2014</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">LU Sovereign Bonds Held</div>
-      <div class="kpi-value">€${b.lu_govt_bonds[lastIdx]}bn</div>
-      <div class="kpi-subtext">Est. domestic banks' LU govt holdings</div>
-    </div>
+    <div class="kpi-card"><div class="kpi-label">Total MFI Assets</div><div class="kpi-value">€${totalAssets}bn</div><div class="kpi-subtext">${sectorRatio}× nominal GDP (${b.years[lastIdx]})</div></div>
+    <div class="kpi-card"><div class="kpi-label">Govt Bond Holdings</div><div class="kpi-value">€${govtBonds}bn</div><div class="kpi-subtext">${bondPct}% of total assets</div></div>
+    <div class="kpi-card"><div class="kpi-label">Credit to Govt</div><div class="kpi-value">€${creditGovt}bn</div><div class="kpi-subtext">${creditShr}% of total credit</div></div>
+    <div class="kpi-card"><div class="kpi-label">Credit to Private Sector</div><div class="kpi-value">€${creditPriv}bn</div><div class="kpi-subtext">${(100 - +creditShr).toFixed(1)}% of total credit</div></div>
+    <div class="kpi-card"><div class="kpi-label">Resident Banks</div><div class="kpi-value">${numBanks}</div><div class="kpi-subtext">Down from 148 in 2014</div></div>
+    <div class="kpi-card"><div class="kpi-label">LU Sovereign Bonds Held</div><div class="kpi-value">€${b.lu_govt_bonds[lastIdx]}bn</div><div class="kpi-subtext">Est. domestic banks' LU holdings</div></div>
   `;
 
-  // ── Chart 1: Govt bonds + Credit to govt over time
   makeChart('chart-bonds', {
     type: 'line',
-    data: {
-      labels: b.years,
-      datasets: [
-        {
-          label: 'Govt Bond Holdings (all EA)',
-          data: b.govt_bonds_held,
-          borderColor: COLORS.govt,
-          backgroundColor: 'rgba(239,51,64,.08)',
-          fill: true,
-          tension: 0.3,
-          borderWidth: 2.5,
-          pointRadius: 3
-        },
-        {
-          label: 'Credit to General Government',
-          data: b.credit_govt,
-          borderColor: COLORS.amber,
-          backgroundColor: 'rgba(245,158,11,.07)',
-          fill: true,
-          tension: 0.3,
-          borderWidth: 2,
-          pointRadius: 3
-        },
-        {
-          label: 'Luxembourg Sovereign Bonds',
-          data: b.lu_govt_bonds,
-          borderColor: '#8b5cf6',
-          borderWidth: 2,
-          borderDash: [4, 3],
-          tension: 0.3,
-          pointRadius: 3,
-          fill: false
-        }
-      ]
-    },
+    data: { labels: b.years, datasets: [
+      { label: 'Govt Bond Holdings (all EA)', data: b.govt_bonds_held, borderColor: COLORS.govt, backgroundColor: 'rgba(239,51,64,.08)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 3 },
+      { label: 'Credit to General Government', data: b.credit_govt, borderColor: COLORS.amber, backgroundColor: 'rgba(245,158,11,.07)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 3 },
+      { label: 'Luxembourg Sovereign Bonds', data: b.lu_govt_bonds, borderColor: '#8b5cf6', borderWidth: 2, tension: 0.3, pointRadius: 3, fill: false }
+    ]},
     options: buildLineOptions('€ billion')
   });
 
-  // ── Chart 2: Credit ratio stacked bar
-  const govtShr  = b.years.map((_, i) => +((b.credit_govt[i]   / (b.credit_govt[i]+b.credit_private[i]))*100).toFixed(1));
-  const privShr  = b.years.map((_, i) => +((b.credit_private[i] / (b.credit_govt[i]+b.credit_private[i]))*100).toFixed(1));
-
+  const govtShr = b.years.map((_, i) => +((b.credit_govt[i] / (b.credit_govt[i] + b.credit_private[i])) * 100).toFixed(1));
+  const privShr = b.years.map((_, i) => +((b.credit_private[i] / (b.credit_govt[i] + b.credit_private[i])) * 100).toFixed(1));
   makeChart('chart-credit-ratio', {
     type: 'bar',
-    data: {
-      labels: b.years,
-      datasets: [
-        { label: 'Govt (%)', data: govtShr,  backgroundColor: 'rgba(239,51,64,.8)',  stack: 'a' },
-        { label: 'Private (%)', data: privShr, backgroundColor: 'rgba(29,78,216,.75)', stack: 'a' }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}%` } } },
-      scales: {
-        x: { stacked: true, grid: { display: false } },
-        y: { stacked: true, min: 0, max: 100, ticks: { callback: v => v + '%' } }
-      }
-    }
+    data: { labels: b.years, datasets: [
+      { label: 'Govt (%)', data: govtShr, backgroundColor: 'rgba(239,51,64,.8)', stack: 'a' },
+      { label: 'Private (%)', data: privShr, backgroundColor: 'rgba(29,78,216,.75)', stack: 'a' }
+    ]},
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}%` } } }, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, min: 0, max: 100, ticks: { callback: v => v + '%' } } } }
   });
 
-  // ── Chart 3: Crowding-out indicator (YoY growth differential)
   const crowdOut = b.years.map((y, i) => {
     if (i === 0) return null;
-    const gGrowth = ((b.credit_govt[i] - b.credit_govt[i-1]) / b.credit_govt[i-1]) * 100;
-    const pGrowth = ((b.credit_private[i] - b.credit_private[i-1]) / b.credit_private[i-1]) * 100;
-    return +(gGrowth - pGrowth).toFixed(2);
+    const gG = ((b.credit_govt[i] - b.credit_govt[i-1]) / b.credit_govt[i-1]) * 100;
+    const pG = ((b.credit_private[i] - b.credit_private[i-1]) / b.credit_private[i-1]) * 100;
+    return +(gG - pG).toFixed(2);
   });
-
   makeChart('chart-crowding', {
     type: 'bar',
-    data: {
-      labels: b.years,
-      datasets: [{
-        label: 'Govt credit growth minus private credit growth (pp)',
-        data: crowdOut,
-        backgroundColor: crowdOut.map(v => v === null ? 'transparent' : (v > 0 ? 'rgba(239,51,64,.75)' : 'rgba(29,78,216,.65)')),
-        borderRadius: 3
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => (ctx.raw ?? '–') + ' pp' } }
-      },
-      scales: {
-        x: { grid: { display: false } },
-        y: {
-          ticks: { callback: v => v + 'pp' },
-          grid: { color: '#f1f5f9' }
-        }
-      }
-    }
+    data: { labels: b.years, datasets: [{ label: 'Govt credit growth minus private credit growth (pp)', data: crowdOut, backgroundColor: crowdOut.map(v => v === null ? 'transparent' : (v > 0 ? 'rgba(239,51,64,.75)' : 'rgba(29,78,216,.65)')), borderRadius: 3 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => (ctx.raw ?? '–') + ' pp' } } }, scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => v + 'pp' }, grid: { color: '#f1f5f9' } } } }
   });
 
-  // ── Chart 4: Banking sector size ratio
   const sectorSizeArr = b.years.map((_, i) => +(b.total_assets[i] / f.gdp_eur_bn[i]).toFixed(2));
+  makeChart('chart-sector-size', { type: 'line', data: { labels: b.years, datasets: [{ label: 'Total Assets / GDP', data: sectorSizeArr, borderColor: '#c8a135', backgroundColor: 'rgba(200,161,53,.1)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 3 }] }, options: buildLineOptions('x GDP', 1) });
 
-  makeChart('chart-sector-size', {
-    type: 'line',
-    data: {
-      labels: b.years,
-      datasets: [{
-        label: 'Total Assets / GDP',
-        data: sectorSizeArr,
-        borderColor: '#c8a135',
-        backgroundColor: 'rgba(200,161,53,.1)',
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2.5,
-        pointRadius: 3
-      }]
-    },
-    options: buildLineOptions('x GDP', 1)
-  });
+  makeChart('chart-num-banks', { type: 'bar', data: { labels: b.years, datasets: [{ label: 'Authorised credit institutions', data: b.num_banks, backgroundColor: 'rgba(14,165,233,.7)', borderRadius: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { min: 100, grid: { color: '#f1f5f9' } } } } });
 
-  // ── Chart 5: Number of banks
-  makeChart('chart-num-banks', {
-    type: 'bar',
-    data: {
-      labels: b.years,
-      datasets: [{
-        label: 'Authorised credit institutions',
-        data: b.num_banks,
-        backgroundColor: 'rgba(14,165,233,.7)',
-        borderRadius: 3
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { display: false } },
-        y: { min: 100, grid: { color: '#f1f5f9' } }
-      }
-    }
-  });
-
-  // ── Chart 6: LU sovereign bonds
-  makeChart('chart-lu-bonds', {
-    type: 'line',
-    data: {
-      labels: b.years,
-      datasets: [{
-        label: 'LU Govt Bonds Held (€ bn)',
-        data: b.lu_govt_bonds,
-        borderColor: '#8b5cf6',
-        backgroundColor: 'rgba(139,92,246,.1)',
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2.5,
-        pointRadius: 3
-      }]
-    },
-    options: buildLineOptions('€ billion')
-  });
+  makeChart('chart-lu-bonds', { type: 'line', data: { labels: b.years, datasets: [{ label: 'LU Govt Bonds Held (€ bn)', data: b.lu_govt_bonds, borderColor: '#8b5cf6', backgroundColor: 'rgba(139,92,246,.1)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 3 }] }, options: buildLineOptions('€ billion') });
 }
 
-// ─── ─── FISCAL PANEL ─── ────────────────────────────────────────────────────
-
+// ── Fiscal panel ──────────────────────────────────────────────────────────
 function renderFiscalPanel() {
   const f = fiscalData.annual;
   const lastIdx = f.years.length - 1;
 
-  // ── KPIs
   document.getElementById('fiscal-kpis').innerHTML = `
-    <div class="kpi-card">
-      <div class="kpi-label">Revenue (% GDP)</div>
-      <div class="kpi-value">${fmtPct(f.revenue_pct_gdp[lastIdx])}</div>
-      <div class="kpi-subtext">€${f.revenue_eur_bn[lastIdx].toFixed(1)}bn nominal</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Expenditure (% GDP)</div>
-      <div class="kpi-value">${fmtPct(f.expenditure_pct_gdp[lastIdx])}</div>
-      <div class="kpi-subtext">€${f.expenditure_eur_bn[lastIdx].toFixed(1)}bn nominal</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Fiscal Balance</div>
-      <div class="kpi-value" style="color:${f.balance_pct_gdp[lastIdx] >= 0 ? 'var(--green)' : 'var(--red)'}">${f.balance_pct_gdp[lastIdx] > 0 ? '+' : ''}${fmtPct(f.balance_pct_gdp[lastIdx])}</div>
-      <div class="kpi-subtext">€${(f.revenue_eur_bn[lastIdx]-f.expenditure_eur_bn[lastIdx]).toFixed(1)}bn surplus</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Debt / GDP</div>
-      <div class="kpi-value">${fmtPct(f.debt_pct_gdp[lastIdx])}</div>
-      <div class="kpi-subtext">€${f.debt_eur_bn[lastIdx].toFixed(1)}bn Maastricht debt</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Nominal GDP</div>
-      <div class="kpi-value">${fmtBn(f.gdp_eur_bn[lastIdx], 1)}</div>
-      <div class="kpi-subtext">${f.years[lastIdx]}</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Central Govt Share</div>
-      <div class="kpi-value">${f.central_govt_pct[lastIdx]}%</div>
-      <div class="kpi-subtext">of general govt expenditure</div>
-    </div>
+    <div class="kpi-card"><div class="kpi-label">Revenue (% GDP)</div><div class="kpi-value">${fmtPct(f.revenue_pct_gdp[lastIdx])}</div><div class="kpi-subtext">€${f.revenue_eur_bn[lastIdx].toFixed(1)}bn nominal</div></div>
+    <div class="kpi-card"><div class="kpi-label">Expenditure (% GDP)</div><div class="kpi-value">${fmtPct(f.expenditure_pct_gdp[lastIdx])}</div><div class="kpi-subtext">€${f.expenditure_eur_bn[lastIdx].toFixed(1)}bn nominal</div></div>
+    <div class="kpi-card"><div class="kpi-label">Fiscal Balance</div><div class="kpi-value" style="color:${f.balance_pct_gdp[lastIdx] >= 0 ? 'var(--green)' : 'var(--red)'}">${f.balance_pct_gdp[lastIdx] > 0 ? '+' : ''}${fmtPct(f.balance_pct_gdp[lastIdx])}</div><div class="kpi-subtext">€${(f.revenue_eur_bn[lastIdx]-f.expenditure_eur_bn[lastIdx]).toFixed(1)}bn surplus</div></div>
+    <div class="kpi-card"><div class="kpi-label">Debt / GDP</div><div class="kpi-value">${fmtPct(f.debt_pct_gdp[lastIdx])}</div><div class="kpi-subtext">€${f.debt_eur_bn[lastIdx].toFixed(1)}bn Maastricht debt</div></div>
+    <div class="kpi-card"><div class="kpi-label">Nominal GDP</div><div class="kpi-value">${fmtBn(f.gdp_eur_bn[lastIdx], 1)}</div><div class="kpi-subtext">${f.years[lastIdx]}</div></div>
+    <div class="kpi-card"><div class="kpi-label">Local Govt Share</div><div class="kpi-value">${f.local_govt_pct[lastIdx]}%</div><div class="kpi-subtext">of general govt expenditure</div></div>
   `;
 
-  // ── Chart 1: Revenue & Expenditure
-  makeChart('chart-fiscal-trajectory', {
-    type: 'line',
-    data: {
-      labels: f.years,
-      datasets: [
-        {
-          label: 'Revenue',
-          data: f.revenue_pct_gdp,
-          borderColor: COLORS.green,
-          backgroundColor: 'rgba(22,163,74,.1)',
-          fill: true,
-          tension: 0.3,
-          borderWidth: 2.5,
-          pointRadius: 3
-        },
-        {
-          label: 'Expenditure',
-          data: f.expenditure_pct_gdp,
-          borderColor: COLORS.red,
-          backgroundColor: 'rgba(239,51,64,.07)',
-          fill: true,
-          tension: 0.3,
-          borderWidth: 2.5,
-          pointRadius: 3
-        }
-      ]
-    },
-    options: buildLineOptions('% of GDP')
-  });
+  makeChart('chart-fiscal-trajectory', { type: 'line', data: { labels: f.years, datasets: [
+    { label: 'Revenue', data: f.revenue_pct_gdp, borderColor: COLORS.green, backgroundColor: 'rgba(22,163,74,.1)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 3 },
+    { label: 'Expenditure', data: f.expenditure_pct_gdp, borderColor: COLORS.red, backgroundColor: 'rgba(239,51,64,.07)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 3 }
+  ]}, options: buildLineOptions('% of GDP') });
 
-  // ── Chart 2: Fiscal balance bar
-  makeChart('chart-balance', {
-    type: 'bar',
-    data: {
-      labels: f.years,
-      datasets: [{
-        label: 'Fiscal Balance (% GDP)',
-        data: f.balance_pct_gdp,
-        backgroundColor: f.balance_pct_gdp.map(v => v >= 0 ? 'rgba(22,163,74,.75)' : 'rgba(220,38,38,.75)'),
-        borderRadius: 3
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ctx.raw.toFixed(1) + '% of GDP' } }
-      },
-      scales: {
-        x: { grid: { display: false } },
-        y: {
-          ticks: { callback: v => v + '%' },
-          grid: { color: '#f1f5f9' }
-        }
-      }
-    }
-  });
+  makeChart('chart-balance', { type: 'bar', data: { labels: f.years, datasets: [{ label: 'Fiscal Balance (% GDP)', data: f.balance_pct_gdp, backgroundColor: f.balance_pct_gdp.map(v => v >= 0 ? 'rgba(22,163,74,.75)' : 'rgba(220,38,38,.75)'), borderRadius: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw.toFixed(1) + '% of GDP' } } }, scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => v + '%' }, grid: { color: '#f1f5f9' } } } } });
 
-  // ── Chart 3: Debt/GDP
-  makeChart('chart-debt', {
-    type: 'line',
-    data: {
-      labels: f.years,
-      datasets: [{
-        label: 'Maastricht Debt (% GDP)',
-        data: f.debt_pct_gdp,
-        borderColor: '#f59e0b',
-        backgroundColor: 'rgba(245,158,11,.1)',
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2.5,
-        pointRadius: 3
-      }]
-    },
-    options: buildLineOptions('% of GDP')
-  });
+  makeChart('chart-debt', { type: 'line', data: { labels: f.years, datasets: [{ label: 'Maastricht Debt (% GDP)', data: f.debt_pct_gdp, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,.1)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 3 }] }, options: buildLineOptions('% of GDP') });
 
-  // ── Chart 4: Sub-sector shares
-  makeChart('chart-subsectors', {
-    type: 'line',
-    data: {
-      labels: f.years,
-      datasets: [
-        { label: 'Central govt',   data: f.central_govt_pct,  borderColor: '#1d4ed8', tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false },
-        { label: 'Local govt',     data: f.local_govt_pct,    borderColor: '#0891b2', tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false },
-        { label: 'Social security',data: f.social_security_pct,borderColor:'#16a34a', tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false }
-      ]
-    },
-    options: buildLineOptions('% of total')
-  });
+  makeChart('chart-subsectors', { type: 'line', data: { labels: f.years, datasets: [
+    { label: 'Central govt',    data: f.central_govt_pct,    borderColor: '#1d4ed8', tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false },
+    { label: 'Local govt',      data: f.local_govt_pct,      borderColor: '#0891b2', tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false },
+    { label: 'Social security', data: f.social_security_pct, borderColor: '#16a34a', tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false }
+  ]}, options: buildLineOptions('% of total') });
 
-  // ── Chart 5: COFOG horizontal bars
   const cofog = fiscalData.cofog_shares_2023;
   const cofogColors = ['#1d4ed8','#0891b2','#16a34a','#f59e0b','#8b5cf6','#ef4444','#0d9488','#e879f9','#6366f1','#dc2626'];
-  const cofogLabels = {
-    general_services: 'General Services',
-    defence: 'Defence',
-    public_order_safety: 'Public Order & Safety',
-    economic_affairs: 'Economic Affairs',
-    environment: 'Environment Protection',
-    housing: 'Housing & Community',
-    health: 'Health',
-    recreation_culture: 'Recreation & Culture',
-    education: 'Education',
-    social_protection: 'Social Protection'
-  };
-
+  const cofogLabels = { general_services:'General Services', defence:'Defence', public_order_safety:'Public Order & Safety', economic_affairs:'Economic Affairs', environment:'Environment', housing:'Housing & Community', health:'Health', recreation_culture:'Recreation & Culture', education:'Education', social_protection:'Social Protection' };
   const cofogArea = document.getElementById('cofog-chart-area');
   if (cofogArea) {
-    const rows = Object.entries(cofog).map(([key, pct], i) => `
+    cofogArea.innerHTML = '<div style="padding:.5rem 0">' + Object.entries(cofog).map(([key, pct], i) => `
       <div class="cofog-row" style="padding:3px 0">
         <div style="font-size:10px;color:#374151;width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(cofogLabels[key] || key)}</div>
-        <div class="cofog-bar-wrap">
-          <div class="cofog-bar" style="width:${pct * 3}%;background:${cofogColors[i]};max-width:100%"></div>
-        </div>
+        <div class="cofog-bar-wrap"><div class="cofog-bar" style="width:${pct * 3}%;background:${cofogColors[i]};max-width:100%"></div></div>
         <div class="cofog-pct">${pct.toFixed(1)}%</div>
-      </div>
-    `).join('');
-    cofogArea.innerHTML = `<div style="padding:.5rem 0">${rows}</div>`;
+      </div>`).join('') + '</div>';
   }
 
-  // ── Chart 6: GDP & Debt nominal
-  makeChart('chart-gdp-debt-nominal', {
-    type: 'line',
-    data: {
-      labels: f.years,
-      datasets: [
-        { label: 'GDP (€ bn)', data: f.gdp_eur_bn,  borderColor: COLORS.accent, backgroundColor: 'rgba(29,78,216,.07)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 3 },
-        { label: 'Debt (€ bn)', data: f.debt_eur_bn, borderColor: COLORS.amber,  borderDash: [5,4], tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false }
-      ]
-    },
-    options: buildLineOptions('€ billion')
-  });
+  makeChart('chart-gdp-debt-nominal', { type: 'line', data: { labels: f.years, datasets: [
+    { label: 'GDP (€ bn)',  data: f.gdp_eur_bn,  borderColor: COLORS.accent, backgroundColor: 'rgba(29,78,216,.07)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 3 },
+    { label: 'Debt (€ bn)', data: f.debt_eur_bn, borderColor: COLORS.amber,  borderDash: [5,4], tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false }
+  ]}, options: buildLineOptions('€ billion') });
 }
 
-// ─── ─── MAP PANEL ─── ───────────────────────────────────────────────────────
+// ── Stress panel ──────────────────────────────────────────────────────────
+function renderStressPanel() {
+  if (!stressScores) return;
+  const slider = document.getElementById('stress-year-slider');
+  slider.max   = stressScores.length - 1;
+  slider.value = stressScores.length - 1;
+  document.getElementById('stress-year-display').textContent = stressScores[stressScores.length - 1].year;
+  slider.addEventListener('input', () => {
+    const idx = +slider.value;
+    document.getElementById('stress-year-display').textContent = stressScores[idx].year;
+    updateStressSummary(idx);
+  });
+  updateStressSummary(stressScores.length - 1);
+  renderStressHistoryChart();
+  renderStressComponentCharts();
+}
 
-let mapInitialised = false;
+function refreshStressCharts() {
+  if (!stressScores) return;
+  const slider = document.getElementById('stress-year-slider');
+  const idx = slider ? Math.min(+slider.value, stressScores.length - 1) : stressScores.length - 1;
+  updateStressSummary(idx);
+  renderStressHistoryChart();
+  renderStressComponentCharts();
+}
 
+function updateStressSummary(idx) {
+  const s   = stressScores[idx];
+  const lvl = stressLevel(s.composite);
+  const scoreNum = document.getElementById('stress-score-num');
+  const badge    = document.getElementById('stress-level-badge');
+  scoreNum.textContent = s.composite.toFixed(3);
+  scoreNum.style.color = lvl.color;
+  badge.textContent    = lvl.label;
+  badge.style.background = lvl.bg;
+  badge.style.color      = lvl.color;
+  drawGaugeArc(s.composite, lvl.color);
+  const list = document.getElementById('stress-components-list');
+  list.innerHTML = STRESS_COMPONENTS.map(comp => {
+    const sc = s.components.find(c => c.id === comp.id);
+    if (!sc) return '';
+    const barColor = sc.norm < 0.25 ? '#16a34a' : sc.norm < 0.5 ? '#f59e0b' : sc.norm < 0.75 ? '#ea580c' : '#dc2626';
+    let valDisplay;
+    if (comp.id === 'bond_concentration') valDisplay = fmtPct(s.bondConc);
+    else if (comp.id === 'credit_govt_share') valDisplay = fmtPct(s.creditShr);
+    else if (comp.id === 'fiscal_balance')    valDisplay = fmtPct(s.fiscalBal) + ' GDP';
+    else if (comp.id === 'sector_size')       valDisplay = fmtMultiple(s.sectorSz);
+    return `<div class="stress-comp-row">
+      <div class="stress-comp-name"><span>${escapeHtml(comp.label)}</span><span class="stress-comp-value" style="color:${barColor}">${escapeHtml(valDisplay)}</span></div>
+      <div class="stress-comp-bar-track"><div class="stress-comp-bar-fill" style="width:${(sc.norm*100).toFixed(1)}%;background:${barColor}"></div></div>
+      <div class="stress-comp-desc">${escapeHtml(comp.desc)} · weight ${(comp.weight*100).toFixed(0)}%</div>
+    </div>`;
+  }).join('');
+}
+
+function drawGaugeArc(score, color) {
+  const svg = document.getElementById('stress-gauge-svg');
+  if (!svg) return;
+  const R=65, CX=80, CY=95;
+  const startAngle = Math.PI, endAngle = 2 * Math.PI;
+  const angle = startAngle + (endAngle - startAngle) * Math.min(score, 1);
+  const bgX1 = CX + R * Math.cos(startAngle), bgY1 = CY + R * Math.sin(startAngle);
+  const bgX2 = CX + R * Math.cos(endAngle),   bgY2 = CY + R * Math.sin(endAngle);
+  const fillX = CX + R * Math.cos(angle),     fillY = CY + R * Math.sin(angle);
+  const largeArc = score > 0.5 ? 1 : 0;
+  svg.innerHTML = `
+    <path d="M ${bgX1} ${bgY1} A ${R} ${R} 0 1 1 ${bgX2} ${bgY2}" fill="none" stroke="#e2e8f0" stroke-width="10" stroke-linecap="round"/>
+    <path d="M ${bgX1} ${bgY1} A ${R} ${R} 0 ${largeArc} 1 ${fillX} ${fillY}" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round"/>`;
+}
+
+function renderStressHistoryChart() {
+  const years  = stressScores.map(s => s.year);
+  const scores = stressScores.map(s => +s.composite.toFixed(3));
+  makeChart('chart-stress-history', { type: 'line', data: { labels: years, datasets: [{ label: 'Composite Stress Score', data: scores, borderColor: '#c8a135', backgroundColor: 'rgba(200,161,53,.12)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: scores.map(v => stressLevel(v).color) }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'Score: ' + ctx.raw + ' (' + stressLevel(ctx.raw).label + ')' } } }, scales: { x: { grid: { display: false } }, y: { min: 0, max: 1, grid: { color: '#f1f5f9' }, ticks: { callback: v => v.toFixed(2) } } } } });
+}
+
+function renderStressComponentCharts() {
+  const years = stressScores.map(s => s.year);
+  makeChart('chart-sc-bond-conc', { type: 'bar', data: { labels: years, datasets: [{ label: 'Bond Concentration (%)', data: stressScores.map(s => +s.bondConc.toFixed(2)), backgroundColor: 'rgba(239,51,64,.7)', borderRadius: 3 }] }, options: buildMiniBarOptions('%') });
+  makeChart('chart-sc-credit-shr', { type: 'bar', data: { labels: years, datasets: [{ label: 'Public Credit Share (%)', data: stressScores.map(s => +s.creditShr.toFixed(2)), backgroundColor: 'rgba(245,158,11,.7)', borderRadius: 3 }] }, options: buildMiniBarOptions('%') });
+  makeChart('chart-sc-fiscal', { type: 'bar', data: { labels: years, datasets: [{ label: 'Fiscal Balance (% GDP)', data: stressScores.map(s => +s.fiscalBal.toFixed(2)), backgroundColor: stressScores.map(s => s.fiscalBal >= 0 ? 'rgba(22,163,74,.75)' : 'rgba(220,38,38,.75)'), borderRadius: 3 }] }, options: buildMiniBarOptions('% GDP') });
+  makeChart('chart-sc-sector-sz', { type: 'line', data: { labels: years, datasets: [{ label: 'Bank Assets / GDP', data: stressScores.map(s => +s.sectorSz.toFixed(2)), borderColor: '#c8a135', backgroundColor: 'rgba(200,161,53,.1)', fill: true, tension: 0.3, borderWidth: 2, pointRadius: 2 }] }, options: buildMiniLineOptions('x GDP') });
+}
+
+// ── Map ───────────────────────────────────────────────────────────────────
 function initMap() {
   if (mapInitialised) return;
   mapInitialised = true;
-
-  mapInstance = new maplibregl.Map({
-    container: 'map',
-    style: 'https://tiles.openfreemap.org/styles/bright',
-    center: MAP_CENTER_LU,
-    zoom: MAP_ZOOM_LU,
-    minZoom: 7,
-    maxZoom: 14,
-    maxBounds: [[5.5, 49.2], [6.9, 50.4]]
-  });
-
-  mapInstance.on('load', () => {
-    loadCommuneGeoJSON();
-  });
-
-  document.getElementById('map-reset-btn').addEventListener('click', () => {
-    mapInstance.easeTo({ center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, duration: 1500 });
-  });
-
-  document.getElementById('indicator-select').addEventListener('change', e => {
-    activeIndicator = e.target.value;
-    if (mapSourcesReady) updateChoropleth();
-    renderLegend();
-  });
-
+  mapInstance = new maplibregl.Map({ container: 'map', style: 'https://tiles.openfreemap.org/styles/bright', center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, minZoom: 7, maxZoom: 14, maxBounds: [[5.5, 49.2], [6.9, 50.4]] });
+  mapInstance.on('load', () => { loadCommuneGeoJSON(); });
+  document.getElementById('map-reset-btn').addEventListener('click', () => { mapInstance.easeTo({ center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, duration: 1500 }); });
+  document.getElementById('indicator-select').addEventListener('change', e => { activeIndicator = e.target.value; if (mapSourcesReady) updateChoropleth(); renderLegend(); });
   document.getElementById('geo-level-select').addEventListener('change', e => {
     if (e.target.value === 'cantons') {
       e.target.value = 'communes';
-      document.getElementById('map-data-note').innerHTML =
-        'Canton aggregation layer not yet implemented — showing commune-level data.<br>' +
-        'Commune boundaries: Eurostat GISCO LAU 2021.<br>' +
-        'Indicators: STATEC LUSTAT reference year 2021.';
+      document.getElementById('map-data-note').innerHTML = 'Canton aggregation layer not yet implemented — showing commune-level data.<br>Commune boundaries: Eurostat GISCO LAU 2021.<br>Indicators: STATEC LUSTAT 2021.';
     }
   });
-
-  document.getElementById('popup-close-btn').addEventListener('click', () => {
-    document.getElementById('commune-popup').style.display = 'none';
-    selectedCommune = null;
-    if (mapSourcesReady) {
-      mapInstance.removeFeatureState({ source: 'communes' });
-    }
-  });
+  document.getElementById('popup-close-btn').addEventListener('click', () => { document.getElementById('commune-popup').style.display = 'none'; selectedCommune = null; if (mapSourcesReady) mapInstance.removeFeatureState({ source: 'communes' }); });
 }
 
 async function loadCommuneGeoJSON() {
   const noteEl = document.getElementById('map-data-note');
   noteEl.textContent = 'Loading commune boundaries…';
-
-  // Try local file first (fastest, no CORS issues)
   try {
     const res = await fetch('./data/lu_communes.geojson');
-    if (!res.ok) throw new Error('Local HTTP ' + res.status);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const geoJSON = await res.json();
-    if (!geoJSON.features?.length) throw new Error('Empty local file');
+    if (!geoJSON.features?.length) throw new Error('Empty file');
     communeGeoJSON = geoJSON;
     noteEl.textContent = `${geoJSON.features.length} communes loaded (LAU 2021)`;
     addMapLayers();
-    return;
   } catch (localErr) {
-    console.warn('Local GeoJSON failed:', localErr.message);
-  }
-
-  // Fallback: GISCO Eurostat distribution CDN
-  const GISCO_CDN = 'https://gisco-services.ec.europa.eu/distribution/v2/lau/geojson/LAU_RG_01M_2021_4326.geojson';
-  noteEl.textContent = 'Local file not found — fetching from GISCO CDN (may be slow)…';
-  try {
-    const res = await fetch(GISCO_CDN);
-    if (!res.ok) throw new Error('GISCO CDN HTTP ' + res.status);
-    const full = await res.json();
-    const features = full.features.filter(f => f.properties.CNTR_CODE === 'LU');
-    if (!features.length) throw new Error('No LU features in GISCO file');
-    communeGeoJSON = { type: 'FeatureCollection', features };
-    noteEl.textContent = `${features.length} communes loaded from GISCO CDN`;
-    addMapLayers();
-  } catch (err) {
-    console.warn('GISCO CDN failed:', err.message);
-    noteEl.innerHTML = `⚠ Could not load commune boundaries. Ensure <code>data/lu_communes.geojson</code> is present (GISCO LAU 2021, filtered for LU).`;
+    const GISCO_CDN = 'https://gisco-services.ec.europa.eu/distribution/v2/lau/geojson/LAU_RG_01M_2021_4326.geojson';
+    noteEl.textContent = 'Fetching from GISCO CDN…';
+    try {
+      const res = await fetch(GISCO_CDN);
+      if (!res.ok) throw new Error('GISCO ' + res.status);
+      const full = await res.json();
+      const features = full.features.filter(f => f.properties.CNTR_CODE === 'LU');
+      communeGeoJSON = { type: 'FeatureCollection', features };
+      noteEl.textContent = `${features.length} communes loaded from GISCO CDN`;
+      addMapLayers();
+    } catch (err) {
+      noteEl.innerHTML = `⚠ Could not load commune boundaries. Ensure <code>data/lu_communes.geojson</code> is present.`;
+    }
   }
 }
 
 function addMapLayers() {
   if (!communeGeoJSON) return;
-
-  // Annotate features with commune data values
   communeGeoJSON.features.forEach(f => {
-    const name = f.properties.LAU_NAME;
-    const data = communeData?.communes?.[name];
-    if (data) {
-      Object.keys(COMMUNE_INDICATORS).forEach(ind => {
-        f.properties['_' + ind] = data[ind] ?? null;
-      });
-    }
+    const data = communeData?.communes?.[f.properties.LAU_NAME];
+    if (data) Object.keys(COMMUNE_INDICATORS).forEach(ind => { f.properties['_' + ind] = data[ind] ?? null; });
   });
-
-  mapInstance.addSource('communes', {
-    type: 'geojson',
-    data: communeGeoJSON,
-    generateId: true
-  });
-
-  mapInstance.addLayer({
-    id: 'commune-fill',
-    type: 'fill',
-    source: 'communes',
-    paint: {
-      'fill-color': buildFillExpression(),
-      'fill-opacity': ['case', ['boolean',['feature-state','selected'],false], 0.85, 0.68]
-    }
-  });
-
-  mapInstance.addLayer({
-    id: 'commune-outline',
-    type: 'line',
-    source: 'communes',
-    paint: {
-      'line-color': ['case', ['boolean',['feature-state','selected'],false], '#0f2242', '#94a3b8'],
-      'line-width':  ['case', ['boolean',['feature-state','selected'],false], 2, 0.6]
-    }
-  });
-
+  mapInstance.addSource('communes', { type: 'geojson', data: communeGeoJSON, generateId: true });
+  mapInstance.addLayer({ id: 'commune-fill', type: 'fill', source: 'communes', paint: { 'fill-color': buildFillExpression(), 'fill-opacity': ['case', ['boolean', ['feature-state','selected'], false], 0.85, 0.68] } });
+  mapInstance.addLayer({ id: 'commune-outline', type: 'line', source: 'communes', paint: { 'line-color': ['case', ['boolean', ['feature-state','selected'], false], '#0f2242', '#94a3b8'], 'line-width': ['case', ['boolean', ['feature-state','selected'], false], 2, 0.6] } });
   mapSourcesReady = true;
   renderLegend();
-
-  // Hover tooltip
   const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: [0,-8] });
-
   mapInstance.on('mousemove', 'commune-fill', e => {
     if (!e.features.length) return;
-    const f = e.features[0];
-    const name = f.properties.LAU_NAME;
+    const f = e.features[0]; const name = f.properties.LAU_NAME;
     const data = communeData?.communes?.[name];
     const indCfg = COMMUNE_INDICATORS[activeIndicator];
     const rawVal = f.properties['_' + activeIndicator];
     const fmtVal = rawVal != null ? indCfg.format(rawVal) : '–';
-    popup.setLngLat(e.lngLat)
-      .setHTML(`<strong>${escapeHtml(name || '–')}</strong><br><span style="color:#64748b">${escapeHtml(indCfg.label)}: </span><strong>${escapeHtml(fmtVal)}</strong>${data ? `<br><span style="font-size:10px;color:#94a3b8">Canton: ${escapeHtml(data.canton)}</span>` : ''}`)
-      .addTo(mapInstance);
+    popup.setLngLat(e.lngLat).setHTML(`<strong>${escapeHtml(name||'–')}</strong><br><span style="color:#64748b">${escapeHtml(indCfg.label)}: </span><strong>${escapeHtml(fmtVal)}</strong>${data ? `<br><span style="font-size:10px;color:#94a3b8">Canton: ${escapeHtml(data.canton)}</span>` : ''}`).addTo(mapInstance);
     mapInstance.getCanvas().style.cursor = 'pointer';
   });
-
-  mapInstance.on('mouseleave', 'commune-fill', () => {
-    popup.remove();
-    mapInstance.getCanvas().style.cursor = '';
-  });
-
+  mapInstance.on('mouseleave', 'commune-fill', () => { popup.remove(); mapInstance.getCanvas().style.cursor = ''; });
   mapInstance.on('click', 'commune-fill', e => {
     if (!e.features.length) return;
     mapInstance.removeFeatureState({ source: 'communes' });
@@ -1107,285 +1863,55 @@ function addMapLayers() {
 function buildFillExpression() {
   const cfg = COMMUNE_INDICATORS[activeIndicator];
   const prop = '_' + activeIndicator;
-
   if (cfg.categorical) {
     const matchArgs = [];
     cfg.classes.forEach(c => matchArgs.push(c.key, c.color));
     return ['match', ['get', prop], ...matchArgs, '#e5e7eb'];
   }
-
-  // Step expression based on breaks
-  const breaks = cfg.breaks;
-  const colors  = cfg.colors;
-  const expr = ['step', ['get', prop], colors[0]];
-  breaks.forEach((b, i) => { expr.push(b, colors[i + 1] || colors[colors.length - 1]); });
+  const expr = ['step', ['get', prop], cfg.colors[0]];
+  cfg.breaks.forEach((b, i) => { expr.push(b, cfg.colors[i + 1] || cfg.colors[cfg.colors.length - 1]); });
   return ['case', ['==', ['get', prop], null], '#e5e7eb', expr];
 }
 
-function updateChoropleth() {
-  if (!mapSourcesReady) return;
-  mapInstance.setPaintProperty('commune-fill', 'fill-color', buildFillExpression());
-}
+function updateChoropleth() { if (mapSourcesReady) mapInstance.setPaintProperty('commune-fill', 'fill-color', buildFillExpression()); }
 
 function renderLegend() {
   const legend = document.getElementById('map-legend');
   const cfg = COMMUNE_INDICATORS[activeIndicator];
   if (!cfg) return;
-
   let rows = '';
   if (cfg.categorical) {
-    rows = cfg.classes.map(c => `
-      <div class="legend-row">
-        <div class="legend-swatch" style="background:${c.color}"></div>
-        <span>${escapeHtml(c.label)}</span>
-      </div>`).join('');
+    rows = cfg.classes.map(c => `<div class="legend-row"><div class="legend-swatch" style="background:${c.color}"></div><span>${escapeHtml(c.label)}</span></div>`).join('');
   } else {
-    const breaks = cfg.breaks;
-    const colors  = cfg.colors;
-    rows = colors.map((col, i) => {
-      const lo = i === 0 ? '' : (breaks[i-1] !== undefined ? cfg.format(breaks[i-1]) : '');
-      const hi = breaks[i] !== undefined ? cfg.format(breaks[i]) : '+';
-      const rangeLabel = i === 0 ? `< ${cfg.format(breaks[0])}` : (i >= colors.length - 1 ? `> ${cfg.format(breaks[breaks.length-1])}` : `${lo} – ${hi}`);
+    rows = cfg.colors.map((col, i) => {
+      const lo = i === 0 ? '' : (cfg.breaks[i-1] !== undefined ? cfg.format(cfg.breaks[i-1]) : '');
+      const hi = cfg.breaks[i] !== undefined ? cfg.format(cfg.breaks[i]) : '+';
+      const rangeLabel = i === 0 ? `< ${cfg.format(cfg.breaks[0])}` : (i >= cfg.colors.length - 1 ? `> ${cfg.format(cfg.breaks[cfg.breaks.length-1])}` : `${lo} – ${hi}`);
       return `<div class="legend-row"><div class="legend-swatch" style="background:${col}"></div><span>${escapeHtml(rangeLabel)}</span></div>`;
     }).join('');
   }
-
   legend.innerHTML = `<div class="legend-title">${escapeHtml(cfg.label)}</div>${rows}<div style="font-size:9px;color:#94a3b8;margin-top:4px">STATEC LUSTAT 2021</div>`;
 }
 
 function showCommunePopup(name) {
   const popup = document.getElementById('commune-popup');
-  const data = communeData?.communes?.[name];
-  document.getElementById('popup-name').textContent = name;
+  const data  = communeData?.communes?.[name];
+  document.getElementById('popup-name').textContent   = name;
   document.getElementById('popup-canton').textContent = data ? 'Canton ' + data.canton : 'Luxembourg';
-
   const degurbaLabels = { 1: 'Urban', 2: 'Town/Suburb', 3: 'Rural' };
-
-  if (data) {
-    document.getElementById('popup-body').innerHTML = `
-      <div class="commune-stat-row">
-        <span class="commune-stat-label">Population</span>
-        <span class="commune-stat-value">${data.population.toLocaleString('en-LU')}</span>
-      </div>
-      <div class="commune-stat-row">
-        <span class="commune-stat-label">Employment rate</span>
-        <span class="commune-stat-value">${data.employment_rate.toFixed(1)}%</span>
-      </div>
-      <div class="commune-stat-row">
-        <span class="commune-stat-label">Unemployment rate</span>
-        <span class="commune-stat-value">${data.unemployment_rate.toFixed(1)}%</span>
-      </div>
-      <div class="commune-stat-row">
-        <span class="commune-stat-label">Income index</span>
-        <span class="commune-stat-value">${data.income_index} (LU=100)</span>
-      </div>
-      <div class="commune-stat-row">
-        <span class="commune-stat-label">Foreign population</span>
-        <span class="commune-stat-value">${data.foreign_pop_pct.toFixed(1)}%</span>
-      </div>
-      <div class="commune-stat-row">
-        <span class="commune-stat-label">Urbanisation</span>
-        <span class="commune-stat-value">
-          <span class="degurba-pill degurba-${data.degurba}">${degurbaLabels[data.degurba] || data.degurba}</span>
-        </span>
-      </div>
-      <div class="commune-stat-row">
-        <span class="commune-stat-label">Area</span>
-        <span class="commune-stat-value">${data.area_km2} km²</span>
-      </div>
-    `;
-  } else {
-    document.getElementById('popup-body').innerHTML = `<div style="font-size:11px;color:#94a3b8;padding:.5rem 0">No STATEC data matched for this commune.</div>`;
-  }
-
+  document.getElementById('popup-body').innerHTML = data ? `
+    <div class="commune-stat-row"><span class="commune-stat-label">Population</span><span class="commune-stat-value">${data.population.toLocaleString('en-LU')}</span></div>
+    <div class="commune-stat-row"><span class="commune-stat-label">Employment rate</span><span class="commune-stat-value">${data.employment_rate.toFixed(1)}%</span></div>
+    <div class="commune-stat-row"><span class="commune-stat-label">Unemployment rate</span><span class="commune-stat-value">${data.unemployment_rate.toFixed(1)}%</span></div>
+    <div class="commune-stat-row"><span class="commune-stat-label">Income index</span><span class="commune-stat-value">${data.income_index} (LU=100)</span></div>
+    <div class="commune-stat-row"><span class="commune-stat-label">Foreign population</span><span class="commune-stat-value">${data.foreign_pop_pct.toFixed(1)}%</span></div>
+    <div class="commune-stat-row"><span class="commune-stat-label">Urbanisation</span><span class="commune-stat-value"><span class="degurba-pill degurba-${data.degurba}">${degurbaLabels[data.degurba]||data.degurba}</span></span></div>
+    <div class="commune-stat-row"><span class="commune-stat-label">Area</span><span class="commune-stat-value">${data.area_km2} km²</span></div>` :
+    `<div style="font-size:11px;color:#94a3b8;padding:.5rem 0">No STATEC data matched for this commune.</div>`;
   popup.style.display = 'block';
 }
 
-// ─── ─── STRESS PANEL ─── ────────────────────────────────────────────────────
-
-function renderStressPanel() {
-  if (!stressScores) return;
-
-  const slider = document.getElementById('stress-year-slider');
-  slider.max = stressScores.length - 1;
-  slider.value = stressScores.length - 1;
-
-  slider.addEventListener('input', () => {
-    const idx = +slider.value;
-    document.getElementById('stress-year-display').textContent = stressScores[idx].year;
-    updateStressSummary(idx);
-  });
-
-  updateStressSummary(stressScores.length - 1);
-  renderStressHistoryChart();
-  renderStressComponentCharts();
-}
-
-function updateStressSummary(idx) {
-  const s = stressScores[idx];
-  const lvl = stressLevel(s.composite);
-  const scoreNum = document.getElementById('stress-score-num');
-  const badge    = document.getElementById('stress-level-badge');
-
-  scoreNum.textContent = s.composite.toFixed(3);
-  scoreNum.style.color = lvl.color;
-  badge.textContent = lvl.label;
-  badge.style.background = lvl.bg;
-  badge.style.color = lvl.color;
-
-  // SVG gauge arc
-  drawGaugeArc(s.composite, lvl.color);
-
-  // Component rows
-  const list = document.getElementById('stress-components-list');
-  list.innerHTML = STRESS_COMPONENTS.map(comp => {
-    const sc = s.components.find(c => c.id === comp.id);
-    if (!sc) return '';
-    const barColor = sc.norm < 0.25 ? '#16a34a' : sc.norm < 0.5 ? '#f59e0b' : sc.norm < 0.75 ? '#ea580c' : '#dc2626';
-    let valDisplay;
-    if (comp.id === 'bond_concentration') valDisplay = fmtPct(s.bondConc);
-    else if (comp.id === 'credit_govt_share') valDisplay = fmtPct(s.creditShr);
-    else if (comp.id === 'fiscal_balance')   valDisplay = fmtPct(s.fiscalBal) + ' GDP';
-    else if (comp.id === 'sector_size')      valDisplay = fmtMultiple(s.sectorSz);
-    return `
-      <div class="stress-comp-row">
-        <div class="stress-comp-name">
-          <span>${escapeHtml(comp.label)}</span>
-          <span class="stress-comp-value" style="color:${barColor}">${escapeHtml(valDisplay)}</span>
-        </div>
-        <div class="stress-comp-bar-track">
-          <div class="stress-comp-bar-fill" style="width:${(sc.norm*100).toFixed(1)}%;background:${barColor}"></div>
-        </div>
-        <div class="stress-comp-desc">${escapeHtml(comp.desc)} · weight ${(comp.weight*100).toFixed(0)}%</div>
-      </div>`;
-  }).join('');
-}
-
-function drawGaugeArc(score, color) {
-  const svg = document.getElementById('stress-gauge-svg');
-  if (!svg) return;
-  const R=65, CX=80, CY=95;
-  const startAngle = Math.PI;
-  const endAngle   = 2 * Math.PI;
-  const angle = startAngle + (endAngle - startAngle) * Math.min(score, 1);
-  const bgX1 = CX + R * Math.cos(startAngle), bgY1 = CY + R * Math.sin(startAngle);
-  const bgX2 = CX + R * Math.cos(endAngle),   bgY2 = CY + R * Math.sin(endAngle);
-  const fillX = CX + R * Math.cos(angle),     fillY = CY + R * Math.sin(angle);
-  const largeArc = score > 0.5 ? 1 : 0;
-  svg.innerHTML = `
-    <path d="M ${bgX1} ${bgY1} A ${R} ${R} 0 1 1 ${bgX2} ${bgY2}" fill="none" stroke="#e2e8f0" stroke-width="10" stroke-linecap="round"/>
-    <path d="M ${bgX1} ${bgY1} A ${R} ${R} 0 ${largeArc} 1 ${fillX} ${fillY}" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round"/>
-  `;
-}
-
-function renderStressHistoryChart() {
-  const years  = stressScores.map(s => s.year);
-  const scores = stressScores.map(s => +s.composite.toFixed(3));
-
-  makeChart('chart-stress-history', {
-    type: 'line',
-    data: {
-      labels: years,
-      datasets: [{
-        label: 'Composite Stress Score',
-        data: scores,
-        borderColor: '#c8a135',
-        backgroundColor: 'rgba(200,161,53,.12)',
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2.5,
-        pointRadius: 4,
-        pointBackgroundColor: scores.map(v => stressLevel(v).color)
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => 'Score: ' + ctx.raw + ' (' + stressLevel(ctx.raw).label + ')' } }
-      },
-      scales: {
-        x: { grid: { display: false } },
-        y: {
-          min: 0, max: 1,
-          grid: { color: '#f1f5f9' },
-          ticks: { callback: v => v.toFixed(2) }
-        }
-      }
-    }
-  });
-}
-
-function renderStressComponentCharts() {
-  const years = stressScores.map(s => s.year);
-
-  makeChart('chart-sc-bond-conc', {
-    type: 'bar',
-    data: {
-      labels: years,
-      datasets: [{
-        label: 'Bond Concentration (%)',
-        data: stressScores.map(s => +s.bondConc.toFixed(2)),
-        backgroundColor: 'rgba(239,51,64,.7)',
-        borderRadius: 3
-      }]
-    },
-    options: buildMiniBarOptions('%')
-  });
-
-  makeChart('chart-sc-credit-shr', {
-    type: 'bar',
-    data: {
-      labels: years,
-      datasets: [{
-        label: 'Public Credit Share (%)',
-        data: stressScores.map(s => +s.creditShr.toFixed(2)),
-        backgroundColor: 'rgba(245,158,11,.7)',
-        borderRadius: 3
-      }]
-    },
-    options: buildMiniBarOptions('%')
-  });
-
-  makeChart('chart-sc-fiscal', {
-    type: 'bar',
-    data: {
-      labels: years,
-      datasets: [{
-        label: 'Fiscal Balance (% GDP)',
-        data: stressScores.map(s => +s.fiscalBal.toFixed(2)),
-        backgroundColor: stressScores.map(s => s.fiscalBal >= 0 ? 'rgba(22,163,74,.75)' : 'rgba(220,38,38,.75)'),
-        borderRadius: 3
-      }]
-    },
-    options: buildMiniBarOptions('% GDP')
-  });
-
-  makeChart('chart-sc-sector-sz', {
-    type: 'line',
-    data: {
-      labels: years,
-      datasets: [{
-        label: 'Bank Assets / GDP',
-        data: stressScores.map(s => +s.sectorSz.toFixed(2)),
-        borderColor: '#c8a135',
-        backgroundColor: 'rgba(200,161,53,.1)',
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2,
-        pointRadius: 2
-      }]
-    },
-    options: buildMiniLineOptions('x GDP')
-  });
-}
-
-// ─── ─── LIVE API REFRESH ─── ────────────────────────────────────────────────
-
-// Merges live series into an existing annual data object in-place.
-// ECB BSI returns values in EUR millions; local data is EUR billions → scale by 1e-3.
-// Returns count of years actually updated.
+// ── Live refresh ──────────────────────────────────────────────────────────
 function mergeLiveSeries(annualObj, fieldName, liveYears, liveValues, scaleFactor = 1) {
   let updated = 0;
   liveYears.forEach((y, i) => {
@@ -1397,106 +1923,50 @@ function mergeLiveSeries(annualObj, fieldName, liveYears, liveValues, scaleFacto
 }
 
 document.getElementById('btn-fetch-banking').addEventListener('click', async function() {
-  this.textContent = '↻ Fetching…';
-  this.classList.add('loading');
+  this.textContent = '↻ Fetching…'; this.classList.add('loading');
   try {
-    // ECB Data Portal returns BSI total assets in EUR millions; local data in EUR bn → /1000
     const { years, values } = await fetchECBSeries('BSI/A.LU.N.A.T.A.1.U2.2240.Z01.E');
     const updated = mergeLiveSeries(bankingData.annual, 'total_assets', years, values, 1 / 1000);
     stressScores = computeStressScores(bankingData, fiscalData);
     renderBankingPanel();
-    if (activePanel === 'stress') refreshStressCharts();
+    if (activePanel === 'evidence' && stressInitialized) refreshStressCharts();
     alert(`Updated ${updated} year(s) of total assets from ECB Data Portal.`);
   } catch (err) {
-    alert('ECB fetch failed: ' + err.message + '\n\nNote: the ECB Data Portal API requires HTTPS and may have CORS restrictions in some browsers.');
+    alert('ECB fetch failed: ' + err.message);
   } finally {
-    this.textContent = '↻ Refresh from ECB SDW';
-    this.classList.remove('loading');
+    this.textContent = '↻ Refresh from ECB'; this.classList.remove('loading');
   }
 });
 
 document.getElementById('btn-fetch-fiscal').addEventListener('click', async function() {
-  this.textContent = '↻ Fetching…';
-  this.classList.add('loading');
+  this.textContent = '↻ Fetching…'; this.classList.add('loading');
   try {
-    // Eurostat returns fiscal balance already in % of GDP — no scaling needed
     const { years, values } = await fetchEurostatSeries('gov_10q_ggnfa', { geo: 'LU', na_item: 'B9', sector: 'S13', freq: 'A', unit: 'PC_GDP' });
     const updated = mergeLiveSeries(fiscalData.annual, 'balance_pct_gdp', years, values, 1);
     stressScores = computeStressScores(bankingData, fiscalData);
     renderFiscalPanel();
-    if (activePanel === 'stress') refreshStressCharts();
-    alert(`Updated ${updated} year(s) of fiscal balance (% GDP) from Eurostat.`);
+    if (activePanel === 'evidence' && stressInitialized) refreshStressCharts();
+    alert(`Updated ${updated} year(s) of fiscal balance from Eurostat.`);
   } catch (err) {
-    alert('Eurostat fetch failed: ' + err.message + '\n\nTry using the static data for offline work.');
+    alert('Eurostat fetch failed: ' + err.message);
   } finally {
-    this.textContent = '↻ Refresh from Eurostat';
-    this.classList.remove('loading');
+    this.textContent = '↻ Refresh from Eurostat'; this.classList.remove('loading');
   }
 });
 
-// Re-renders stress charts (history + components + summary) without re-attaching slider events.
-function refreshStressCharts() {
-  if (!stressScores) return;
-  const slider = document.getElementById('stress-year-slider');
-  const idx = slider ? +slider.value : stressScores.length - 1;
-  updateStressSummary(Math.min(idx, stressScores.length - 1));
-  renderStressHistoryChart();
-  renderStressComponentCharts();
-}
-
-// ─── ─── CHART HELPERS ─── ────────────────────────────────────────────────────
-
+// ── Chart helpers ─────────────────────────────────────────────────────────
 function buildLineOptions(yLabel, decimals = 1) {
-  return {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: { position: 'top' },
-      tooltip: {
-        callbacks: {
-          label: ctx => `${ctx.dataset.label}: ${ctx.raw != null ? Number(ctx.raw).toFixed(decimals) + ' ' + yLabel : '–'}`
-        }
-      }
-    },
-    scales: {
-      x: { grid: { display: false } },
-      y: {
-        title: { display: true, text: yLabel, font: { size: 10 }, color: '#94a3b8' },
-        grid: { color: '#f1f5f9' },
-        ticks: { callback: v => Number(v).toFixed(decimals) }
-      }
-    }
-  };
+  return { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw != null ? Number(ctx.raw).toFixed(decimals) + ' ' + yLabel : '–'}` } } }, scales: { x: { grid: { display: false } }, y: { title: { display: true, text: yLabel, font: { size: 10 }, color: '#94a3b8' }, grid: { color: '#f1f5f9' }, ticks: { callback: v => Number(v).toFixed(decimals) } } } };
 }
-
 function buildMiniBarOptions(unit) {
-  return {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + ' ' + unit } } },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: { size: 9 } } },
-      y: { ticks: { callback: v => v + unit, font: { size: 9 } }, grid: { color: '#f1f5f9' } }
-    }
-  };
+  return { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + ' ' + unit } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { ticks: { callback: v => v + unit, font: { size: 9 } }, grid: { color: '#f1f5f9' } } } };
 }
-
 function buildMiniLineOptions(unit) {
-  return {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + unit } } },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: { size: 9 } } },
-      y: { ticks: { callback: v => v + unit, font: { size: 9 } }, grid: { color: '#f1f5f9' } }
-    }
-  };
+  return { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + unit } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { ticks: { callback: v => v + unit, font: { size: 9 } }, grid: { color: '#f1f5f9' } } } };
 }
 
-// ─── BOOT ─────────────────────────────────────────────────────────────────────
+// ── Boot ──────────────────────────────────────────────────────────────────
 loadAllData().catch(err => console.error('LuxFin data load error:', err));
-
 </script>
 </body>
 </html>
