@@ -331,12 +331,9 @@
       </div>
     </div>
 
-    <div class="evidence-intro-block">
-      <strong>Evidence role:</strong> These series establish the macro-level baseline for H1 —
-      how much credit does the Luxembourg banking sector allocate to the public sector, and how has that share evolved?
-      They calibrate the <em>scale</em> of the domestic nexus and reveal the structural dominance of the EA sovereign bond channel.
-      The limitation is that these are national aggregates: no bank-by-commune decomposition is publicly available.
-      That decomposition — the core data requirement for H1 — requires BCL supervisory access.
+    <div class="prose" style="padding-top:1.5rem;padding-bottom:1rem">
+      <p class="prose-eyebrow">Evidence Role</p>
+      <p class="prose-p">These series establish the macro-level baseline for H1 — how much credit does the Luxembourg banking sector allocate to the public sector, and how has that share evolved? They calibrate the <em>scale</em> of the domestic nexus and reveal the structural dominance of the EA sovereign bond channel. The limitation is that these are national aggregates: no bank-by-commune decomposition is publicly available. That decomposition — the core data requirement for H1 — requires BCL supervisory access.</p>
     </div>
 
     <div class="kpi-strip" id="banking-kpis"></div>
@@ -448,13 +445,8 @@
       <div class="fc-text">At <strong>~12× GDP</strong>, Luxembourg's banking sector is structurally unlike any typical euro-area jurisdiction — a scale that amplifies every sovereign-bank feedback mechanism. Yet the dominant channel is <em>outward</em>: ~€64 bn in EA sovereign bonds against ~€6.4 bn in Luxembourg-issued debt, meaning contagion risk runs through cross-border holdings, not domestic fiscal weakness. The subnational commune credit channel is the analytically original dimension that national aggregates cannot see.</div>
     </div>
 
-    <div class="research-note">
-      <div class="research-note-title">Structural Context</div>
-      Luxembourg's banking sector (~12×GDP) is dominated by the EA sovereign bond channel:
-      MFIs hold ~€64bn in EA sovereign debt (primarily FR, BE, IT, ES) versus ~€6.4bn in Luxembourg sovereign bonds.
-      Domestic sovereign risk is therefore a second-order concern. The <em>subnational</em> channel —
-      direct credit to 102 communes — is the under-documented, analytically original dimension.
-      National BSI aggregates cannot reveal commune-level concentration; only BCL supervisory data can.
+    <div class="prose" style="padding-top:.5rem;padding-bottom:1.25rem">
+      <div class="prose-note"><strong>Structural context:</strong> Luxembourg's banking sector (~12×GDP) is dominated by the EA sovereign bond channel — MFIs hold ~€64bn in EA sovereign debt (primarily FR, BE, IT, ES) versus ~€6.4bn in Luxembourg sovereign bonds. Domestic sovereign risk is a second-order concern. The <em>subnational</em> channel — direct credit to 102 communes — is the under-documented, analytically original dimension. National BSI aggregates cannot reveal commune-level concentration; only BCL supervisory data can.</div>
     </div>
 
     <div class="panel-source-footer">
@@ -480,12 +472,9 @@
       </div>
     </div>
 
-    <div class="evidence-intro-block">
-      <strong>Evidence role:</strong> These series characterise the fiscal counterpart of the sovereign-bank relationship.
-      Luxembourg's structural surplus and low Maastricht debt (~25% GDP) make it unusual: <em>national</em> sovereign risk is minimal.
-      The research question therefore pivots to the <em>communal sub-sector</em> (local government, S1313, ~11% of total expenditure),
-      where fiscal heterogeneity across 102 communes is substantially higher than the national aggregate implies.
-      The COFOG breakdown establishes which expenditure categories are most rigid — important for H2 (revenue-expenditure imbalance as H1 predictor).
+    <div class="prose" style="padding-top:1.5rem;padding-bottom:1rem">
+      <p class="prose-eyebrow">Evidence Role</p>
+      <p class="prose-p">These series characterise the fiscal counterpart of the sovereign-bank relationship. Luxembourg's structural surplus and low Maastricht debt (~25% GDP) make it unusual: <em>national</em> sovereign risk is minimal. The research question therefore pivots to the <em>communal sub-sector</em> (local government, S1313, ~11% of total expenditure), where fiscal heterogeneity across 102 communes is substantially higher than the national aggregate implies. The COFOG breakdown establishes which expenditure categories are most rigid — important for H2 (revenue-expenditure imbalance as H1 predictor).</p>
     </div>
 
     <div class="kpi-strip" id="fiscal-kpis"></div>
@@ -597,13 +586,8 @@
       <div class="fc-text">Luxembourg's structural surplus — averaging <strong>+1.5–2% of GDP</strong> and only briefly compressed during COVID-19 — makes national sovereign risk minimal. This is precisely why the research pivots to the communal sub-sector (S1313, ~11% of total expenditure): it is the only layer where fiscal heterogeneity across 102 communes is large enough to generate the differentiated stress signals that H1 and H3 require.</div>
     </div>
 
-    <div class="research-note">
-      <div class="research-note-title">Research Context — Why National Aggregates Are Insufficient</div>
-      Luxembourg's general government fiscal position is structurally strong.
-      The communal layer (~11% of expenditure) is the research-relevant sub-sector.
-      STATEC LUSTAT publishes commune-level population and economic indicators,
-      but commune financial accounts (revenues, expenditures, debt by category) require a targeted data request.
-      The panel_dataset for the ML pipeline will be built from these commune-level accounts — not the national GFS series shown here.
+    <div class="prose" style="padding-top:.5rem;padding-bottom:1.25rem">
+      <div class="prose-note"><strong>Why national aggregates are insufficient:</strong> Luxembourg's general government fiscal position is structurally strong. The communal layer (~11% of expenditure) is the research-relevant sub-sector. STATEC LUSTAT publishes commune-level population and economic indicators, but commune financial accounts (revenues, expenditures, debt by category) require a targeted data request. The panel_dataset for the ML pipeline will be built from these commune-level accounts — not the national GFS series shown here.</div>
     </div>
 
     <div class="panel-source-footer">
@@ -635,15 +619,9 @@
       </div>
     </div>
 
-    <div class="evidence-intro-block">
-      <strong>Status — Baseline Heuristic:</strong>
-      This index is a <em>deterministic normalised composite</em> with fixed weights and static thresholds.
-      It is NOT forward-looking, NOT machine-learning, and has NOT been validated as an early-warning system.
-      It serves as the <strong>proof-of-concept baseline</strong> that the ML pipeline (see ML Design tab) is designed to supersede.
-      A score below 0.25 indicates low stress; Luxembourg has remained in this zone throughout 2014–2023,
-      consistent with its structural fiscal strength. Converting this into a validated early-warning system
-      requires: labelled stress events, a forecasting model, temporal cross-validation, calibration,
-      lead-time tests, and false-alarm rate analysis — all specified in the ML Design section.
+    <div class="prose" style="padding-top:1.5rem;padding-bottom:1rem">
+      <p class="prose-eyebrow">Status — Baseline Heuristic</p>
+      <div class="prose-note" style="border-color:#f59e0b;background:#fffbeb"><strong>Not a predictive model.</strong> This index is a <em>deterministic normalised composite</em> with fixed weights and static thresholds — NOT forward-looking, NOT machine-learning, and NOT validated as an early-warning system. It serves as the proof-of-concept baseline that the ML pipeline (ML Design panel) is designed to supersede. A score below 0.25 indicates low stress; Luxembourg has remained in this zone throughout 2014–2023. Converting this into a validated early-warning system requires: labelled stress events, a forecasting model, temporal cross-validation, calibration, lead-time tests, and false-alarm rate analysis.</div>
     </div>
 
     <div class="stress-layout">
@@ -723,15 +701,8 @@
           </div>
         </div>
 
-        <div class="research-note">
-          <div class="research-note-title">Why Luxembourg Scores Low — and Why That Matters</div>
-          Luxembourg's composite stress score remains below 0.25 throughout 2014–2023.
-          This reflects structural fiscal strength (persistent surpluses, low debt) and a banking sector
-          that, while large, is not excessively concentrated in domestic public-sector credit.
-          The <em>subnational</em> stress that H1 hypothesises would not be visible in this national-aggregate index —
-          it requires commune-level data and bank-level exposure decomposition.
-          This index therefore illustrates both the <em>baseline</em> condition and the <em>data gap</em>
-          that motivates the full research design.
+        <div class="prose" style="padding-top:.5rem;padding-bottom:1.25rem">
+          <div class="prose-note">Luxembourg's composite stress score remains below 0.25 throughout 2014–2023, reflecting structural fiscal strength and a banking sector not excessively concentrated in domestic public-sector credit. The <em>subnational</em> stress that H1 hypothesises would not be visible in this national-aggregate index — it requires commune-level data and bank-level exposure decomposition. This index illustrates both the <em>baseline</em> condition and the <em>data gap</em> that motivates the full research design.</div>
         </div>
       </div>
     </div>
