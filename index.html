@@ -50,6 +50,12 @@
 <!-- ══ PANEL 1: OVERVIEW ════════════════════════════════════════════════════ -->
 <section id="panel-overview" class="panel active">
 
+  <div class="panel-intro">
+    <div class="pi-eyebrow">Act I · Problem <span class="pi-eyebrow-sep">·</span> Chapter 01</div>
+    <div class="pi-title">The Research Question</div>
+    <div class="pi-question">Does concentrated banking sector exposure to local government borrowers create a subnational sovereign-bank nexus — and can forward-looking ML-based fiscal risk indicators serve as an early warning system for regional financial stability in Luxembourg?</div>
+  </div>
+
   <!-- Hero -->
   <div class="proposal-hero">
     <div class="proposal-hero-inner">
@@ -335,6 +341,12 @@
 <!-- ══ PANEL 2: NEXUS FRAMEWORK ══════════════════════════════════════════════ -->
 <section id="panel-nexus" class="panel">
 
+  <div class="panel-intro">
+    <div class="pi-eyebrow">Act I · Problem <span class="pi-eyebrow-sep">·</span> Chapter 02</div>
+    <div class="pi-title">The Mechanism</div>
+    <div class="pi-question">How does concentrated local-government lending create feedback loops between commune fiscal stress and bank balance sheets — and why is this channel invisible in national aggregates?</div>
+  </div>
+
   <div class="section-block">
     <h2 class="section-heading">
       <span class="sec-num">§3</span> Sovereign-Bank Nexus — Conceptual Framework
@@ -474,6 +486,12 @@
 <!-- ══ PANEL 3: EVIDENCE EXPLORER ════════════════════════════════════════════ -->
 <section id="panel-evidence" class="panel">
 
+  <div class="panel-intro">
+    <div class="pi-eyebrow">Act I · Problem <span class="pi-eyebrow-sep">·</span> Chapter 03</div>
+    <div class="pi-title">The Evidence</div>
+    <div class="pi-question">What does public ECB and Eurostat data reveal about Luxembourg's banking sector scale, government credit allocation, and fiscal position — and what gaps remain before the commune-level nexus can be estimated?</div>
+  </div>
+
   <!-- Sub-nav -->
   <div class="evidence-sub-nav">
     <button class="evidence-sub-tab active" data-sub="banking">▦ Banking Exposure</button>
@@ -605,6 +623,11 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="finding-callout finding-callout--insight" style="margin-bottom:1.25rem">
+      <div class="fc-label">Finding</div>
+      <div class="fc-text">At <strong>~12× GDP</strong>, Luxembourg's banking sector is structurally unlike any typical euro-area jurisdiction — a scale that amplifies every sovereign-bank feedback mechanism. Yet the dominant channel is <em>outward</em>: ~€64 bn in EA sovereign bonds against ~€6.4 bn in Luxembourg-issued debt, meaning contagion risk runs through cross-border holdings, not domestic fiscal weakness. The subnational commune credit channel is the analytically original dimension that national aggregates cannot see.</div>
     </div>
 
     <div class="research-note">
@@ -751,6 +774,11 @@
 
     </div>
 
+    <div class="finding-callout finding-callout--implication" style="margin-bottom:1.25rem">
+      <div class="fc-label">Implication</div>
+      <div class="fc-text">Luxembourg's structural surplus — averaging <strong>+1.5–2% of GDP</strong> and only briefly compressed during COVID-19 — makes national sovereign risk minimal. This is precisely why the research pivots to the communal sub-sector (S1313, ~11% of total expenditure): it is the only layer where fiscal heterogeneity across 102 communes is large enough to generate the differentiated stress signals that H1 and H3 require.</div>
+    </div>
+
     <div class="research-note">
       <div class="research-note-title">Research Context — Why National Aggregates Are Insufficient</div>
       Luxembourg's general government fiscal position is structurally strong.
@@ -891,6 +919,11 @@
     </div>
   </div>
 
+  <div class="finding-callout finding-callout--diagnostic" style="margin: 1rem 1.5rem 1.5rem">
+    <div class="fc-label">Diagnostic</div>
+    <div class="fc-text">The heuristic stress score has remained <strong>below 0.25 throughout 2014–2023</strong>, confirming Luxembourg's structural national resilience. But this is precisely the point: the index is a national aggregate. Commune-level exposure concentration — the research variable in H1 — is invisible here. The gap between this score and what the full design will measure is the core motivation for the entire research programme.</div>
+  </div>
+
   <div class="chapter-connector" data-next="ml">
     <div class="chapter-connector-inner">
       <div class="connector-num">04</div>
@@ -907,6 +940,13 @@
 
 <!-- ══ PANEL 4: ML EARLY-WARNING DESIGN ══════════════════════════════════════ -->
 <section id="panel-ml" class="panel">
+
+  <div class="panel-intro">
+    <div class="pi-eyebrow">Act II · Design <span class="pi-eyebrow-sep">·</span> Chapter 04</div>
+    <div class="pi-title">The Model Architecture</div>
+    <div class="pi-question">How should a three-layer ML pipeline — from a deterministic heuristic baseline through a prototype commune panel to a supervised XGBoost model — be designed to turn subnational fiscal signals into actionable early-warning scores?</div>
+  </div>
+
   <div class="section-block">
 
     <h2 class="section-heading">
@@ -1245,6 +1285,13 @@
 
 <!-- ══ PANEL 5: EMPIRICAL STRATEGY ═══════════════════════════════════════════ -->
 <section id="panel-empirical" class="panel">
+
+  <div class="panel-intro">
+    <div class="pi-eyebrow">Act II · Design <span class="pi-eyebrow-sep">·</span> Chapter 05</div>
+    <div class="pi-title">The Empirical Strategy</div>
+    <div class="pi-question">What identification strategy, fixed-effects structure, and robustness tests can credibly estimate the sovereign-bank nexus at commune level — and what is the minimum viable design before supervisory data is obtained?</div>
+  </div>
+
   <div class="section-block">
 
     <h2 class="section-heading">
@@ -1454,6 +1501,12 @@
 <!-- ══ PANEL 6: MAP ═══════════════════════════════════════════════════════════ -->
 <section id="panel-map" class="panel">
 
+  <div class="panel-intro">
+    <div class="pi-eyebrow">Act II · Design <span class="pi-eyebrow-sep">·</span> Chapter 06</div>
+    <div class="pi-title">The Spatial Lens</div>
+    <div class="pi-question">How much socioeconomic heterogeneity exists across Luxembourg's 102 communes — and is that heterogeneity sufficient to generate the subnational fiscal risk differentiation that H1 and H3 require?</div>
+  </div>
+
   <div class="map-panel-header">
     <div>
       <div class="map-panel-title">Subnational Vulnerability Explorer — Luxembourg Communes</div>
@@ -1550,6 +1603,13 @@
 
 <!-- ══ PANEL 7: ARCHITECTURE & ROADMAP ══════════════════════════════════════ -->
 <section id="panel-roadmap" class="panel">
+
+  <div class="panel-intro">
+    <div class="pi-eyebrow">Act II · Design <span class="pi-eyebrow-sep">·</span> Chapter 07</div>
+    <div class="pi-title">The Architecture</div>
+    <div class="pi-question">How is the five-layer research platform structured — from public data APIs through the ML service to the supervisory data extensions — and what work packages remain before full execution?</div>
+  </div>
+
   <div class="section-block">
 
     <h2 class="section-heading">
