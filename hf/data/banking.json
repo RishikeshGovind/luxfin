@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "source": "ECB Statistical Data Warehouse – BSI (MFI Balance Sheet Items) statistics",
+    "bcl_source": "Banque Centrale du Luxembourg – MFI statistics",
+    "last_updated": "2024-Q3",
+    "currency": "EUR billion",
+    "notes": "Luxembourg-resident MFIs. Government bond holdings include all euro-area sovereigns held. Total assets include all resident and non-resident claims.",
+    "series_keys": {
+      "total_assets":    "BSI/A.LU.N.A.T.A.1.U2.2240.Z01.E",
+      "credit_govt":     "BSI/A.LU.N.A.A20.A.1.U2.2240.Z01.E",
+      "credit_private":  "BSI/A.LU.N.A.A30.A.1.U2.2240.Z01.E",
+      "govt_bonds_held": "BSI/A.LU.N.A.A51.A.1.U2.2240.Z01.E"
+    }
+  },
+  "annual": {
+    "years":            [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+    "total_assets":     [726,  758,  789,  821,  848,  880,  912,  956,  978,  985],
+    "credit_govt":      [18.5, 19.2, 20.1, 21.5, 22.3, 23.1, 26.4, 28.1, 29.8, 30.5],
+    "credit_private":   [175.4,183.2,192.1,201.5,212.3,225.1,234.2,248.5,256.1,258.4],
+    "govt_bonds_held":  [34.2, 37.1, 39.5, 42.3, 44.8, 46.2, 53.1, 58.4, 62.1, 64.3],
+    "lu_govt_bonds":    [3.1,  3.4,  3.6,  3.9,  4.1,  4.3,  5.2,  5.8,  6.1,  6.4],
+    "gdp":              [47.1, 52.1, 55.1, 58.2, 62.3, 65.1, 63.1, 70.1, 75.3, 78.2],
+    "num_banks":        [148,  143,  141,  136,  131,  129,  127,  126,  124,  121]
+  },
+  "events": [
+    { "year": 2014, "label": "ECB QE begins", "type": "policy" },
+    { "year": 2015, "label": "PSPP programme launch", "type": "policy" },
+    { "year": 2018, "label": "ECB balance sheet peak", "type": "policy" },
+    { "year": 2020, "label": "COVID-19: PEPP launched", "type": "shock" },
+    { "year": 2022, "label": "ECB rate hike cycle", "type": "policy" },
+    { "year": 2023, "label": "Quantitative Tightening", "type": "policy" }
+  ]
+}
