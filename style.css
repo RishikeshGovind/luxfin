@@ -865,10 +865,11 @@ h1, h2, h3, h4, h5 {
 
 /* ── Distill-style reading layout ────────────────────────────────────── */
 .prose {
-  max-width: 740px;
+  max-width: 980px;
   margin: 0 auto;
   padding: 2.5rem 2rem;
 }
+.prose > * { max-width: 720px; }
 .prose + .prose { padding-top: 0; }
 .prose-wide {
   max-width: 980px;
