@@ -1140,6 +1140,9 @@ h1, h2, h3, h4, h5 {
 .lit-row-gap          { font-size: .82rem; color: #1d4ed8; line-height: 1.65; border-left: 2px solid #bfdbfe; padding-left: .65rem; }
 .lit-gap-label        { font-size: .58rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); display: block; margin-bottom: .1rem; }
 
+/* Channel stack (vertical, replaces channel-grid) */
+.channel-stack { display: flex; flex-direction: column; gap: 1rem; }
+
 /* ── Panel intro frames (Layer 4) ─────────────────────────────────────── */
 .panel-intro {
   background: linear-gradient(135deg, var(--accent-dark) 0%, #1d4ed8 100%);
