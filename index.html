@@ -2088,8 +2088,6 @@ function initMap() {
   mapInstance.on('load', () => {
     mapLoaded = true;
     mapInstance.resize();
-    const cam = mapInstance.cameraForBounds(LU_BOUNDS, { padding: LU_FIT_PAD });
-    if (cam) mapInstance.jumpTo(cam);
     loadCommuneGeoJSON();
   });
   document.getElementById('map-reset-btn').addEventListener('click', () => { mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PAD }); });
