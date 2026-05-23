@@ -7,9 +7,9 @@ const APP_VERSION = '1.0';
 const ECB_SDW_BASE = 'https://data-api.ecb.europa.eu/service/data';
 const EUROSTAT_BASE = 'https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data';
 
-// Map panel config — center of Luxembourg, zoom fits the country boundary
-const MAP_CENTER_LU = [6.13, 49.75];
-const MAP_ZOOM_LU   = 9.5;
+// Map panel config — offset center east to account for left control card
+const MAP_CENTER_LU = [6.13, 49.81];
+const MAP_ZOOM_LU   = 9.0;
 
 // ─── Map choropleth indicator definitions ─────────────────────────────────────
 const COMMUNE_INDICATORS = {

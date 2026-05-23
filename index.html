@@ -2085,7 +2085,13 @@ function initMap() {
   if (mapInitialised) return;
   mapInitialised = true;
   mapInstance = new maplibregl.Map({ container: 'map', style: 'https://tiles.openfreemap.org/styles/bright', center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, minZoom: 7, maxZoom: 14, maxBounds: [[5.5, 49.2], [6.9, 50.4]] });
-  mapInstance.on('load', () => { mapLoaded = true; mapInstance.resize(); mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PAD, animate: false }); loadCommuneGeoJSON(); });
+  mapInstance.on('load', () => {
+    mapLoaded = true;
+    mapInstance.resize();
+    const cam = mapInstance.cameraForBounds(LU_BOUNDS, { padding: LU_FIT_PAD });
+    if (cam) mapInstance.jumpTo(cam);
+    loadCommuneGeoJSON();
+  });
   document.getElementById('map-reset-btn').addEventListener('click', () => { mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PAD }); });
   document.getElementById('indicator-select').addEventListener('change', e => { activeIndicator = e.target.value; if (mapSourcesReady) updateChoropleth(); renderLegend(); });
   document.getElementById('geo-level-select').addEventListener('change', e => {
