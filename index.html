@@ -885,13 +885,58 @@
       (Govind 2024) and adapted to the Luxembourg commune-bank context.
     </p>
 
-    <div class="data-note" style="margin:0 0 1.5rem">
+    <div class="data-note" style="margin:0 0 1rem">
       <span class="data-note-icon">ℹ</span>
       <span>
-        <strong>Model status:</strong> The stress score in the Evidence panel is a deterministic baseline benchmark.
-        The ML system below is not presented as an empirical result until the Luxembourg commune-year panel is built,
-        labels are defined, temporal validation is completed, and model-performance diagnostics are reported.
+        <strong>Model status — three distinct layers:</strong>
+        (1) <strong>Heuristic baseline</strong> (implemented): deterministic 4-component stress index, visible in the Evidence panel and served live by the API.
+        (2) <strong>Prototype panel</strong> (built): 102-commune socioeconomic panel with proxy distress labels — useful for verifying pipeline mechanics only, not for estimating true fiscal distress.
+        (3) <strong>Supervised ML</strong> (planned WP3): XGBoost + SHAP model trained on labelled fiscal events — not started; requires commune financial accounts and BCL supervisory data.
       </span>
+    </div>
+
+    <div class="data-note" style="margin:0 0 1.5rem;border-color:#f59e0b;background:#fffbeb">
+      <span class="data-note-icon">⚠</span>
+      <span>
+        <strong>Proxy label warning:</strong> The current <code style="font-family:'JetBrains Mono',monospace;font-size:.85em">panel_dataset.csv</code>
+        uses socioeconomic indicators (unemployment rate, income index, employment rate) as a proxy for fiscal distress.
+        This label is useful for testing pipeline mechanics and feature engineering workflows — it is
+        <em>not</em> a measure of fiscal distress and should not be interpreted as one.
+        It will be replaced by binary events derived from commune financial accounts (STATEC) and bank exposure data (BCL) in WP1.
+      </span>
+    </div>
+
+    <!-- Prototype panel summary -->
+    <h3 class="section-subheading">Prototype Panel — Current State</h3>
+    <div class="two-col" style="margin-bottom:1.5rem;gap:1rem">
+      <div class="rtable-wrap">
+        <table class="rtable">
+          <thead><tr><th>Dimension</th><th>Value</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>Communes</td><td>102</td><td>STATEC LUSTAT / Eurostat LAU 2021</td></tr>
+            <tr><td>Years</td><td>2021 only</td><td>Single snapshot — time series pending</td></tr>
+            <tr><td>Rows</td><td>102 (commune × year)</td><td><code>data/panel_dataset.csv</code></td></tr>
+            <tr><td>Implemented features</td><td>13 socioeconomic + 7 national context</td><td>STATEC LUSTAT + ECB/Eurostat</td></tr>
+            <tr><td>Placeholder columns</td><td>6 (commune revenue, debt, bank exposure)</td><td>Require BCL/STATEC access</td></tr>
+            <tr><td>Proxy distress flags</td><td>22 / 102 (21.6%)</td><td>Socioeconomic proxy only — not fiscal events</td></tr>
+            <tr><td>Reproduce</td><td colspan="2"><code>python3 scripts/build_panel.py</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="data-note" style="margin:0 0 .75rem;border-color:#a78bfa;background:#f5f3ff">
+          <span class="data-note-icon">→</span>
+          <span>
+            <strong>What the proxy panel enables now:</strong> verifying that the Python/R pipeline parses all 102 communes, that feature engineering code runs end-to-end, that the API loads the panel at startup, and that column schemas match what XGBoost will expect.
+          </span>
+        </div>
+        <div class="data-note" style="margin:0;border-color:#ef4444;background:#fef2f2">
+          <span class="data-note-icon">→</span>
+          <span>
+            <strong>What it does not enable:</strong> any claim about true fiscal distress prevalence, model performance, or the H3 hypothesis. The proxy label must be replaced before any ML results are reportable.
+          </span>
+        </div>
+      </div>
     </div>
 
     <!-- Prediction target -->
@@ -1058,16 +1103,23 @@
       </table>
     </div>
 
-    <h3 class="section-subheading">Planned API Contract</h3>
+    <h3 class="section-subheading">API Contract — Live &amp; Planned</h3>
+    <p style="font-size:.8rem;color:var(--text-muted);margin:.25rem 0 .85rem">
+      Run locally: <code style="font-family:'JetBrains Mono',monospace;font-size:.9em;background:#f1f5f9;padding:.1em .4em;border-radius:3px">uvicorn api.fiscal_ml_api:app --reload</code>
+      · Interactive docs at <code style="font-family:'JetBrains Mono',monospace;font-size:.9em;background:#f1f5f9;padding:.1em .4em;border-radius:3px">/docs</code>
+    </p>
     <div class="rtable-wrap" style="margin-bottom:1.5rem">
       <table class="rtable">
         <thead><tr><th>Endpoint</th><th>Purpose</th><th>Output</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td><code>GET /health</code></td><td>Service readiness check</td><td>Model/version/data vintage</td><td><span class="status-badge planned">Scaffold</span></td></tr>
-          <tr><td><code>POST /predict_distress</code></td><td>t+1 fiscal stress prediction for selected communes</td><td>Probability, warning flag, threshold band</td><td><span class="status-badge planned">WP3</span></td></tr>
-          <tr><td><code>POST /shap_explain</code></td><td>Local explanations for flagged communes</td><td>Top positive/negative SHAP drivers</td><td><span class="status-badge planned">WP3</span></td></tr>
-          <tr><td><code>GET /model_performance</code></td><td>Validation transparency</td><td>AUC-ROC, PR-AUC, Brier score, F1, false-alarm rate</td><td><span class="status-badge planned">WP3</span></td></tr>
-          <tr><td><code>GET /feature_importance</code></td><td>Global interpretability</td><td>Grouped feature importance and SHAP means</td><td><span class="status-badge planned">WP3</span></td></tr>
+          <tr><td><code>GET /health</code></td><td>Service readiness, data vintage, panel status</td><td>Model layer, available years, latest stress level</td><td><span class="status-badge implemented">Live — heuristic</span></td></tr>
+          <tr><td><code>GET /stress_score</code></td><td>Heuristic composite score for a given year</td><td>Composite [0,1], level, 4-component breakdown</td><td><span class="status-badge implemented">Live — heuristic</span></td></tr>
+          <tr><td><code>GET /stress_history</code></td><td>Full 2014–2023 heuristic time series</td><td>Series + methodology object</td><td><span class="status-badge implemented">Live — heuristic</span></td></tr>
+          <tr><td><code>GET /panel_summary</code></td><td>Prototype commune panel statistics</td><td>102 rows, proxy prevalence, at-risk list, placeholder columns</td><td><span class="status-badge implemented">Live — prototype panel</span></td></tr>
+          <tr><td><code>GET /model_performance</code></td><td>Benchmark and planned ML metrics</td><td>Heuristic benchmark + TBD metric targets for WP3</td><td><span class="status-badge implemented">Live — heuristic only</span></td></tr>
+          <tr><td><code>GET /feature_importance</code></td><td>Component weights + planned feature groups</td><td>Heuristic weights (live) + XGBoost group design (planned)</td><td><span class="status-badge implemented">Live — heuristic only</span></td></tr>
+          <tr><td><code>POST /predict_distress</code></td><td>t+1 fiscal stress prediction per commune</td><td>Probability, warning flag, threshold band</td><td><span class="status-badge planned">WP3 — XGBoost model required</span></td></tr>
+          <tr><td><code>POST /shap_explain</code></td><td>Local SHAP explanations for flagged communes</td><td>Top positive/negative SHAP drivers per commune</td><td><span class="status-badge planned">WP3 — trained model required</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -1455,14 +1507,15 @@
       <div class="arch-connector">↓</div>
 
       <div class="arch-layer ml">
-        <div><div class="arch-layer-name">Python ML Service</div><div class="arch-layer-sub"><code style="opacity:.7">ml-service/</code> · planned WP3 · FastAPI + XGBoost + SHAP</div></div>
+        <div><div class="arch-layer-name">Python API Service</div><div class="arch-layer-sub"><code style="opacity:.7">api/fiscal_ml_api.py</code> · heuristic layer live · XGBoost layer planned WP3</div></div>
         <div class="arch-nodes">
-          <div class="arch-node pending">train_model.py</div>
-          <div class="arch-node pending">ml_api.py</div>
-          <div class="arch-node pending">/predict endpoint</div>
-          <div class="arch-node pending">/shap_explain endpoint</div>
-          <div class="arch-node pending">/feature_importance</div>
-          <div class="arch-node pending">/model_performance</div>
+          <div class="arch-node">fiscal_ml_api.py (FastAPI)</div>
+          <div class="arch-node">scripts/build_panel.py</div>
+          <div class="arch-node">data/panel_dataset.csv (prototype)</div>
+          <div class="arch-node">/health · /stress_score · /stress_history</div>
+          <div class="arch-node">/panel_summary · /model_performance</div>
+          <div class="arch-node pending">train_model.py (WP3)</div>
+          <div class="arch-node pending">/predict_distress · /shap_explain (WP3)</div>
         </div>
       </div>
 
@@ -1510,28 +1563,98 @@
       </table>
     </div>
 
-    <h3 class="section-subheading">Implemented vs. Planned Repository Artifacts</h3>
+    <h3 class="section-subheading">Repository Artifacts — Current State</h3>
     <div class="artifact-grid" style="margin-bottom:1.5rem">
       <div class="artifact-card">
         <div class="artifact-status"><span class="status-badge implemented">Implemented</span></div>
         <div class="artifact-name"><code>index.html</code> · <code>style.css</code> · <code>js/shared.js</code></div>
-        <div class="artifact-text">Interactive proposal interface, evidence modules, live public API refresh, and baseline stress calculation.</div>
+        <div class="artifact-text">Interactive proposal interface, evidence modules, live public API refresh, heuristic stress index, and commune map.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-status"><span class="status-badge implemented">Live — heuristic layer</span></div>
+        <div class="artifact-name"><code>api/fiscal_ml_api.py</code> + <code>api/requirements.txt</code></div>
+        <div class="artifact-text">FastAPI service with live heuristic endpoints: <code>/health</code>, <code>/stress_score</code>, <code>/stress_history</code>, <code>/panel_summary</code>, <code>/model_performance</code>, <code>/feature_importance</code>. XGBoost and SHAP endpoints explicitly return planned status.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-status"><span class="status-badge prototype">Prototype panel</span></div>
+        <div class="artifact-name"><code>data/panel_dataset.csv</code> · <code>scripts/build_panel.py</code></div>
+        <div class="artifact-text">102-commune socioeconomic panel (STATEC LUSTAT 2021). Proxy distress label from unemployment/income/employment indicators. 6 fiscal and bank-exposure columns are empty placeholders. Reproduce: <code>python3 scripts/build_panel.py</code></div>
       </div>
       <div class="artifact-card">
         <div class="artifact-status"><span class="status-badge prototype">Documented</span></div>
-        <div class="artifact-name"><code>research/</code></div>
-        <div class="artifact-text">Data requirements, empirical strategy, and ML pipeline plan now live alongside the platform for review and extension.</div>
+        <div class="artifact-name"><code>research/</code> · <code>scripts/build_lux_panel.R</code></div>
+        <div class="artifact-text">Data requirements, empirical strategy, ML pipeline plan, and R panel-builder mirror. R script produces identical schema for comparison; Python is the canonical pipeline for API integration.</div>
       </div>
-      <div class="artifact-card">
-        <div class="artifact-status"><span class="status-badge planned">Scaffolded</span></div>
-        <div class="artifact-name"><code>scripts/build_lux_panel.R</code></div>
-        <div class="artifact-text">Placeholder for the reproducible commune-year panel builder, mirroring the AreaStat AT R data pipeline pattern.</div>
-      </div>
-      <div class="artifact-card">
-        <div class="artifact-status"><span class="status-badge planned">Scaffolded</span></div>
-        <div class="artifact-name"><code>api/fiscal_ml_api.py</code></div>
-        <div class="artifact-text">FastAPI contract for future XGBoost, SHAP, model performance, and feature-importance endpoints.</div>
-      </div>
+    </div>
+
+    <!-- API Readiness block -->
+    <h3 class="section-subheading">API Readiness</h3>
+    <div class="data-note" style="margin:0 0 .85rem;font-size:.8rem">
+      <span class="data-note-icon">ℹ</span>
+      <span>Run <code style="font-family:'JetBrains Mono',monospace">uvicorn api.fiscal_ml_api:app --reload</code> from the repo root. The API loads <code>banking.json</code>, <code>fiscal.json</code>, <code>communes.json</code>, and <code>panel_dataset.csv</code> at startup. See <code>/docs</code> for interactive Swagger UI.</span>
+    </div>
+    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+      <table class="rtable">
+        <thead><tr><th>Endpoint</th><th>Layer</th><th>Data source</th><th>Returns</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>GET /health</code></td>
+            <td>Infrastructure</td>
+            <td>banking.json, fiscal.json</td>
+            <td>Model layer, years, latest stress level, panel status</td>
+            <td><span class="status-badge implemented">Live</span></td>
+          </tr>
+          <tr>
+            <td><code>GET /stress_score?year=</code></td>
+            <td>Heuristic</td>
+            <td>banking.json, fiscal.json</td>
+            <td>Composite [0,1] + 4 components (mirrors js/shared.js)</td>
+            <td><span class="status-badge implemented">Live</span></td>
+          </tr>
+          <tr>
+            <td><code>GET /stress_history</code></td>
+            <td>Heuristic</td>
+            <td>banking.json, fiscal.json</td>
+            <td>2014–2023 series + methodology</td>
+            <td><span class="status-badge implemented">Live</span></td>
+          </tr>
+          <tr>
+            <td><code>GET /panel_summary</code></td>
+            <td>Prototype panel</td>
+            <td>panel_dataset.csv</td>
+            <td>102 communes, proxy prevalence 21.6%, placeholder columns list</td>
+            <td><span class="status-badge implemented">Live</span></td>
+          </tr>
+          <tr>
+            <td><code>GET /model_performance</code></td>
+            <td>Heuristic + WP3 design</td>
+            <td>computed</td>
+            <td>Heuristic benchmark + planned ML metric targets (AUC-ROC, PR-AUC, Brier, FAR)</td>
+            <td><span class="status-badge implemented">Live — heuristic only</span></td>
+          </tr>
+          <tr>
+            <td><code>GET /feature_importance</code></td>
+            <td>Heuristic + WP3 design</td>
+            <td>computed</td>
+            <td>4 component weights (live) + planned XGBoost feature groups</td>
+            <td><span class="status-badge implemented">Live — heuristic only</span></td>
+          </tr>
+          <tr>
+            <td><code>POST /predict_distress</code></td>
+            <td>ML model</td>
+            <td>panel_dataset.csv + trained model</td>
+            <td>Returns national heuristic context + informative WP3 blocker</td>
+            <td><span class="status-badge planned">WP3 — requires trained model</span></td>
+          </tr>
+          <tr>
+            <td><code>POST /shap_explain</code></td>
+            <td>ML interpretability</td>
+            <td>trained XGBoost tree</td>
+            <td>Returns heuristic decomposition + informative WP3 blocker</td>
+            <td><span class="status-badge planned">WP3 — requires trained model</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Work packages -->
@@ -1551,7 +1674,7 @@
           <li>Validate commune matching (LAU codes, name harmonisation)</li>
           <li>Build spatial adjacency matrix (queen contiguity)</li>
         </ul>
-        <div class="wp-deliverable">Deliverable: <code>panel_dataset.csv</code> + data documentation</div>
+        <div class="wp-deliverable">Deliverable: <code>panel_dataset.csv</code> with fiscal accounts (extends prototype) + data documentation</div>
       </div>
 
       <div class="wp-card">

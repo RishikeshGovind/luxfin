@@ -1,14 +1,27 @@
 # LuxFin commune-year panel builder (R version)
-# Mirrors scripts/build_panel.py — R is the preferred language for the
-# final panel once BCL/STATEC commune fiscal accounts are obtained.
 #
-# Current state: uses STATEC LUSTAT 2021 snapshot + Eurostat GFS national
-# aggregates as a prototype panel with socioeconomic proxy distress labels.
+# CANONICAL PIPELINE: scripts/build_panel.py (Python)
+#   - Python is canonical because the FastAPI service (api/fiscal_ml_api.py)
+#     loads panel_dataset.csv at startup.
+#   - This R script is a comparison mirror only. It produces an identical
+#     column schema for cross-validation. Output goes to the same CSV path,
+#     so run one or the other, not both.
+#
+# When to prefer R:
+#   - Once BCL/STATEC commune fiscal accounts are obtained and the panel
+#     construction pipeline grows more complex (merging multiple sources,
+#     spatial joins, etc.), R with sf/tidyverse is the preferred choice.
+#   - For WP1 data ingestion, this R script will become the canonical builder
+#     and Python will act as the API consumer.
+#
+# Current state: STATEC LUSTAT 2021 snapshot + Eurostat GFS national
+# aggregates. Proxy distress label from socioeconomic indicators only.
+# Not a fiscal accounts panel.
 #
 # Run from repo root:
 #   Rscript scripts/build_lux_panel.R
 #
-# Required packages: jsonlite, dplyr, readr
+# Required packages: jsonlite, dplyr, readr, here
 
 suppressPackageStartupMessages({
   library(jsonlite)
