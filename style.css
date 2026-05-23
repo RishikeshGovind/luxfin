@@ -408,7 +408,7 @@ h1, h2, h3, h4, h5 {
 .mcc-controls { display: flex; gap: 4px; }
 
 #map-legend {
-  position: absolute; bottom: 24px; left: 14px; z-index: 10;
+  position: absolute; bottom: 24px; right: 14px; z-index: 10;
   background: rgba(255,255,255,0.96);
   border: 1px solid #d1d5db;
   border-radius: 8px; padding: 8px 12px;
