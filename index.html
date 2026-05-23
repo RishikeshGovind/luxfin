@@ -1666,13 +1666,6 @@ document.querySelectorAll('.chapter-connector').forEach(strip => {
   strip.addEventListener('click', () => navigateTo(strip.dataset.next));
 });
 
-// ── Section quick-nav cards ───────────────────────────────────────────────
-document.querySelectorAll('.snav-card[data-goto]').forEach(card => {
-  card.addEventListener('click', () => {
-    const tab = document.querySelector(`.nav-tab[data-panel="${card.dataset.goto}"]`);
-    if (tab) tab.click();
-  });
-});
 
 // ── Evidence sub-tab navigation ───────────────────────────────────────────
 document.querySelectorAll('.evidence-sub-tab').forEach(btn => {

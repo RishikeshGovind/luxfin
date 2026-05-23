@@ -522,10 +522,6 @@ h1, h2, h3, h4, h5 {
 .data-note { display: flex; align-items: flex-start; gap: .5rem; background: #eff6ff; border: 1px solid #bfdbfe; border-left: 3px solid var(--accent); color: var(--accent-dark); padding: .75rem 1rem; font-size: .78rem; line-height: 1.6; border-radius: var(--radius); margin: 1rem 1.5rem; }
 .data-note-icon { font-size: .9rem; flex-shrink: 0; margin-top: .15rem; }
 
-/* ── Research note card ───────────────────────────────────────────────── */
-.research-note { background: #fafaf7; border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: .85rem 1.1rem; font-size: .8rem; color: #334155; line-height: 1.65; margin: 1rem 1.5rem; }
-.research-note-title { font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--gold); margin-bottom: .35rem; }
-
 /* ── Live fetch button ───────────────────────────────────────────────── */
 .live-fetch-btn { display: flex; align-items: center; gap: .35rem; font-size: .75rem; color: var(--accent); background: none; border: 1px solid #bfdbfe; border-radius: 4px; padding: .2rem .6rem; cursor: pointer; font-family: inherit; transition: background .15s; }
 .live-fetch-btn:hover { background: #eff6ff; }
@@ -585,151 +581,6 @@ h1, h2, h3, h4, h5 {
 .status-badge.planned      { background: #ede9fe; color: #4c1d95; }
 .status-badge.required     { background: #fee2e2; color: #7f1d1d; }
 
-/* ── Research readiness cards ─────────────────────────────────────────── */
-.readiness-block { padding-top: 2rem; padding-bottom: 1rem; }
-.readiness-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: .9rem;
-}
-.readiness-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-top: 3px solid var(--accent);
-  border-radius: 8px;
-  padding: 1rem 1.1rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,.04);
-}
-.readiness-card.implemented { border-top-color: var(--green); }
-.readiness-card.prototype { border-top-color: var(--amber); }
-.readiness-card.planned { border-top-color: #8b5cf6; }
-.readiness-card.required { border-top-color: var(--red); }
-.readiness-kicker {
-  font-size: .65rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--text-xmuted);
-  margin-bottom: .35rem;
-}
-.readiness-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: .95rem;
-  font-weight: 700;
-  color: var(--accent-dark);
-  margin-bottom: .35rem;
-}
-.readiness-text {
-  font-size: .78rem;
-  line-height: 1.55;
-  color: var(--text-muted);
-}
-
-/* ── Proposal hero ────────────────────────────────────────────────────── */
-.proposal-hero {
-  background: linear-gradient(135deg, #0a1628 0%, #0f2242 60%, #1a3860 100%);
-  color: #fff;
-  padding: 3.5rem 2rem 3rem;
-  position: relative;
-  overflow: hidden;
-}
-.proposal-hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(255,255,255,.018) 80px, rgba(255,255,255,.018) 81px);
-  pointer-events: none;
-}
-.proposal-hero-inner { max-width: 900px; position: relative; z-index: 1; }
-.proposal-pretitle {
-  font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
-  color: #c8a135; margin-bottom: .85rem;
-  display: flex; align-items: center; gap: .6rem;
-}
-.proposal-pretitle::before { content: '◈'; font-size: .9rem; }
-.proposal-question {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.95rem; font-weight: 700; line-height: 1.25;
-  letter-spacing: -.03em;
-  color: #fff;
-  margin-bottom: .85rem;
-  max-width: 820px;
-}
-.proposal-subq {
-  font-size: 1rem; font-weight: 400; color: rgba(255,255,255,.72);
-  line-height: 1.55; margin-bottom: 1.75rem; max-width: 720px;
-}
-.proposal-meta-strip {
-  display: flex; gap: 1.75rem; flex-wrap: wrap; align-items: center;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255,255,255,.12);
-}
-.proposal-meta-item {
-  font-size: .78rem; color: rgba(255,255,255,.65);
-  display: flex; align-items: center; gap: .4rem;
-}
-.proposal-meta-item strong { color: rgba(255,255,255,.88); font-weight: 600; }
-
-/* ── Section container ────────────────────────────────────────────────── */
-.section-block {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2.5rem 1.75rem;
-}
-.section-block + .section-block { padding-top: 0; }
-
-.section-heading {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.25rem; font-weight: 700;
-  color: var(--accent-dark);
-  margin-bottom: .4rem;
-  display: flex; align-items: center; gap: .75rem;
-}
-.section-heading .sec-num {
-  font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--gold); background: #fefce8; border: 1px solid #fde68a;
-  padding: .1rem .45rem; border-radius: 4px;
-}
-.section-subheading {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1rem; font-weight: 700; color: var(--accent-dark);
-  margin: 1.75rem 0 .6rem;
-}
-.section-intro {
-  font-size: .88rem; color: var(--text-muted); line-height: 1.7;
-  margin-bottom: 1.5rem; max-width: 840px;
-}
-
-/* ── Hypothesis cards ──────────────────────────────────────────────────── */
-.hyp-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.1rem;
-  margin-bottom: .75rem;
-}
-@media (max-width: 900px) { .hyp-grid { grid-template-columns: 1fr; } }
-
-.hyp-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 1.1rem 1.25rem;
-  display: flex; flex-direction: column; gap: .75rem;
-  box-shadow: 0 1px 4px rgba(0,0,0,.04);
-}
-.hyp-number {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.4rem; font-weight: 700;
-  color: var(--accent); line-height: 1;
-}
-.hyp-label {
-  font-size: .68rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .08em; color: var(--text-xmuted);
-  margin-top: -.4rem;
-}
-.hyp-text { font-size: .84rem; line-height: 1.65; color: var(--text); }
-.hyp-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .4rem; }
-.hyp-method { font-size: .72rem; color: var(--text-muted); font-style: italic; }
 
 /* ── Evidence frame (per-chart context) ───────────────────────────────── */
 .evidence-frame {
@@ -755,17 +606,6 @@ h1, h2, h3, h4, h5 {
 .ev-tests .ev-note-label { color: #15803d; }
 .ev-needed { background: #fffbeb; border-left: 2px solid #f59e0b; }
 .ev-needed .ev-note-label { color: #b45309; }
-
-/* ── Evidence intro block ─────────────────────────────────────────────── */
-.evidence-intro-block {
-  background: #fafaf7;
-  border-left: 4px solid var(--gold);
-  margin: 1.25rem 1.5rem .25rem;
-  padding: .9rem 1.1rem;
-  font-size: .82rem; line-height: 1.65; color: #334155;
-  border-radius: 0 6px 6px 0;
-}
-.evidence-intro-block strong { color: var(--accent-dark); }
 
 /* ── Research tables ──────────────────────────────────────────────────── */
 .rtable-wrap { overflow-x: auto; }
@@ -927,45 +767,6 @@ h1, h2, h3, h4, h5 {
   color: var(--text-muted);
 }
 
-/* ── Section navigation cards (overview quick-links) ─────────────────── */
-.snav-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: .85rem;
-}
-.snav-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 1rem 1.1rem;
-  cursor: pointer; transition: all .15s;
-  display: flex; flex-direction: column; gap: .4rem;
-}
-.snav-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(29,78,216,.1); transform: translateY(-1px); }
-.snav-icon { font-size: 1.2rem; }
-.snav-title { font-size: .88rem; font-weight: 700; color: var(--text); }
-.snav-desc { font-size: .74rem; color: var(--text-muted); line-height: 1.4; }
-
-/* ── Two-column layout ────────────────────────────────────────────────── */
-.two-col {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-  align-items: start;
-}
-@media (max-width: 780px) { .two-col { grid-template-columns: 1fr; } }
-.three-col {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem;
-}
-@media (max-width: 900px) { .three-col { grid-template-columns: 1fr; } }
-
-/* ── Lit gap / comparison cards ────────────────────────────────────────── */
-.lit-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: .9rem 1.1rem;
-}
-.lit-card-title { font-size: .84rem; font-weight: 700; color: var(--text); margin-bottom: .3rem; }
-.lit-card-ref { font-size: .72rem; color: var(--text-xmuted); font-style: italic; margin-bottom: .4rem; }
-.lit-card-contribution { font-size: .78rem; color: var(--text-muted); line-height: 1.5; margin-bottom: .4rem; }
-.lit-card-gap { font-size: .78rem; color: #92400e; background: #fef3c7; border-radius: 4px; padding: .35rem .6rem; line-height: 1.4; }
-.lit-card-gap::before { content: 'Gap: '; font-weight: 700; }
-
 /* ── Variable spec cards (empirical strategy) ─────────────────────────── */
 .var-group { display: flex; flex-direction: column; gap: .5rem; }
 .var-card {
@@ -976,15 +777,6 @@ h1, h2, h3, h4, h5 {
 .var-name { font-family: 'JetBrains Mono', monospace; font-size: .8rem; font-weight: 600; color: var(--accent-dark); min-width: 160px; flex-shrink: 0; }
 .var-desc { font-size: .8rem; color: var(--text-muted); line-height: 1.45; }
 .var-source { font-size: .7rem; color: var(--text-xmuted); display: block; margin-top: .15rem; }
-
-/* ── Identification risk cards ────────────────────────────────────────── */
-.risk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .75rem; }
-.risk-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: .75rem .9rem; }
-.risk-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #dc2626; margin-bottom: .3rem; }
-.risk-text { font-size: .8rem; color: var(--text-muted); line-height: 1.5; }
-.strat-card { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: .75rem .9rem; }
-.strat-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #15803d; margin-bottom: .3rem; }
-.strat-text { font-size: .8rem; color: #166534; line-height: 1.5; }
 
 /* ── Map panel header ─────────────────────────────────────────────────── */
 .map-panel-header {
@@ -1037,8 +829,6 @@ h1, h2, h3, h4, h5 {
   #map-control-card { width: 190px; }
   #commune-popup { display: none !important; }
   .panel-header { padding: 1rem; }
-  .proposal-question { font-size: 1.4rem; }
-  .section-block { padding: 1.5rem 1rem; }
   .evidence-frame { grid-template-columns: 1fr; }
   .ml-pipeline-diagram { grid-template-columns: 1fr; }
 }
