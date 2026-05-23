@@ -361,9 +361,20 @@ h1, h2, h3, h4, h5 {
 .stress-comp-desc { font-size: .68rem; color: var(--text-xmuted); }
 .stress-charts-area { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
 .stress-history-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-.stress-history-header { padding: .9rem 1.25rem; border-bottom: 1px solid var(--border); background: #f8fafc; }
+.stress-history-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; padding: .9rem 1.25rem; border-bottom: 1px solid var(--border); background: #f8fafc; }
 .stress-history-title { font-size: .88rem; font-weight: 700; color: var(--text); }
 .stress-history-body { padding: 1rem 1.25rem; }
+.stress-api-controls { display: flex; align-items: center; gap: .5rem; }
+.stress-data-badge { font-size: .68rem; font-weight: 600; color: var(--text-muted); background: #f1f5f9; border: 1px solid var(--border); border-radius: 4px; padding: .15rem .5rem; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; transition: background .2s, color .2s; }
+.stress-data-badge.live { background: #dcfce7; border-color: #86efac; color: #15803d; }
+
+/* ── Map year toggle ─────────────────────────────────────────────────── */
+.year-toggle-group { display: flex; gap: .25rem; }
+.year-toggle-btn { font-size: .72rem; font-weight: 600; font-family: inherit; border: 1px solid var(--border); border-radius: 4px; padding: .2rem .55rem; cursor: pointer; background: var(--surface); color: var(--text-muted); transition: background .15s, color .15s, border-color .15s; }
+.year-toggle-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.year-toggle-btn:disabled { opacity: .4; cursor: not-allowed; }
+.year-toggle-btn:not(:disabled):not(.active):hover { background: #eff6ff; border-color: #bfdbfe; color: var(--accent); }
+.year-toggle-note { font-size: .68rem; color: var(--text-muted); margin-top: .25rem; }
 
 /* ── COFOG ────────────────────────────────────────────────────────────── */
 .cofog-row { display: flex; align-items: center; gap: .5rem; font-size: .75rem; color: var(--text); padding: 3px 0; }

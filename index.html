@@ -820,6 +820,10 @@
         <div class="stress-history-card">
           <div class="stress-history-header">
             <div class="stress-history-title">Composite Stress Score — Historical (2014–2023)</div>
+            <div class="stress-api-controls">
+              <span class="stress-data-badge" id="stress-data-badge">Static · banking.json</span>
+              <button class="live-fetch-btn" id="btn-fetch-stress-api">↻ Load from API</button>
+            </div>
           </div>
           <div class="stress-history-body">
             <div class="chart-wrap"><canvas id="chart-stress-history"></canvas></div>
@@ -1434,6 +1438,16 @@
       </div>
 
       <div class="mcc-section">
+        <div class="mcc-label">Reference Year</div>
+        <div class="year-toggle-group">
+          <button class="year-toggle-btn active" data-year="2021">2021</button>
+          <button class="year-toggle-btn" data-year="2022" disabled title="Pending STATEC release">2022</button>
+          <button class="year-toggle-btn" data-year="2023" disabled title="Pending STATEC release">2023</button>
+        </div>
+        <div class="year-toggle-note" id="year-toggle-note">STATEC LUSTAT · 2022–2023 pending release</div>
+      </div>
+
+      <div class="mcc-section">
         <div class="mcc-label">Geographic Level</div>
         <select id="geo-level-select" class="mcc-select">
           <option value="communes" selected>Communes (~102)</option>
@@ -1761,8 +1775,10 @@ let chartInstances = {};
 let activePanel    = 'overview';
 let communeGeoJSON = null;
 let selectedCommune = null;
-let activeIndicator = 'employment_rate';
-let mapInstance     = null;
+let activeIndicator  = 'employment_rate';
+let activeMapYear    = 2021;
+let communeYearData  = {};          // keyed by year; populated as data loads
+let mapInstance      = null;
 let mapSourcesReady = false;
 let mapInitialised  = false;
 let stressInitialized = false;
@@ -1855,6 +1871,7 @@ async function loadAllData() {
   bankingData  = bData;
   fiscalData   = fData;
   communeData  = cData;
+  communeYearData[2021] = cData;
   communePanelData = indexPanelByCommune(panelRows);
   stressScores = computeStressScores(bankingData, fiscalData);
   renderBankingPanel();
@@ -2074,6 +2091,66 @@ function initMap() {
     }
   });
   document.getElementById('popup-close-btn').addEventListener('click', () => { document.getElementById('commune-popup').style.display = 'none'; selectedCommune = null; if (mapSourcesReady) mapInstance.removeFeatureState({ source: 'communes' }); });
+
+  // Year toggle
+  document.querySelectorAll('.year-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (btn.disabled) return;
+      const year = parseInt(btn.dataset.year);
+      if (year === activeMapYear) return;
+      document.querySelectorAll('.year-toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeMapYear = year;
+      await loadCommuneYear(year);
+    });
+  });
+}
+
+async function loadCommuneYear(year) {
+  const noteEl = document.getElementById('year-toggle-note');
+  if (communeYearData[year]) {
+    communeData = communeYearData[year];
+    refreshMapProperties();
+    noteEl.textContent = `STATEC LUSTAT · ${year}`;
+    return;
+  }
+  noteEl.textContent = `Loading ${year} data…`;
+  try {
+    const res = await fetch(`./data/communes_${year}.json`);
+    if (!res.ok) throw new Error('not found');
+    const data = await res.json();
+    communeYearData[year] = data;
+    communeData = data;
+    refreshMapProperties();
+    noteEl.textContent = `STATEC LUSTAT · ${year}`;
+  } catch {
+    noteEl.textContent = `${year} data not available — reverting to 2021`;
+    activeMapYear = 2021;
+    communeData = communeYearData[2021];
+    document.querySelectorAll('.year-toggle-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.year === '2021');
+    });
+    refreshMapProperties();
+  }
+}
+
+function refreshMapProperties() {
+  if (!communeGeoJSON || !mapSourcesReady) return;
+  communeGeoJSON.features.forEach(f => {
+    const name  = f.properties.LAU_NAME;
+    const data  = communeData?.communes?.[name];
+    const panel = communePanelData?.[name];
+    if (data) Object.keys(COMMUNE_INDICATORS).forEach(ind => { f.properties['_' + ind] = data[ind] ?? null; });
+    if (panel) {
+      f.properties._proxy_risk = panel.fiscal_distress_proxy ?? null;
+      f.properties._unemp_z   = panel.unemp_z ?? null;
+      f.properties._income_z  = panel.income_z ?? null;
+      f.properties._emp_z     = panel.emp_z ?? null;
+    }
+  });
+  mapInstance.getSource('communes').setData(communeGeoJSON);
+  updateChoropleth();
+  renderLegend();
 }
 
 async function loadCommuneGeoJSON() {
@@ -2239,6 +2316,54 @@ function mergeLiveSeries(annualObj, fieldName, liveYears, liveValues, scaleFacto
   });
   return updated;
 }
+
+document.getElementById('btn-fetch-stress-api').addEventListener('click', async function() {
+  const badge = document.getElementById('stress-data-badge');
+  this.textContent = '↻ Loading…'; this.classList.add('loading');
+  badge.textContent = 'Fetching from API…';
+  try {
+    const res = await fetch(`${HF_API}/stress_history`, { signal: AbortSignal.timeout(15000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const d = await res.json();
+    if (!Array.isArray(d.series) || d.series.length === 0) throw new Error('empty response');
+    stressScores = d.series.map(h => {
+      const c = h.components ?? {};
+      const rawMap = {
+        bond_concentration: c.bond_concentration ?? null,
+        credit_govt_share:  c.credit_govt_share  ?? null,
+        fiscal_balance:     c.fiscal_balance      ?? null,
+        sector_size:        c.sector_size         ?? null,
+      };
+      const components = STRESS_COMPONENTS.map(comp => {
+        const rawVal = rawMap[comp.id];
+        if (rawVal == null) return { id: comp.id, rawVal: null, norm: 0, weight: comp.weight };
+        const lo = comp.lowThresh, hi = comp.highThresh;
+        let norm = Math.max(0, Math.min(1, (rawVal - lo) / (hi - lo)));
+        if (comp.invertSign) norm = 1 - norm;
+        return { id: comp.id, rawVal, norm, weight: comp.weight };
+      });
+      return {
+        year:      h.year,
+        composite: h.composite,
+        components,
+        bondConc:  rawMap.bond_concentration,
+        creditShr: rawMap.credit_govt_share,
+        fiscalBal: rawMap.fiscal_balance,
+        sectorSz:  rawMap.sector_size,
+      };
+    });
+    if (stressInitialized) refreshStressCharts();
+    else { renderStressPanel(); stressInitialized = true; }
+    badge.textContent = 'API · live';
+    badge.classList.add('live');
+  } catch (err) {
+    badge.textContent = 'API error — using static data';
+    badge.classList.remove('live');
+    console.warn('Stress API fetch failed:', err.message);
+  } finally {
+    this.textContent = '↻ Load from API'; this.classList.remove('loading');
+  }
+});
 
 document.getElementById('btn-fetch-banking').addEventListener('click', async function() {
   this.textContent = '↻ Fetching…'; this.classList.add('loading');
