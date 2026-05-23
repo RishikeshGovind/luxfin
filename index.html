@@ -49,6 +49,10 @@
     <span class="data-static-dot"></span>
     Static · ECB / Eurostat / STATEC
   </div>
+  <div class="header-api-status" id="api-status-badge" title="LuxFin Heuristic API · aetherno-luxfin-api.hf.space">
+    <span class="api-status-dot" id="api-status-dot"></span>
+    <span id="api-status-text">API …</span>
+  </div>
 </header>
 
 
@@ -1609,56 +1613,56 @@
         <thead><tr><th>Endpoint</th><th>Layer</th><th>Data source</th><th>Returns</th><th>Status</th></tr></thead>
         <tbody>
           <tr>
-            <td><code>GET /health</code></td>
+            <td><a href="https://aetherno-luxfin-api.hf.space/health" target="_blank" rel="noopener" class="api-link"><code>GET /health</code></a></td>
             <td>Infrastructure</td>
             <td>banking.json, fiscal.json</td>
             <td>Model layer, years, latest stress level, panel status</td>
             <td><span class="status-badge implemented">Live</span></td>
           </tr>
           <tr>
-            <td><code>GET /stress_score?year=</code></td>
+            <td><a href="https://aetherno-luxfin-api.hf.space/stress_score?year=2023" target="_blank" rel="noopener" class="api-link"><code>GET /stress_score?year=</code></a></td>
             <td>Heuristic</td>
             <td>banking.json, fiscal.json</td>
             <td>Composite [0,1] + 4 components (mirrors js/shared.js)</td>
             <td><span class="status-badge implemented">Live</span></td>
           </tr>
           <tr>
-            <td><code>GET /stress_history</code></td>
+            <td><a href="https://aetherno-luxfin-api.hf.space/stress_history" target="_blank" rel="noopener" class="api-link"><code>GET /stress_history</code></a></td>
             <td>Heuristic</td>
             <td>banking.json, fiscal.json</td>
             <td>2014–2023 series + methodology</td>
             <td><span class="status-badge implemented">Live</span></td>
           </tr>
           <tr>
-            <td><code>GET /panel_summary</code></td>
+            <td><a href="https://aetherno-luxfin-api.hf.space/panel_summary" target="_blank" rel="noopener" class="api-link"><code>GET /panel_summary</code></a></td>
             <td>Prototype panel</td>
             <td>panel_dataset.csv</td>
             <td>102 communes, proxy prevalence 21.6%, placeholder columns list</td>
             <td><span class="status-badge implemented">Live</span></td>
           </tr>
           <tr>
-            <td><code>GET /model_performance</code></td>
+            <td><a href="https://aetherno-luxfin-api.hf.space/model_performance" target="_blank" rel="noopener" class="api-link"><code>GET /model_performance</code></a></td>
             <td>Heuristic + WP3 design</td>
             <td>computed</td>
             <td>Heuristic benchmark + planned ML metric targets (AUC-ROC, PR-AUC, Brier, FAR)</td>
             <td><span class="status-badge implemented">Live — heuristic only</span></td>
           </tr>
           <tr>
-            <td><code>GET /feature_importance</code></td>
+            <td><a href="https://aetherno-luxfin-api.hf.space/feature_importance" target="_blank" rel="noopener" class="api-link"><code>GET /feature_importance</code></a></td>
             <td>Heuristic + WP3 design</td>
             <td>computed</td>
             <td>4 component weights (live) + planned XGBoost feature groups</td>
             <td><span class="status-badge implemented">Live — heuristic only</span></td>
           </tr>
           <tr>
-            <td><code>POST /predict_distress</code></td>
+            <td><a href="https://aetherno-luxfin-api.hf.space/docs#/default/predict_distress_predict_distress_post" target="_blank" rel="noopener" class="api-link api-link-planned"><code>POST /predict_distress</code></a></td>
             <td>ML model</td>
             <td>panel_dataset.csv + trained model</td>
             <td>Returns national heuristic context + informative WP3 blocker</td>
             <td><span class="status-badge planned">WP3 — requires trained model</span></td>
           </tr>
           <tr>
-            <td><code>POST /shap_explain</code></td>
+            <td><a href="https://aetherno-luxfin-api.hf.space/docs#/default/shap_explain_shap_explain_post" target="_blank" rel="noopener" class="api-link api-link-planned"><code>POST /shap_explain</code></a></td>
             <td>ML interpretability</td>
             <td>trained XGBoost tree</td>
             <td>Returns heuristic decomposition + informative WP3 blocker</td>
@@ -2279,8 +2283,30 @@ function buildMiniLineOptions(unit) {
   return { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + unit } } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { ticks: { callback: v => v + unit, font: { size: 9 } }, grid: { color: '#f1f5f9' } } } };
 }
 
+// ── API status ping ───────────────────────────────────────────────────────
+const HF_API = 'https://aetherno-luxfin-api.hf.space';
+
+async function pingAPI() {
+  const dot  = document.getElementById('api-status-dot');
+  const text = document.getElementById('api-status-text');
+  try {
+    const res = await fetch(`${HF_API}/health`, { signal: AbortSignal.timeout(8000) });
+    if (res.ok) {
+      const d = await res.json();
+      dot.className  = 'api-status-dot online';
+      text.textContent = `API ${d.latest_stress?.level ?? 'online'}`;
+    } else {
+      throw new Error('non-200');
+    }
+  } catch {
+    dot.className  = 'api-status-dot offline';
+    text.textContent = 'API offline';
+  }
+}
+
 // ── Boot ──────────────────────────────────────────────────────────────────
 loadAllData().catch(err => console.error('LuxFin data load error:', err));
+pingAPI();
 </script>
 </body>
 </html>

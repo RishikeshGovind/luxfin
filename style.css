@@ -119,6 +119,39 @@ h1, h2, h3, h4, h5 {
   flex-shrink: 0;
 }
 
+/* ── Live API status badge ───────────────────────────────────────────── */
+.header-api-status {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .72rem;
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+  margin-left: 1.25rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid rgba(255,255,255,0.12);
+  cursor: default;
+}
+.api-status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+  transition: background .4s;
+}
+.api-status-dot.online  { background: #4ade80; box-shadow: 0 0 5px #4ade8088; }
+.api-status-dot.offline { background: #ef4444; }
+
+/* ── API table links ─────────────────────────────────────────────────── */
+.api-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: .82rem;
+}
+.api-link:hover { text-decoration: underline; }
+.api-link code  { color: inherit; }
+.api-link-planned { color: var(--text-muted); }
+
 /* ── Panels ───────────────────────────────────────────────────────────── */
 .panel { display: none; min-height: calc(100vh - var(--header-h)); }
 .panel.active { display: block; }
