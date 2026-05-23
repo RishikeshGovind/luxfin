@@ -821,10 +821,11 @@ h1, h2, h3, h4, h5 {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 6px; padding: .65rem .85rem;
   text-align: center;
+  display: flex; flex-direction: column; align-items: center;
 }
 .metric-name { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: .25rem; }
-.metric-value { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--text); }
-.metric-note { font-size: .68rem; color: var(--text-xmuted); margin-top: .1rem; }
+.metric-value { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--text); flex: 1; display: flex; align-items: center; }
+.metric-note { font-size: .68rem; color: var(--text-xmuted); margin-top: .25rem; }
 .metric-card.tbd .metric-value { color: var(--text-xmuted); font-size: .85rem; }
 
 /* ── Responsive ──────────────────────────────────────────────────────── */
