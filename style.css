@@ -1049,6 +1049,97 @@ h1, h2, h3, h4, h5 {
   .nav-tab-icon { display: none; }
 }
 
+/* ── Distill-style reading layout ────────────────────────────────────── */
+.prose {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+}
+.prose + .prose { padding-top: 0; }
+.prose-wide {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 2rem 2.5rem;
+}
+.prose-eyebrow {
+  font-size: .6rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .14em; color: var(--gold); margin-bottom: .4rem;
+}
+.prose-h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.35rem; font-weight: 700; letter-spacing: -.03em;
+  color: var(--accent-dark); margin-bottom: .65rem;
+}
+.prose-lede {
+  font-size: .97rem; line-height: 1.82; color: #334155; margin-bottom: 1.25rem;
+}
+.prose-p {
+  font-size: .9rem; line-height: 1.82; color: #475569; margin-bottom: 1rem;
+}
+.prose-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+.prose-note {
+  background: #f8fafc; border-left: 3px solid var(--border);
+  padding: .75rem 1rem; font-size: .8rem; line-height: 1.65;
+  color: var(--text-muted); border-radius: 0 6px 6px 0; margin-top: 1rem;
+}
+
+/* Metadata key-value strip */
+.meta-row-list { margin-top: 1.5rem; border-top: 1px solid var(--border); }
+.meta-row {
+  display: flex; gap: 1rem; align-items: baseline;
+  padding: .5rem 0; border-bottom: 1px solid var(--border);
+  font-size: .84rem; color: var(--text);
+}
+.meta-key {
+  font-size: .68rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--text-muted); min-width: 78px; flex-shrink: 0;
+}
+
+/* Readiness inline list */
+.readiness-list { margin-top: .75rem; }
+.readiness-row {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: .85rem 0; border-top: 1px solid var(--border);
+}
+.readiness-row:last-child { border-bottom: 1px solid var(--border); }
+.rr-pill {
+  font-size: .58rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; padding: .22rem .6rem; border-radius: 4px;
+  flex-shrink: 0; margin-top: .15rem; white-space: nowrap;
+}
+.rr-implemented { background: #dcfce7; color: #15803d; }
+.rr-prototype    { background: #dbeafe; color: #1e40af; }
+.rr-planned      { background: #fef3c7; color: #92400e; }
+.rr-required     { background: #fee2e2; color: #991b1b; }
+.rr-title { font-size: .88rem; font-weight: 700; color: var(--text); margin-bottom: .18rem; }
+.rr-text  { font-size: .82rem; color: var(--text-muted); line-height: 1.6; }
+
+/* Hypothesis inline rows */
+.hyp-rows { margin-top: .75rem; }
+.hyp-row {
+  display: flex; gap: 1.25rem; padding: 1.1rem 0; border-top: 1px solid var(--border);
+}
+.hyp-row:last-child { border-bottom: 1px solid var(--border); }
+.hyp-row-num {
+  font-family: 'Space Grotesk', sans-serif; font-size: 1.9rem; font-weight: 800;
+  color: var(--accent); opacity: .16; flex-shrink: 0; width: 44px;
+  line-height: 1.1; letter-spacing: -.05em;
+}
+.hyp-row-body { flex: 1; }
+.hyp-row-label { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--text-xmuted); margin-bottom: .3rem; }
+.hyp-row-text  { font-size: .88rem; line-height: 1.72; color: var(--text); margin-bottom: .45rem; }
+.hyp-row-meta  { font-size: .72rem; color: var(--text-muted); font-style: italic; }
+
+/* Literature inline rows */
+.lit-rows { margin-top: .75rem; }
+.lit-row { padding: 1rem 0; border-top: 1px solid var(--border); }
+.lit-row:last-child { border-bottom: 1px solid var(--border); }
+.lit-row-title        { font-size: .9rem; font-weight: 700; color: var(--accent-dark); margin-bottom: .2rem; }
+.lit-row-ref          { font-size: .72rem; color: var(--text-xmuted); font-style: italic; margin-bottom: .35rem; }
+.lit-row-contribution { font-size: .83rem; color: var(--text); line-height: 1.65; margin-bottom: .35rem; }
+.lit-row-gap          { font-size: .82rem; color: #1d4ed8; line-height: 1.65; border-left: 2px solid #bfdbfe; padding-left: .65rem; }
+.lit-gap-label        { font-size: .58rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); display: block; margin-bottom: .1rem; }
+
 /* ── Panel intro frames (Layer 4) ─────────────────────────────────────── */
 .panel-intro {
   background: linear-gradient(135deg, var(--accent-dark) 0%, #1d4ed8 100%);

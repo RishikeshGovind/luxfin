@@ -56,269 +56,129 @@
     <div class="pi-question">Does concentrated banking sector exposure to local government borrowers create a subnational sovereign-bank nexus — and can forward-looking ML-based fiscal risk indicators serve as an early warning system for regional financial stability in Luxembourg?</div>
   </div>
 
-  <!-- Hero -->
-  <div class="proposal-hero">
-    <div class="proposal-hero-inner">
-      <div class="proposal-pretitle">PhD Research Proposal · University of Luxembourg · Department of Finance</div>
-      <h1 class="proposal-question">
-        Does concentrated banking sector exposure to local government borrowers create a subnational sovereign-bank nexus?
-      </h1>
-      <p class="proposal-subq">
-        And can forward-looking ML-based fiscal risk indicators serve as an early warning system for regional financial stability in Luxembourg?
-      </p>
-      <div class="proposal-meta-strip">
-        <div class="proposal-meta-item"><strong>Geography</strong> Luxembourg · 102 communes · 12 cantons</div>
-        <div class="proposal-meta-item"><strong>Period</strong> 2010–2023 (panel) · forecast horizon t+1/t+2</div>
-        <div class="proposal-meta-item"><strong>Methods</strong> Panel regression · ML (XGBoost) · SHAP · Spatial econometrics</div>
-        <div class="proposal-meta-item"><strong>Data</strong> ECB BSI · Eurostat GFS · STATEC LUSTAT · BCL supervisory</div>
+  <!-- Dossier intro -->
+  <div class="prose">
+    <p class="prose-eyebrow">PhD Research Proposal · University of Luxembourg · Department of Finance</p>
+    <p class="prose-lede">Luxembourg's banking sector — at ~12× GDP — lends directly to 102 communes with markedly heterogeneous fiscal capacity. This proposal tests whether concentrated local-government exposures create a subnational sovereign-bank feedback loop, and whether ML-based fiscal indicators can serve as an early-warning system for regional financial stability.</p>
+    <div class="meta-row-list">
+      <div class="meta-row"><span class="meta-key">Geography</span>Luxembourg · 102 communes · 12 cantons</div>
+      <div class="meta-row"><span class="meta-key">Period</span>2010–2023 panel · forecast horizon t+1/t+2</div>
+      <div class="meta-row"><span class="meta-key">Methods</span>Panel regression · XGBoost · SHAP · Spatial econometrics</div>
+      <div class="meta-row"><span class="meta-key">Data</span>ECB BSI · Eurostat GFS · STATEC LUSTAT · BCL supervisory</div>
+    </div>
+  </div>
+
+  <hr class="prose-divider">
+
+  <!-- Readiness -->
+  <div class="prose">
+    <p class="prose-eyebrow">Research Readiness</p>
+    <h2 class="prose-h2">What is built, designed, and still pending</h2>
+    <p class="prose-p">LuxFin is deliberately staged: implemented evidence, prototype design, and data-dependent extensions. This keeps the proposal ambitious while making clear which claims are demonstrated now and which require supervisory access.</p>
+    <div class="readiness-list">
+      <div class="readiness-row">
+        <span class="rr-pill rr-implemented">Implemented</span>
+        <div><div class="rr-title">Static Research Platform</div><div class="rr-text">Interactive proposal narrative, ECB/Eurostat evidence panels, commune map, and a transparent baseline stress index.</div></div>
+      </div>
+      <div class="readiness-row">
+        <span class="rr-pill rr-prototype">Prototype</span>
+        <div><div class="rr-title">Research Design Modules</div><div class="rr-text">Feature architecture, empirical strategy, data feasibility matrix, and ML validation plan specified before full data access.</div></div>
+      </div>
+      <div class="readiness-row">
+        <span class="rr-pill rr-planned">Planned</span>
+        <div><div class="rr-title">ML/API Execution Layer</div><div class="rr-text">R panel builder, Plumber fiscal summaries, FastAPI XGBoost service, SHAP explanations, and model performance endpoints.</div></div>
+      </div>
+      <div class="readiness-row">
+        <span class="rr-pill rr-required">Requires Access</span>
+        <div><div class="rr-title">Bank-Commune Exposure Matrix</div><div class="rr-text">BCL/CSSF supervisory data required to estimate the core bank-by-commune nexus rather than national aggregates only.</div></div>
       </div>
     </div>
   </div>
 
-  <!-- Research readiness -->
-  <div class="section-block readiness-block">
-    <h2 class="section-heading">
-      <span class="sec-num">0</span> Current Research Readiness
-    </h2>
-    <p class="section-intro">
-      LuxFin is deliberately split into implemented evidence, prototype design, and data-dependent extensions.
-      This keeps the proposal ambitious while making clear which claims are demonstrated now and which require
-      supervisory access or additional panel construction.
-    </p>
-
-    <div class="readiness-grid">
-      <div class="readiness-card implemented">
-        <div class="readiness-kicker">Implemented</div>
-        <div class="readiness-title">Static Research Platform</div>
-        <div class="readiness-text">Interactive proposal narrative, ECB/Eurostat evidence panels, commune map, and a transparent baseline stress index.</div>
-      </div>
-      <div class="readiness-card prototype">
-        <div class="readiness-kicker">Prototype</div>
-        <div class="readiness-title">Research Design Modules</div>
-        <div class="readiness-text">Feature architecture, empirical strategy, data feasibility matrix, and ML validation plan are specified before full data access.</div>
-      </div>
-      <div class="readiness-card planned">
-        <div class="readiness-kicker">Planned</div>
-        <div class="readiness-title">ML/API Execution Layer</div>
-        <div class="readiness-text">R panel builder, Plumber fiscal summaries, FastAPI XGBoost service, SHAP explanations, and model performance endpoints.</div>
-      </div>
-      <div class="readiness-card required">
-        <div class="readiness-kicker">Requires Access</div>
-        <div class="readiness-title">Bank-Commune Exposure Matrix</div>
-        <div class="readiness-text">BCL/CSSF supervisory data are required to estimate the core bank-by-commune nexus rather than only national aggregates.</div>
-      </div>
-    </div>
-  </div>
+  <hr class="prose-divider">
 
   <!-- Hypotheses -->
-  <div class="section-block">
-    <h2 class="section-heading">
-      <span class="sec-num">H</span> Core Hypotheses
-    </h2>
-    <p class="section-intro">
-      Three nested hypotheses structure the empirical programme.
-      H1 establishes whether the nexus exists. H2 tests its causal direction.
-      H3 asks whether ML can operationalise it as an actionable early-warning signal.
-    </p>
-
-    <div class="hyp-grid">
-
-      <div class="hyp-card">
-        <div>
-          <div class="hyp-number">H1</div>
-          <div class="hyp-label">Subnational Nexus</div>
-        </div>
-        <p class="hyp-text">
-          Concentrated bank lending to specific Luxembourg communes creates measurable subnational feedback loops:
-          fiscal stress in borrowing communes constrains credit supply from exposed banks,
-          amplifying local economic downturns beyond what national aggregates reveal.
-        </p>
-        <div class="hyp-footer">
-          <span class="hyp-method">Panel regression · commune + bank FE · lagged exposure</span>
-          <span class="status-badge design">Empirical Design</span>
+  <div class="prose">
+    <p class="prose-eyebrow">Core Hypotheses</p>
+    <h2 class="prose-h2">Three nested empirical claims</h2>
+    <p class="prose-p">H1 establishes whether the nexus exists. H2 tests its causal direction. H3 asks whether ML can operationalise it as an actionable early-warning signal.</p>
+    <div class="hyp-rows">
+      <div class="hyp-row">
+        <div class="hyp-row-num">H1</div>
+        <div class="hyp-row-body">
+          <div class="hyp-row-label">Subnational Nexus</div>
+          <p class="hyp-row-text">Concentrated bank lending to specific Luxembourg communes creates measurable subnational feedback loops: fiscal stress in borrowing communes constrains credit supply from exposed banks, amplifying local economic downturns beyond what national aggregates reveal.</p>
+          <div class="hyp-row-meta">Panel regression · commune + bank FE · lagged exposure · <span class="status-badge design" style="font-style:normal">Empirical Design</span></div>
         </div>
       </div>
-
-      <div class="hyp-card">
-        <div>
-          <div class="hyp-number">H2</div>
-          <div class="hyp-label">Fiscal–Credit Causality</div>
-        </div>
-        <p class="hyp-text">
-          Commune-level fiscal indicators — balance deterioration, revenue transfer-dependence,
-          expenditure overruns — Granger-cause changes in bank credit supply to the local public sector
-          at a 1–2 year lag, with the direction running from fiscal to credit rather than the reverse.
-        </p>
-        <div class="hyp-footer">
-          <span class="hyp-method">Granger causality · panel VAR · event study</span>
-          <span class="status-badge design">Empirical Design</span>
+      <div class="hyp-row">
+        <div class="hyp-row-num">H2</div>
+        <div class="hyp-row-body">
+          <div class="hyp-row-label">Fiscal–Credit Causality</div>
+          <p class="hyp-row-text">Commune-level fiscal indicators — balance deterioration, revenue transfer-dependence, expenditure overruns — Granger-cause changes in bank credit supply to the local public sector at a 1–2 year lag, with the direction running from fiscal to credit rather than the reverse.</p>
+          <div class="hyp-row-meta">Granger causality · panel VAR · event study · <span class="status-badge design" style="font-style:normal">Empirical Design</span></div>
         </div>
       </div>
-
-      <div class="hyp-card">
-        <div>
-          <div class="hyp-number">H3</div>
-          <div class="hyp-label">ML Early Warning</div>
-        </div>
-        <p class="hyp-text">
-          The thesis will test whether an XGBoost-based early-warning model trained on the
-          commune-year fiscal panel can exceed a pre-specified benchmark of AUC-ROC ≥ 0.75
-          at a t+1 horizon, with Precision–Recall AUC and calibration quality reported for
-          macroprudential usefulness.
-        </p>
-        <div class="hyp-footer">
-          <span class="hyp-method">XGBoost · temporal CV · SHAP interpretability</span>
-          <span class="status-badge planned">Planned Implementation</span>
+      <div class="hyp-row">
+        <div class="hyp-row-num">H3</div>
+        <div class="hyp-row-body">
+          <div class="hyp-row-label">ML Early Warning</div>
+          <p class="hyp-row-text">An XGBoost-based early-warning model trained on the commune-year fiscal panel can exceed a benchmark of AUC-ROC ≥ 0.75 at a t+1 horizon, with Precision–Recall AUC and calibration quality reported for macroprudential usefulness.</p>
+          <div class="hyp-row-meta">XGBoost · temporal CV · SHAP interpretability · <span class="status-badge planned" style="font-style:normal">Planned</span></div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <hr class="section-divider">
+  <hr class="prose-divider">
 
   <!-- Motivation -->
-  <div class="section-block">
-    <h2 class="section-heading">
-      <span class="sec-num">§1</span> Motivation &amp; Policy Relevance
-    </h2>
-
-    <div class="two-col">
-      <div>
-        <h3 class="section-subheading">Why Luxembourg?</h3>
-        <p class="section-intro" style="margin-bottom:.9rem">
-          Luxembourg occupies a structurally exceptional position in European finance.
-          Its banking sector stands at approximately 12× GDP — the largest ratio in the euro area —
-          while its 102 communes display markedly heterogeneous fiscal capacity,
-          with per-capita income indices ranging from 70 to over 130 (LU = 100)
-          and populations from under 1,000 to 130,000.
-          This combination of a concentrated financial sector and a fragmented local government layer
-          creates the conditions for a subnational sovereign-bank nexus that has not been empirically documented.
-        </p>
-        <p class="section-intro" style="margin-bottom:.9rem">
-          Post-COVID fiscal consolidation has placed new pressure on smaller communes dependent on
-          central government transfers, while the 2022–2023 rate cycle increased debt-servicing costs
-          for communes that borrowed at floating rates. These dynamics create a natural quasi-experiment
-          to study whether commune fiscal stress transmits to the banking institutions most exposed to them.
-        </p>
-      </div>
-      <div>
-        <h3 class="section-subheading">Why Now?</h3>
-        <p class="section-intro" style="margin-bottom:.9rem">
-          The ECB's macroprudential framework monitors sovereign-bank linkages at the national level.
-          The June 2023 FSB/IMF review of systemic risk identified subnational public finance as an
-          understudied transmission channel, particularly in small financial centres where a handful
-          of banks may hold concentrated local-government exposures.
-        </p>
-        <p class="section-intro" style="margin-bottom:.9rem">
-          Machine learning techniques now offer the ability to build early-warning indicators from
-          high-dimensional commune panels without over-fitting — provided temporal validation is
-          rigorously respected. No such system exists for Luxembourg's subnational public finance.
-          The BCL and CSSF supervisory data, if accessible via MOU, would make this one of the most
-          granular bank-commune nexus studies in the academic literature.
-        </p>
-        <div class="data-note" style="margin: 0">
-          <span class="data-note-icon">ℹ</span>
-          <span>
-            The research design is developed in advance of full data access.
-            BCL supervisory micro-data require a formal MOU. The empirical pipeline is designed
-            to operate at different data tiers — from publicly available STATEC / Eurostat aggregates
-            up to full bank-commune credit registers if access is granted.
-          </span>
-        </div>
-      </div>
-    </div>
+  <div class="prose">
+    <p class="prose-eyebrow">Motivation &amp; Policy Relevance</p>
+    <h2 class="prose-h2">Why Luxembourg, and why now</h2>
+    <p class="prose-p">Luxembourg occupies a structurally exceptional position in European finance. Its banking sector stands at approximately 12× GDP — the largest ratio in the euro area — while its 102 communes display markedly heterogeneous fiscal capacity, with per-capita income indices ranging from 70 to over 130 (LU = 100) and populations from under 1,000 to 130,000. This combination of a concentrated financial sector and a fragmented local government layer creates the conditions for a subnational sovereign-bank nexus that has not been empirically documented.</p>
+    <p class="prose-p">Post-COVID fiscal consolidation has placed new pressure on smaller communes dependent on central government transfers, while the 2022–2023 rate cycle increased debt-servicing costs for communes that borrowed at floating rates. These dynamics create a natural quasi-experiment to study whether commune fiscal stress transmits to the banking institutions most exposed to them.</p>
+    <p class="prose-p">The ECB's macroprudential framework monitors sovereign-bank linkages at the national level. The June 2023 FSB/IMF review of systemic risk identified subnational public finance as an understudied transmission channel, particularly in small financial centres where a handful of banks may hold concentrated local-government exposures. Machine learning now offers the ability to build early-warning indicators from high-dimensional commune panels without over-fitting — provided temporal validation is rigorously respected.</p>
+    <div class="prose-note">The research design is developed in advance of full data access. BCL supervisory micro-data require a formal MOU. The pipeline is designed to operate at different data tiers — from publicly available STATEC/Eurostat aggregates up to full bank-commune credit registers if access is granted.</div>
   </div>
 
-  <hr class="section-divider">
+  <hr class="prose-divider">
 
-  <!-- Literature Gap -->
-  <div class="section-block">
-    <h2 class="section-heading">
-      <span class="sec-num">§2</span> Literature Gap
-    </h2>
-    <p class="section-intro">
-      The research sits at the intersection of four bodies of literature, each of which leaves a specific gap
-      that this proposal addresses.
-    </p>
-
-    <div class="three-col" style="margin-bottom:.5rem">
-
-      <div class="lit-card">
-        <div class="lit-card-title">Sovereign-Bank Doom Loop</div>
-        <div class="lit-card-ref">Acharya, Drechsler &amp; Schnabl (2014) · Diabolic loop literature</div>
-        <div class="lit-card-contribution">Establishes the national-level feedback: sovereign stress impairs bank capital; bank distress raises sovereign risk via bail-out expectations.</div>
-        <div class="lit-card-gap">Documents the mechanism at the national level only. Subnational heterogeneity — bank exposure to individual local governments — is unexplored.</div>
+  <!-- Literature -->
+  <div class="prose">
+    <p class="prose-eyebrow">Literature Gap</p>
+    <h2 class="prose-h2">The gap this research addresses</h2>
+    <p class="prose-p">The research sits at the intersection of four bodies of literature, each of which leaves a specific gap that this proposal addresses.</p>
+    <div class="lit-rows">
+      <div class="lit-row">
+        <div class="lit-row-title">Sovereign-Bank Doom Loop</div>
+        <div class="lit-row-ref">Acharya, Drechsler &amp; Schnabl (2014) · Diabolic loop literature</div>
+        <div class="lit-row-contribution">Establishes the national-level feedback: sovereign stress impairs bank capital; bank distress raises sovereign risk via bail-out expectations.</div>
+        <div class="lit-row-gap"><span class="lit-gap-label">Gap addressed</span>Documents the mechanism at the national level only. Subnational heterogeneity — bank exposure to individual local governments — is unexplored.</div>
       </div>
-
-      <div class="lit-card">
-        <div class="lit-card-title">Municipal Fiscal Distress</div>
-        <div class="lit-card-ref">Hendrick (2011) · Honadle et al. (2004) · Kloha et al. (2005)</div>
-        <div class="lit-card-contribution">Operationalises fiscal stress for municipalities using balance, debt, revenue composition and expenditure indicators. Validates early-warning scoring rules.</div>
-        <div class="lit-card-gap">Does not model the banking sector counterpart. Fiscal stress is treated as a purely public-finance phenomenon with no credit-market feedback.</div>
+      <div class="lit-row">
+        <div class="lit-row-title">Municipal Fiscal Distress</div>
+        <div class="lit-row-ref">Hendrick (2011) · Honadle et al. (2004) · Kloha et al. (2005)</div>
+        <div class="lit-row-contribution">Operationalises fiscal stress for municipalities using balance, debt, revenue composition and expenditure indicators.</div>
+        <div class="lit-row-gap"><span class="lit-gap-label">Gap addressed</span>Does not model the banking sector counterpart. Fiscal stress is treated as a purely public-finance phenomenon with no credit-market feedback.</div>
       </div>
-
-      <div class="lit-card">
-        <div class="lit-card-title">Credit Procyclicality</div>
-        <div class="lit-card-ref">Jordà, Schularick &amp; Taylor (2016) · Drehmann &amp; Tsatsaronis (2014)</div>
-        <div class="lit-card-contribution">Documents that credit booms predict financial crises; establishes credit-to-GDP gap as the Basel III countercyclical capital buffer indicator.</div>
-        <div class="lit-card-gap">Analysis is at the national or bank-sector level. Does not decompose by borrower type (private vs. local government) or by geographic sub-unit.</div>
+      <div class="lit-row">
+        <div class="lit-row-title">Credit Procyclicality</div>
+        <div class="lit-row-ref">Jordà, Schularick &amp; Taylor (2016) · Drehmann &amp; Tsatsaronis (2014)</div>
+        <div class="lit-row-contribution">Documents that credit booms predict financial crises; establishes credit-to-GDP gap as the Basel III countercyclical capital buffer indicator.</div>
+        <div class="lit-row-gap"><span class="lit-gap-label">Gap addressed</span>Analysis is at the national or bank-sector level. Does not decompose by borrower type or geographic sub-unit.</div>
       </div>
-
-      <div class="lit-card">
-        <div class="lit-card-title">Fiscal Decentralisation</div>
-        <div class="lit-card-ref">Blöchliger &amp; King (2006) · Oates (1999) · Rodden et al. (2003)</div>
-        <div class="lit-card-contribution">Analyses intergovernmental fiscal transfers, soft budget constraints, and fiscal risk in decentralised systems.</div>
-        <div class="lit-card-gap">Focuses on government-side behaviour. The banking sector exposure to subnational borrowers and its financial-stability implications are not modelled.</div>
+      <div class="lit-row">
+        <div class="lit-row-title">Fiscal Decentralisation</div>
+        <div class="lit-row-ref">Blöchliger &amp; King (2006) · Oates (1999) · Rodden et al. (2003)</div>
+        <div class="lit-row-contribution">Analyses intergovernmental fiscal transfers, soft budget constraints, and fiscal risk in decentralised systems.</div>
+        <div class="lit-row-gap"><span class="lit-gap-label">Gap addressed</span>Focuses on government-side behaviour. Banking sector exposure to subnational borrowers and its financial-stability implications are not modelled.</div>
       </div>
-
-      <div class="lit-card">
-        <div class="lit-card-title">ML Early-Warning Systems</div>
-        <div class="lit-card-ref">Holopainen &amp; Sarlin (2017) · Alessi &amp; Detken (2018) · ECB BEAST model</div>
-        <div class="lit-card-contribution">Applies gradient boosting, neural networks and SHAP to predict national banking crises and systemic risk events with lead times of 1–3 years.</div>
-        <div class="lit-card-gap">Uses national aggregate features (credit-to-GDP, house prices, CA deficit). No subnational commune-level panel has been used as feature input for a banking EWS.</div>
-      </div>
-
-    </div>
-  </div>
-
-  <hr class="section-divider">
-
-  <!-- Section nav -->
-  <div class="section-block">
-    <h2 class="section-heading">
-      <span class="sec-num">→</span> Explore This Proposal
-    </h2>
-    <div class="snav-grid">
-      <div class="snav-card" data-goto="nexus">
-        <div class="snav-icon">⇄</div>
-        <div class="snav-title">Nexus Framework</div>
-        <div class="snav-desc">Mechanism diagram, transmission channels, Luxembourg structural context</div>
-      </div>
-      <div class="snav-card" data-goto="evidence">
-        <div class="snav-icon">▦</div>
-        <div class="snav-title">Evidence Explorer</div>
-        <div class="snav-desc">Banking exposure, public finance, and baseline stress index — prototype data</div>
-      </div>
-      <div class="snav-card" data-goto="ml">
-        <div class="snav-icon">◆</div>
-        <div class="snav-title">ML Design</div>
-        <div class="snav-desc">Feature architecture, model pipeline, validation strategy, SHAP design</div>
-      </div>
-      <div class="snav-card" data-goto="empirical">
-        <div class="snav-icon">≡</div>
-        <div class="snav-title">Empirical Strategy</div>
-        <div class="snav-desc">Units of analysis, variables, identification, and estimation approach</div>
-      </div>
-      <div class="snav-card" data-goto="map">
-        <div class="snav-icon">⬡</div>
-        <div class="snav-title">Commune Map</div>
-        <div class="snav-desc">Interactive subnational vulnerability explorer — 102 Luxembourg communes</div>
-      </div>
-      <div class="snav-card" data-goto="roadmap">
-        <div class="snav-icon">⬕</div>
-        <div class="snav-title">Architecture &amp; Roadmap</div>
-        <div class="snav-desc">Technical stack, data requirements, work packages, and timeline</div>
+      <div class="lit-row">
+        <div class="lit-row-title">ML Early-Warning Systems</div>
+        <div class="lit-row-ref">Holopainen &amp; Sarlin (2017) · Alessi &amp; Detken (2018) · ECB BEAST model</div>
+        <div class="lit-row-contribution">Applies gradient boosting and neural networks to predict national banking crises with lead times of 1–3 years.</div>
+        <div class="lit-row-gap"><span class="lit-gap-label">Gap addressed</span>Uses national aggregate features only. No subnational commune-level panel has been used as feature input for a banking early-warning system.</div>
       </div>
     </div>
   </div>
