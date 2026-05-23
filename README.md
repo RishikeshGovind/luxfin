@@ -1,6 +1,6 @@
 # LuxFin
 
-**Luxembourg Banking & Public Finance Research Dashboard**
+**Interactive PhD research platform for Luxembourg subnational sovereign-bank nexus analysis**
 
 A research prototype supporting the PhD proposal:
 > *Does concentrated banking sector exposure to local government borrowers create a subnational sovereign-bank nexus, and can forward-looking ML-based fiscal risk indicators serve as an early warning system for regional financial stability?*
@@ -11,14 +11,30 @@ Live dashboard → **[rishikeshgovind.github.io/luxfin](https://rishikeshgovind.
 
 ## Overview
 
-LuxFin visualises the structural links between Luxembourg's banking sector and its public-sector borrowers across four panels:
+LuxFin is an interactive proposal and research prototype. It combines a narrative PhD dossier with implemented evidence modules and a scaffold for the eventual R/Python research pipeline.
 
 | Panel | Content |
 |---|---|
-| **Banking Exposure** | MFI balance sheet — government bond holdings, public credit share, crowding-out dynamics, sector size |
-| **Public Finance** | Eurostat GFS revenue, expenditure, fiscal balance, Maastricht debt, COFOG spending breakdown |
-| **Commune Map** | LAU 2021 choropleth of socio-economic indicators across all 102 Luxembourg communes |
-| **Stress Index** | Baseline heuristic composite index of bank-sovereign nexus vulnerability (descriptive, not predictive) |
+| **Overview** | Research question, hypotheses, motivation, literature gap, and readiness status |
+| **Nexus** | Conceptual framework for domestic local-government and euro-area sovereign channels |
+| **Evidence** | MFI balance sheet, public finance, and baseline heuristic stress index |
+| **ML Design** | Planned early-warning target, feature groups, model ladder, validation, and API contract |
+| **Empirical** | Units of analysis, variables, fixed effects, identification risks, and robustness strategy |
+| **Map** | LAU 2021 choropleth of socio-economic indicators across all 102 communes |
+| **Architecture** | Data access matrix, research stack, work packages, and scaffolded artifacts |
+
+---
+
+## Current Status
+
+| Layer | Status | Notes |
+|---|---|---|
+| Frontend proposal platform | Implemented | Static HTML/CSS/JS on GitHub Pages |
+| Public data evidence modules | Implemented | ECB Data Portal, Eurostat, STATEC/LUSTAT snapshots |
+| Baseline stress index | Implemented | Descriptive heuristic benchmark, not predictive ML |
+| Commune-year panel builder | Scaffolded | See `scripts/build_lux_panel.R` |
+| ML API | Scaffolded | See `api/fiscal_ml_api.py`; endpoints return explicit not-implemented statuses |
+| Full bank-commune nexus test | Requires access | Needs BCL/CSSF supervisory data or formal MOU |
 
 ---
 
@@ -74,10 +90,18 @@ Then open `http://localhost:8080`.
 
 ```
 luxfin/
-├── index.html              # Single-page dashboard
+├── index.html              # Interactive PhD proposal platform
 ├── style.css               # Styles
 ├── js/
 │   └── shared.js           # Shared constants, formatters, API fetchers, stress score logic
+├── research/
+│   ├── data_requirements.md # Public vs restricted datasets and minimum viable panel
+│   ├── empirical_strategy.md# Fixed-effects, event-study, and ML design notes
+│   └── ml_pipeline_plan.md  # Target, feature groups, model ladder, validation plan
+├── scripts/
+│   └── build_lux_panel.R    # Scaffold for future commune-year panel construction
+├── api/
+│   └── fiscal_ml_api.py     # Scaffold for future FastAPI + XGBoost + SHAP service
 └── data/
     ├── banking.json         # ECB BSI MFI statistics (2014–2023, EUR bn)
     ├── fiscal.json          # Eurostat GFS general government (2014–2023)

@@ -74,6 +74,41 @@
     </div>
   </div>
 
+  <!-- Research readiness -->
+  <div class="section-block readiness-block">
+    <h2 class="section-heading">
+      <span class="sec-num">0</span> Current Research Readiness
+    </h2>
+    <p class="section-intro">
+      LuxFin is deliberately split into implemented evidence, prototype design, and data-dependent extensions.
+      This keeps the proposal ambitious while making clear which claims are demonstrated now and which require
+      supervisory access or additional panel construction.
+    </p>
+
+    <div class="readiness-grid">
+      <div class="readiness-card implemented">
+        <div class="readiness-kicker">Implemented</div>
+        <div class="readiness-title">Static Research Platform</div>
+        <div class="readiness-text">Interactive proposal narrative, ECB/Eurostat evidence panels, commune map, and a transparent baseline stress index.</div>
+      </div>
+      <div class="readiness-card prototype">
+        <div class="readiness-kicker">Prototype</div>
+        <div class="readiness-title">Research Design Modules</div>
+        <div class="readiness-text">Feature architecture, empirical strategy, data feasibility matrix, and ML validation plan are specified before full data access.</div>
+      </div>
+      <div class="readiness-card planned">
+        <div class="readiness-kicker">Planned</div>
+        <div class="readiness-title">ML/API Execution Layer</div>
+        <div class="readiness-text">R panel builder, Plumber fiscal summaries, FastAPI XGBoost service, SHAP explanations, and model performance endpoints.</div>
+      </div>
+      <div class="readiness-card required">
+        <div class="readiness-kicker">Requires Access</div>
+        <div class="readiness-title">Bank-Commune Exposure Matrix</div>
+        <div class="readiness-text">BCL/CSSF supervisory data are required to estimate the core bank-by-commune nexus rather than only national aggregates.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Hypotheses -->
   <div class="section-block">
     <h2 class="section-heading">
@@ -125,9 +160,10 @@
           <div class="hyp-label">ML Early Warning</div>
         </div>
         <p class="hyp-text">
-          An XGBoost-based early-warning model trained on the commune-year fiscal panel
-          can classify fiscal distress events at a t+1 horizon with AUC-ROC ≥ 0.75
-          and Precision–Recall AUC sufficient for operational use in macroprudential monitoring.
+          The thesis will test whether an XGBoost-based early-warning model trained on the
+          commune-year fiscal panel can exceed a pre-specified benchmark of AUC-ROC ≥ 0.75
+          at a t+1 horizon, with Precision–Recall AUC and calibration quality reported for
+          macroprudential usefulness.
         </p>
         <div class="hyp-footer">
           <span class="hyp-method">XGBoost · temporal CV · SHAP interpretability</span>
@@ -849,6 +885,15 @@
       (Govind 2024) and adapted to the Luxembourg commune-bank context.
     </p>
 
+    <div class="data-note" style="margin:0 0 1.5rem">
+      <span class="data-note-icon">ℹ</span>
+      <span>
+        <strong>Model status:</strong> The stress score in the Evidence panel is a deterministic baseline benchmark.
+        The ML system below is not presented as an empirical result until the Luxembourg commune-year panel is built,
+        labels are defined, temporal validation is completed, and model-performance diagnostics are reported.
+      </span>
+    </div>
+
     <!-- Prediction target -->
     <h3 class="section-subheading">Prediction Target</h3>
     <div class="two-col" style="margin-bottom:1.5rem">
@@ -1013,6 +1058,20 @@
       </table>
     </div>
 
+    <h3 class="section-subheading">Planned API Contract</h3>
+    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+      <table class="rtable">
+        <thead><tr><th>Endpoint</th><th>Purpose</th><th>Output</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET /health</code></td><td>Service readiness check</td><td>Model/version/data vintage</td><td><span class="status-badge planned">Scaffold</span></td></tr>
+          <tr><td><code>POST /predict_distress</code></td><td>t+1 fiscal stress prediction for selected communes</td><td>Probability, warning flag, threshold band</td><td><span class="status-badge planned">WP3</span></td></tr>
+          <tr><td><code>POST /shap_explain</code></td><td>Local explanations for flagged communes</td><td>Top positive/negative SHAP drivers</td><td><span class="status-badge planned">WP3</span></td></tr>
+          <tr><td><code>GET /model_performance</code></td><td>Validation transparency</td><td>AUC-ROC, PR-AUC, Brier score, F1, false-alarm rate</td><td><span class="status-badge planned">WP3</span></td></tr>
+          <tr><td><code>GET /feature_importance</code></td><td>Global interpretability</td><td>Grouped feature importance and SHAP means</td><td><span class="status-badge planned">WP3</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <!-- Validation -->
     <h3 class="section-subheading">Temporal Validation Strategy</h3>
     <div class="two-col" style="margin-bottom:1.5rem">
@@ -1095,6 +1154,36 @@
       The estimation strategy scales with data availability: a minimum viable design uses publicly available
       STATEC/Eurostat aggregates; the full design adds BCL supervisory bank-commune exposure data.
     </p>
+
+    <h3 class="section-subheading">Research Design Matrix</h3>
+    <div class="rtable-wrap" style="margin-bottom:1.5rem">
+      <table class="rtable">
+        <thead><tr><th>Hypothesis</th><th>Outcome</th><th>Key Treatment / Predictor</th><th>Model</th><th>Decision Criterion</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>H1</strong> Subnational nexus</td>
+            <td>Credit growth or contraction to commune borrowers</td>
+            <td>Lagged bank exposure concentration to fiscal-stress communes</td>
+            <td>Bank-commune-year fixed effects regression</td>
+            <td>Negative, significant exposure coefficient after bank, commune, and year FE</td>
+          </tr>
+          <tr>
+            <td><strong>H2</strong> Fiscal-credit causality</td>
+            <td>Future bank credit supply to commune i</td>
+            <td>Lagged fiscal stress indicators and deficit persistence</td>
+            <td>Panel VAR / Granger tests / event study</td>
+            <td>Fiscal indicators improve prediction of credit contraction beyond credit lags</td>
+          </tr>
+          <tr>
+            <td><strong>H3</strong> ML early warning</td>
+            <td>Fiscal stress at t+1 or t+2</td>
+            <td>Fiscal, demographic, spatial, and bank-exposure feature groups</td>
+            <td>Logit baseline, random forest, XGBoost + SHAP</td>
+            <td>Out-of-sample AUC-ROC, PR-AUC, Brier score, and false-alarm rate beat heuristic baseline</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Unit of analysis -->
     <h3 class="section-subheading">Unit of Analysis</h3>
@@ -1419,6 +1508,30 @@
           <tr><td>Bank capital ratios (COREP)</td><td>CSSF / BCL</td><td>Quarterly, bank-level</td><td><span class="status-badge required">CSSF/BCL MOU required</span></td><td>Formal MOU negotiation</td></tr>
         </tbody>
       </table>
+    </div>
+
+    <h3 class="section-subheading">Implemented vs. Planned Repository Artifacts</h3>
+    <div class="artifact-grid" style="margin-bottom:1.5rem">
+      <div class="artifact-card">
+        <div class="artifact-status"><span class="status-badge implemented">Implemented</span></div>
+        <div class="artifact-name"><code>index.html</code> · <code>style.css</code> · <code>js/shared.js</code></div>
+        <div class="artifact-text">Interactive proposal interface, evidence modules, live public API refresh, and baseline stress calculation.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-status"><span class="status-badge prototype">Documented</span></div>
+        <div class="artifact-name"><code>research/</code></div>
+        <div class="artifact-text">Data requirements, empirical strategy, and ML pipeline plan now live alongside the platform for review and extension.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-status"><span class="status-badge planned">Scaffolded</span></div>
+        <div class="artifact-name"><code>scripts/build_lux_panel.R</code></div>
+        <div class="artifact-text">Placeholder for the reproducible commune-year panel builder, mirroring the AreaStat AT R data pipeline pattern.</div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-status"><span class="status-badge planned">Scaffolded</span></div>
+        <div class="artifact-name"><code>api/fiscal_ml_api.py</code></div>
+        <div class="artifact-text">FastAPI contract for future XGBoost, SHAP, model performance, and feature-importance endpoints.</div>
+      </div>
     </div>
 
     <!-- Work packages -->

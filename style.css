@@ -370,6 +370,46 @@ h1, h2, h3, h4, h5 {
 .status-badge.planned      { background: #ede9fe; color: #4c1d95; }
 .status-badge.required     { background: #fee2e2; color: #7f1d1d; }
 
+/* ── Research readiness cards ─────────────────────────────────────────── */
+.readiness-block { padding-top: 2rem; padding-bottom: 1rem; }
+.readiness-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: .9rem;
+}
+.readiness-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.readiness-card.implemented { border-top-color: var(--green); }
+.readiness-card.prototype { border-top-color: var(--amber); }
+.readiness-card.planned { border-top-color: #8b5cf6; }
+.readiness-card.required { border-top-color: var(--red); }
+.readiness-kicker {
+  font-size: .65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-xmuted);
+  margin-bottom: .35rem;
+}
+.readiness-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  margin-bottom: .35rem;
+}
+.readiness-text {
+  font-size: .78rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
 /* ── Proposal hero ────────────────────────────────────────────────────── */
 .proposal-hero {
   background: linear-gradient(135deg, #0a1628 0%, #0f2242 60%, #1a3860 100%);
@@ -638,6 +678,39 @@ h1, h2, h3, h4, h5 {
 .wp-tasks { list-style: none; padding: 0; display: flex; flex-direction: column; gap: .3rem; }
 .wp-tasks li { font-size: .78rem; color: var(--text-muted); padding-left: 1.1rem; position: relative; line-height: 1.45; }
 .wp-tasks li::before { content: '→'; position: absolute; left: 0; color: var(--text-xmuted); }
+
+/* ── Repository artifact cards ────────────────────────────────────────── */
+.artifact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+  gap: .9rem;
+}
+.artifact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+}
+.artifact-status { margin-bottom: .6rem; }
+.artifact-name {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  margin-bottom: .35rem;
+  line-height: 1.5;
+}
+.artifact-name code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .9em;
+  background: #f1f5f9;
+  padding: .12rem .35rem;
+  border-radius: 4px;
+}
+.artifact-text {
+  font-size: .78rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
 
 /* ── Section navigation cards (overview quick-links) ─────────────────── */
 .snav-grid {
