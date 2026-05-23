@@ -1575,11 +1575,16 @@
 </section>
 
 
+<div id="toast"></div>
+
 <!-- ══ SCRIPTS ══════════════════════════════════════════════════════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
 <script>
 'use strict';
+
+// ── Constants ─────────────────────────────────────────────────────────────
+const HF_API = 'https://aetherno-luxfin-api.hf.space';
 
 // ── Global state ──────────────────────────────────────────────────────────
 let bankingData    = null;
@@ -1601,6 +1606,16 @@ const LU_BOUNDS      = [[5.73, 49.44], [6.53, 50.18]];
 const LU_FIT_PAD     = { top: 30, bottom: 30, left: 252, right: 30 };
 let   mapLoaded      = false;
 let stressInitialized = false;
+
+// ── Toast notification ────────────────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg, type = 'default') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'visible' + (type !== 'default' ? ' toast--' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.classList.remove('visible'); }, 3200);
+}
 
 // ── Utilities ─────────────────────────────────────────────────────────────
 function destroyChart(id) {
@@ -2200,9 +2215,9 @@ document.getElementById('btn-fetch-banking').addEventListener('click', async fun
     stressScores = computeStressScores(bankingData, fiscalData);
     renderBankingPanel();
     if (activePanel === 'evidence' && stressInitialized) refreshStressCharts();
-    alert(`Updated ${updated} year(s) of total assets from ECB Data Portal.`);
+    showToast(`Updated ${updated} year(s) from ECB Data Portal`, 'success');
   } catch (err) {
-    alert('ECB fetch failed: ' + err.message);
+    showToast('ECB fetch failed: ' + err.message, 'error');
   } finally {
     this.textContent = '↻ Refresh from ECB'; this.classList.remove('loading');
   }
@@ -2216,9 +2231,9 @@ document.getElementById('btn-fetch-fiscal').addEventListener('click', async func
     stressScores = computeStressScores(bankingData, fiscalData);
     renderFiscalPanel();
     if (activePanel === 'evidence' && stressInitialized) refreshStressCharts();
-    alert(`Updated ${updated} year(s) of fiscal balance from Eurostat.`);
+    showToast(`Updated ${updated} year(s) from Eurostat`, 'success');
   } catch (err) {
-    alert('Eurostat fetch failed: ' + err.message);
+    showToast('Eurostat fetch failed: ' + err.message, 'error');
   } finally {
     this.textContent = '↻ Refresh from Eurostat'; this.classList.remove('loading');
   }
@@ -2236,8 +2251,6 @@ function buildMiniLineOptions(unit) {
 }
 
 // ── API status ping ───────────────────────────────────────────────────────
-const HF_API = 'https://aetherno-luxfin-api.hf.space';
-
 async function pingAPI() {
   const dot  = document.getElementById('api-status-dot');
   const text = document.getElementById('api-status-text');

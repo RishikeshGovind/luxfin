@@ -527,6 +527,21 @@ h1, h2, h3, h4, h5 {
 .live-fetch-btn:hover { background: #eff6ff; }
 .live-fetch-btn.loading { opacity: .6; pointer-events: none; }
 
+/* ── Toast notification ───────────────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+  background: var(--accent-dark); color: #fff;
+  padding: .6rem 1.25rem; border-radius: 6px;
+  font-size: .82rem; font-weight: 500;
+  box-shadow: 0 4px 20px rgba(0,0,0,.18);
+  z-index: 9999; pointer-events: none;
+  opacity: 0; transition: opacity .2s;
+  white-space: nowrap;
+}
+#toast.toast--success { background: #15803d; }
+#toast.toast--error   { background: #b91c1c; }
+#toast.visible        { opacity: 1; }
+
 .source-badge { display: inline-flex; align-items: center; gap: .3rem; background: #f1f5f9; border: 1px solid var(--border); border-radius: 4px; padding: .15rem .5rem; font-size: .68rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
 
 .year-range { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--text-muted); }
