@@ -35,6 +35,7 @@ LuxFin combines a narrative PhD dossier with implemented evidence modules, a liv
 | FastAPI heuristic endpoints | **Live** | `/health`, `/stress_score`, `/stress_history`, `/panel_summary`, `/model_performance`, `/feature_importance` |
 | Prototype commune panel | **Built** | 102 communes × 2021 snapshot; proxy distress labels from socioeconomic indicators |
 | Panel builder script | **Implemented** | `python3 scripts/build_panel.py` (canonical); R mirror at `scripts/build_lux_panel.R` |
+| Baseline proxy-panel logit | **Implemented** | `python3 scripts/logit_baseline.py` — N=102, non-circular predictors, AUC-ROC=0.697 (proxy outcome only) |
 | Validation script | **Implemented** | `python3 scripts/validate.py` |
 | Commune financial accounts panel | **Data request** | STATEC micro-data request required for true fiscal labels |
 | Supervised ML model (XGBoost/SHAP) | **Planned WP3** | Requires fiscal panel with labelled distress events |
@@ -108,6 +109,11 @@ python3 scripts/validate.py
 
 Static snapshots are in `data/`. The Banking Exposure and Public Finance panels include live refresh buttons that pull from the ECB Data Portal API and Eurostat REST API.
 
+**Data provenance notes:**
+- `data/communes.json` population figures are drawn from **STATEC LUSTAT 2021 commune-level tables**, not from the GeoJSON `POP_2021` field (Eurostat GISCO estimate). The two sources use different reference dates and methodology; discrepancies are expected and both are citable.
+- The 102-commune structure reflects the **LAU 2021 boundary vintage**. Luxembourg reduced to 100 municipalities after the 2023 Käerjeng and Reckange/Mess mergers. All analysis is explicitly bounded to the 2021 vintage.
+- Luxembourg's banking sector size (~12× GDP) is described as "among the highest in the euro area" following IMF FSAP (2017) and BCL Financial Stability Review characterisations. The superlative "largest" is intentionally avoided pending a systematic cross-country comparison.
+
 **Not yet obtained (require formal request):**
 - Commune financial accounts (STATEC micro-data) — for true fiscal distress labels
 - Bank-by-commune credit register (BCL supervisory) — for the core nexus test
@@ -147,6 +153,7 @@ luxfin/
 │   └── requirements.txt          # fastapi, uvicorn, pydantic
 ├── scripts/
 │   ├── build_panel.py            # Canonical Python panel builder → data/panel_dataset.csv
+│   ├── logit_baseline.py         # Reproducible proxy-panel logit (non-circular predictors)
 │   ├── build_lux_panel.R         # R mirror (comparison output, not used by API)
 │   └── validate.py               # Quality checks: JSON, CSV, JS syntax, Python imports
 ├── research/
@@ -161,6 +168,8 @@ luxfin/
     └── lu_communes.geojson       # Eurostat GISCO LAU 2021 commune boundaries
 ```
 
+**Deployment note:** `luxfin-api/` is a separate Hugging Face Spaces deployment repository (Docker SDK, port 7860) and is not tracked by this repo's git history. `api/fiscal_ml_api.py` is the **canonical** service implementation; the Hugging Face copy is a deployment mirror. Any divergence between the two is intentional for platform compatibility and is documented in `luxfin-api/README.md`.
+
 ---
 
 ## Research Context
@@ -173,7 +182,8 @@ The core hypothesis targets the *subnational* dimension: whether individual bank
 - The heuristic stress index **is** a transparent, reproducible descriptive benchmark.
 - The prototype panel **is** a pipeline-feasibility demonstration using public socioeconomic data.
 - The proxy distress label **is not** a measure of true fiscal distress.
-- No ML model has been trained; no AUC-ROC, SHAP values, or model predictions exist yet.
+- A preliminary proxy-panel **logit** has been run (N=102, AUC-ROC=0.697) using non-circular structural predictors; reproducible via `python3 scripts/logit_baseline.py`. The dependent variable is a socioeconomic proxy — not a fiscal distress event.
+- No XGBoost/SHAP model has been trained; no ML predictions or SHAP values exist yet.
 - The core nexus test (H1) requires BCL supervisory data not yet obtained.
 
 ---

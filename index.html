@@ -59,9 +59,9 @@
   <!-- Dossier intro -->
   <div class="prose">
     <p class="prose-eyebrow">PhD Research Proposal · University of Luxembourg · Department of Finance</p>
-    <p class="prose-lede">Luxembourg's banking sector — at ~12× GDP — lends directly to 102 communes with markedly heterogeneous fiscal capacity. This proposal tests whether concentrated local-government exposures create a subnational sovereign-bank feedback loop, and whether ML-based fiscal indicators can serve as an early-warning system for regional financial stability.</p>
+    <p class="prose-lede">Luxembourg's banking sector — at ~12× GDP — may have direct or concentrated exposure to local-government borrowers across 102 communes (LAU 2021 boundary vintage) with markedly heterogeneous fiscal capacity. This proposal tests whether those exposures create a subnational sovereign-bank feedback loop, and whether ML-based fiscal indicators can serve as an early-warning system for regional financial stability.</p>
     <div class="meta-row-list">
-      <div class="meta-row"><span class="meta-key">Geography</span>Luxembourg · 102 communes · 12 cantons</div>
+      <div class="meta-row"><span class="meta-key">Geography</span>Luxembourg · 102 communes (LAU 2021) · 12 cantons</div>
       <div class="meta-row"><span class="meta-key">Period</span>2010–2023 panel · forecast horizon t+1/t+2</div>
       <div class="meta-row"><span class="meta-key">Methods</span>Panel regression · XGBoost · SHAP · Spatial econometrics</div>
       <div class="meta-row"><span class="meta-key">Data</span>ECB BSI · Eurostat GFS · STATEC LUSTAT · BCL supervisory</div>
@@ -107,7 +107,7 @@
         <div class="hyp-row-num">H1</div>
         <div class="hyp-row-body">
           <div class="hyp-row-label">Subnational Nexus</div>
-          <p class="hyp-row-text">Concentrated bank lending to specific Luxembourg communes creates measurable subnational feedback loops: fiscal stress in borrowing communes constrains credit supply from exposed banks, amplifying local economic downturns beyond what national aggregates reveal.</p>
+          <p class="hyp-row-text">This project tests whether concentrated bank lending to specific Luxembourg communes would create measurable subnational feedback loops: if the nexus exists, fiscal stress in exposed communes is expected to constrain credit supply from exposed banks, amplifying local economic downturns beyond what national aggregates reveal.</p>
           <div class="hyp-row-meta">Panel regression · commune + bank FE · lagged exposure · <span class="status-badge design" style="font-style:normal">Empirical Design</span></div>
         </div>
       </div>
@@ -115,7 +115,7 @@
         <div class="hyp-row-num">H2</div>
         <div class="hyp-row-body">
           <div class="hyp-row-label">Fiscal–Credit Causality</div>
-          <p class="hyp-row-text">Commune-level fiscal indicators — balance deterioration, revenue transfer-dependence, expenditure overruns — Granger-cause changes in bank credit supply to the local public sector at a 1–2 year lag, with the direction running from fiscal to credit rather than the reverse.</p>
+          <p class="hyp-row-text">Commune-level fiscal indicators — balance deterioration, revenue transfer-dependence, expenditure overruns — are hypothesised to Granger-cause changes in bank credit supply to the local public sector at a 1–2 year lag. The project tests whether this direction (fiscal → credit) dominates the reverse channel.</p>
           <div class="hyp-row-meta">Granger causality · panel VAR · event study · <span class="status-badge design" style="font-style:normal">Empirical Design</span></div>
         </div>
       </div>
@@ -136,8 +136,8 @@
   <div class="prose">
     <p class="prose-eyebrow">Motivation &amp; Policy Relevance</p>
     <h2 class="prose-h2">Why Luxembourg, and why now</h2>
-    <p class="prose-p">Luxembourg occupies a structurally exceptional position in European finance. Its banking sector stands at approximately 12× GDP — the largest ratio in the euro area — while its 102 communes display markedly heterogeneous fiscal capacity, with per-capita income indices ranging from 70 to over 130 (LU = 100) and populations from under 1,000 to 130,000. This combination of a concentrated financial sector and a fragmented local government layer creates the conditions for a subnational sovereign-bank nexus that has not been empirically documented.</p>
-    <p class="prose-p">Post-COVID fiscal consolidation has placed new pressure on smaller communes dependent on central government transfers, while the 2022–2023 rate cycle increased debt-servicing costs for communes that borrowed at floating rates. These dynamics create a natural quasi-experiment to study whether commune fiscal stress transmits to the banking institutions most exposed to them.</p>
+    <p class="prose-p">Luxembourg occupies a structurally exceptional position in European finance. Its banking sector stands at approximately 12× GDP — among the highest ratios in the euro area (IMF FSAP 2017; BCL Financial Stability Review) — while its 102 communes (LAU 2021 boundary vintage) display markedly heterogeneous fiscal capacity, with per-capita income indices ranging from 70 to over 130 (LU = 100) and populations from under 1,000 to 130,000. This combination of a concentrated financial sector and a fragmented local government layer creates the structural conditions for a subnational sovereign-bank nexus that has not been empirically documented.</p>
+    <p class="prose-p">Post-COVID fiscal consolidation has placed new pressure on smaller communes dependent on central government transfers, while the 2022–2023 rate cycle increased debt-servicing costs for communes that borrowed at floating rates. These dynamics constitute an empirical setting in which to study whether commune fiscal stress transmits to the banking institutions most exposed to them — provided granular bank-commune credit data are obtained.</p>
     <p class="prose-p">The ECB's macroprudential framework monitors sovereign-bank linkages at the national level. The June 2023 FSB/IMF review of systemic risk identified subnational public finance as an understudied transmission channel, particularly in small financial centres where a handful of banks may hold concentrated local-government exposures. Machine learning now offers the ability to build early-warning indicators from high-dimensional commune panels without over-fitting — provided temporal validation is rigorously respected.</p>
     <div class="prose-note">The research design is developed in advance of full data access. BCL supervisory micro-data require a formal MOU. The pipeline is designed to operate at different data tiers — from publicly available STATEC/Eurostat aggregates up to full bank-commune credit registers if access is granted.</div>
   </div>
