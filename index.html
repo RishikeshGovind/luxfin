@@ -1595,7 +1595,14 @@
     <h3 class="section-subheading">API Readiness</h3>
     <div class="data-note" style="margin:0 0 .85rem;font-size:.8rem">
       <span class="data-note-icon">ℹ</span>
-      <span>Run <code style="font-family:'JetBrains Mono',monospace">uvicorn api.fiscal_ml_api:app --reload</code> from the repo root. The API loads <code>banking.json</code>, <code>fiscal.json</code>, <code>communes.json</code>, and <code>panel_dataset.csv</code> at startup. See <code>/docs</code> for interactive Swagger UI.</span>
+      <span>
+        <strong>Live:</strong>
+        <a href="https://aetherno-luxfin-api.hf.space/docs" target="_blank" rel="noopener" style="color:var(--accent)">aetherno-luxfin-api.hf.space/docs</a>
+        · Hosted on Hugging Face Spaces (Docker · CPU Basic · free tier).
+        First request after inactivity may take ~30s to wake.
+        <br>
+        <strong>Local:</strong> <code style="font-family:'JetBrains Mono',monospace">uvicorn api.fiscal_ml_api:app --reload</code>
+      </span>
     </div>
     <div class="rtable-wrap" style="margin-bottom:1.5rem">
       <table class="rtable">

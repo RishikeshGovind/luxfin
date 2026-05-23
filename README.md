@@ -61,6 +61,14 @@ Then open `http://localhost:8080`.
 
 ### Running the API
 
+**Live deployment (Hugging Face Spaces):**
+```
+https://aetherno-luxfin-api.hf.space/health
+https://aetherno-luxfin-api.hf.space/docs
+```
+Free-tier CPU Space — first request after inactivity takes ~30s to wake.
+
+**Run locally:**
 ```bash
 pip install -r api/requirements.txt
 uvicorn api.fiscal_ml_api:app --reload
