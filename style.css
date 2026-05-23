@@ -532,8 +532,6 @@ h1, h2, h3, h4, h5 {
 .year-range { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--text-muted); }
 .year-range input[type="range"] { flex: 1; accent-color: var(--accent); cursor: pointer; }
 
-/* ── Loading ──────────────────────────────────────────────────────────── */
-.loading-spinner { width: 20px; height: 20px; border: 2px solid #e5e7eb; border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -658,10 +656,6 @@ h1, h2, h3, h4, h5 {
   font-size: .75rem; color: var(--text-muted);
   font-style: italic; border-top: 1px dashed #cbd5e1; padding-top: .75rem;
 }
-.channel-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem;
-}
-@media (max-width: 780px) { .channel-grid { grid-template-columns: 1fr; } }
 .channel-card {
   background: var(--surface); border: 1px solid var(--border);
   border-top: 3px solid; border-radius: 8px; padding: 1.1rem 1.25rem;
@@ -818,9 +812,6 @@ h1, h2, h3, h4, h5 {
 .metric-note { font-size: .68rem; color: var(--text-xmuted); margin-top: .1rem; }
 .metric-card.tbd .metric-value { color: var(--text-xmuted); font-size: .85rem; }
 
-/* ── Divider ──────────────────────────────────────────────────────────── */
-.section-divider { border: none; border-top: 1px solid var(--border); margin: 0 1.75rem; }
-
 /* ── Responsive ──────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .charts-grid { grid-template-columns: 1fr; padding: 1rem; }
@@ -831,12 +822,29 @@ h1, h2, h3, h4, h5 {
   .panel-header { padding: 1rem; }
   .evidence-frame { grid-template-columns: 1fr; }
   .ml-pipeline-diagram { grid-template-columns: 1fr; }
+  .prose { padding: 1.75rem 1.25rem; }
+  .prose-wide { padding: 0 1.25rem 1.75rem; }
+  .panel-intro { padding: 1.25rem 1.25rem 1rem; }
+  .pi-title { font-size: 1.25rem; }
+  .prose-h2 { font-size: 1.1rem; }
+  .wp-grid { grid-template-columns: 1fr; }
+  .arch-layer { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
-  #header-nav { gap: 0; }
-  .nav-tab { padding: .45rem .5rem; font-size: .75rem; }
-  .nav-tab-icon { display: none; }
+  #app-header { padding: 0 .75rem; overflow: hidden; }
+  #header-nav { gap: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #header-nav::-webkit-scrollbar { display: none; }
+  .header-brand { margin-right: 1rem; font-size: .95rem; }
+  .header-brand-badge { display: none; }
+  .chapter-tab { padding: 0 7px; }
+  .chapter-name { font-size: .68rem; }
+  .chapter-num { font-size: .63rem; }
+  .act-group::before { display: none; }
+  .act-separator { display: none; }
+  .act-group { padding-top: 0; }
+  .prose { padding: 1.25rem 1rem; }
+  .prose-wide { padding: 0 1rem 1.5rem; }
 }
 
 /* ── Distill-style reading layout ────────────────────────────────────── */
