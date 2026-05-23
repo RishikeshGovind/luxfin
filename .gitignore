@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.env
+
+# R
+.Rhistory
+.Rdata
+.Rproj.user/
+
+# macOS
+.DS_Store
+
+# Data panel (generated, not committed until obtained)
+data/panel_dataset.csv
