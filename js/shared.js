@@ -9,7 +9,7 @@ const EUROSTAT_BASE = 'https://ec.europa.eu/eurostat/api/dissemination/statistic
 
 // Map panel config — offset center east to account for left control card
 const MAP_CENTER_LU = [6.13, 49.81];
-const MAP_ZOOM_LU   = 8.5;
+const MAP_ZOOM_LU   = 8.8;
 
 // ─── Map choropleth indicator definitions ─────────────────────────────────────
 const COMMUNE_INDICATORS = {

@@ -2084,10 +2084,12 @@ function renderStressComponentCharts() {
 function initMap() {
   if (mapInitialised) return;
   mapInitialised = true;
-  mapInstance = new maplibregl.Map({ container: 'map', style: 'https://tiles.openfreemap.org/styles/bright', center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, minZoom: 7, maxZoom: 14, maxBounds: [[5.5, 49.2], [6.9, 50.4]] });
+  mapInstance = new maplibregl.Map({ container: 'map', style: 'https://tiles.openfreemap.org/styles/bright', center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, minZoom: 7, maxZoom: 14 });
   mapInstance.on('load', () => {
     mapLoaded = true;
     mapInstance.resize();
+    mapInstance.setCenter(MAP_CENTER_LU);
+    mapInstance.setZoom(MAP_ZOOM_LU);
     loadCommuneGeoJSON();
   });
   document.getElementById('map-reset-btn').addEventListener('click', () => { mapInstance.fitBounds(LU_BOUNDS, { padding: LU_FIT_PAD }); });
