@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LuxFin – Luxembourg Banking &amp; Public Finance Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Research dashboard for bank-sovereign linkages and financial intermediation in Luxembourg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="js/shared.js"></script>
+</head>
+
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════════════════ -->
+<header id="app-header">
+  <div class="header-brand">
+    ◈ LuxFin
+    <span class="header-brand-badge">Research</span>
+  </div>
+
+  <nav id="header-nav">
+    <button class="nav-tab active" data-panel="banking">
+      <span class="nav-tab-icon">🏦</span> Banking Exposure
+    </button>
+    <button class="nav-tab" data-panel="fiscal">
+      <span class="nav-tab-icon">📊</span> Public Finance
+    </button>
+    <button class="nav-tab" data-panel="map">
+      <span class="nav-tab-icon">🗺</span> Commune Map
+    </button>
+    <button class="nav-tab" data-panel="stress">
+      <span class="nav-tab-icon">⚠</span> Stress Indicators
+    </button>
+  </nav>
+
+  <div class="header-data-status">
+    <span class="data-static-dot"></span>
+    Static data · ECB SDW / Eurostat / STATEC
+  </div>
+</header>
+
+<!-- ══ PANEL: BANKING EXPOSURE ════════════════════════════════════════════════ -->
+<section id="panel-banking" class="panel active">
+
+  <div class="panel-header">
+    <div class="panel-header-left">
+      <div class="panel-title">Banking Sector Exposure to Public Sector</div>
+      <div class="panel-desc">Luxembourg MFI balance sheet — government bond holdings, credit allocation, and crowding-out dynamics · Data: ECB SDW BSI / BCL MFI statistics</div>
+    </div>
+    <div class="panel-actions">
+      <button class="live-fetch-btn" id="btn-fetch-banking">
+        ↻ Refresh from ECB SDW
+      </button>
+      <span class="source-badge">BSI statistics</span>
+    </div>
+  </div>
+
+  <!-- KPI strip -->
+  <div class="kpi-strip" id="banking-kpis"></div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+
+    <div class="chart-card wide">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Government Bond Holdings &amp; Credit to Public Sector (€ bn)</div>
+          <div class="chart-card-subtitle">Total EA sovereign bonds held by Luxembourg-resident MFIs vs. direct credit to general government</div>
+          <div class="chart-card-source">Source: ECB SDW BSI · Series: BSI/A.LU.N.A.A51 (debt secs) &amp; BSI/A.LU.N.A.A20 (claims on govt)</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap tall"><canvas id="chart-bonds"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Credit Allocation: Government vs. Private</div>
+          <div class="chart-card-subtitle">Share of total credit extended to public sector vs. private non-financial sector</div>
+          <div class="chart-card-source">Source: ECB SDW BSI · Annual</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap"><canvas id="chart-credit-ratio"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Crowding-Out Indicator</div>
+          <div class="chart-card-subtitle">YoY growth differential: government credit vs. private credit (pp). Positive = government credit growing faster.</div>
+          <div class="chart-card-source">Computed from BSI annual credit series</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap"><canvas id="chart-crowding"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Banking Sector Size vs. GDP</div>
+          <div class="chart-card-subtitle">Total MFI assets as multiple of nominal GDP — structural systemic risk proxy</div>
+          <div class="chart-card-source">BSI total assets / Eurostat GDP (ESA 2010)</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap"><canvas id="chart-sector-size"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Number of Resident Banks</div>
+          <div class="chart-card-subtitle">Total authorised credit institutions in Luxembourg (structural consolidation trend)</div>
+          <div class="chart-card-source">BCL / CSSF annual register</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap"><canvas id="chart-num-banks"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Luxembourg Sovereign Bond Holdings</div>
+          <div class="chart-card-subtitle">Domestic banks' estimated holdings of LU government bonds (subset of all govt bond holdings)</div>
+          <div class="chart-card-source">BCL SHSS / ECB Securities Holdings Statistics</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap"><canvas id="chart-lu-bonds"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="data-note">
+    <span class="data-note-icon">ℹ</span>
+    <span>
+      Luxembourg's banking sector is unusually large at ~12–13× GDP (2023), reflecting its role as a global financial centre for investment fund custody and cross-border lending.
+      The government bond holdings shown include <em>all</em> EA sovereign bonds held by Luxembourg-resident MFIs — not just Luxembourg government debt.
+      Luxembourg sovereign debt is among the lowest in the euro area (~25% of GDP), so the domestic home-bias sovereign-bank loop is less relevant than the broader EA sovereign exposure channel.
+    </span>
+  </div>
+
+  <div class="panel-source-footer">
+    <strong>Sources:</strong>
+    <a href="https://sdw.ecb.europa.eu" target="_blank" rel="noopener">ECB Statistical Data Warehouse</a> ·
+    <a href="https://www.bcl.lu/en/statistics" target="_blank" rel="noopener">Banque Centrale du Luxembourg</a> ·
+    <a href="https://www.cssf.lu/en/statistics/" target="_blank" rel="noopener">CSSF Banking Statistics</a>
+    <span style="margin-left:auto">Data vintage: 2023 (annual) · Static snapshot · Click "Refresh from ECB SDW" for live data</span>
+  </div>
+
+</section>
+
+<!-- ══ PANEL: PUBLIC FINANCE ══════════════════════════════════════════════════ -->
+<section id="panel-fiscal" class="panel">
+
+  <div class="panel-header">
+    <div class="panel-header-left">
+      <div class="panel-title">Luxembourg Public Finance Overview</div>
+      <div class="panel-desc">General government (S13) fiscal aggregates · ESA 2010 methodology · Data: Eurostat GFS / STATEC</div>
+    </div>
+    <div class="panel-actions">
+      <button class="live-fetch-btn" id="btn-fetch-fiscal">
+        ↻ Refresh from Eurostat
+      </button>
+      <span class="source-badge">ESA 2010</span>
+    </div>
+  </div>
+
+  <!-- KPI strip -->
+  <div class="kpi-strip" id="fiscal-kpis"></div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+
+    <div class="chart-card wide">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Revenue &amp; Expenditure Trajectory (% of GDP)</div>
+          <div class="chart-card-subtitle">General government total revenue and expenditure as share of nominal GDP · ESA 2010 (S13)</div>
+          <div class="chart-card-source">Source: Eurostat gov_10q_ggnfa · Luxembourg (LU) · Annual</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap tall"><canvas id="chart-fiscal-trajectory"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Fiscal Balance (% of GDP)</div>
+          <div class="chart-card-subtitle">Net lending/borrowing (B.9) — positive = surplus</div>
+          <div class="chart-card-source">Eurostat: B9, S13, LU · Annual</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap"><canvas id="chart-balance"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Government Debt-to-GDP Trajectory</div>
+          <div class="chart-card-subtitle">Maastricht debt (% of GDP) · One of the lowest in the euro area</div>
+          <div class="chart-card-source">Eurostat: gov_10dd_edpt1 · LU · Annual</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap"><canvas id="chart-debt"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Government by Sub-Sector (%)</div>
+          <div class="chart-card-subtitle">Share of expenditure: central government, local government (communes), social security funds</div>
+          <div class="chart-card-source">Eurostat GFS · Subsectors S1311, S1313, S1314</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap"><canvas id="chart-subsectors"></canvas></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Expenditure by Function (COFOG) — 2023</div>
+          <div class="chart-card-subtitle">Functional breakdown of general government expenditure</div>
+          <div class="chart-card-source">Eurostat gov_10a_exp · COFOG 2009 · LU · 2023</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div id="cofog-chart-area"></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <div class="chart-card-title">Nominal GDP &amp; Debt Stock (€ bn)</div>
+          <div class="chart-card-subtitle">Nominal GDP trajectory alongside Maastricht debt stock</div>
+          <div class="chart-card-source">Eurostat / STATEC</div>
+        </div>
+      </div>
+      <div class="chart-card-body">
+        <div class="chart-wrap"><canvas id="chart-gdp-debt-nominal"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="research-note">
+    <div class="research-note-title">Research Context</div>
+    Luxembourg's general government has historically maintained surpluses (pre-COVID: ~2.5–3% of GDP),
+    reflecting strong financial centre tax revenues (financial services, holding companies) and conservative fiscal management.
+    The COVID shock (2020) produced a rare near-zero balance (0.3% surplus), swiftly reversed.
+    The <em>communal</em> layer (~11% of total expenditure) is relevant for subnational fiscal analysis:
+    communes depend heavily on transfers from the central government and on local business taxes,
+    creating fiscal linkages that can be studied using STATEC LAU-level data.
+  </div>
+
+  <div class="panel-source-footer">
+    <strong>Sources:</strong>
+    <a href="https://ec.europa.eu/eurostat/databrowser/product/view/gov_10q_ggnfa" target="_blank" rel="noopener">Eurostat GFS (ESA 2010)</a> ·
+    <a href="https://lustat.statec.lu" target="_blank" rel="noopener">STATEC LUSTAT</a> ·
+    <a href="https://www.bcl.lu" target="_blank" rel="noopener">BCL Annual Reports</a>
+    <span style="margin-left:auto">Data vintage: 2023 · ESA 2010 / COFOG 2009</span>
+  </div>
+
+</section>
+
+<!-- ══ PANEL: COMMUNE MAP ═════════════════════════════════════════════════════ -->
+<section id="panel-map" class="panel">
+
+  <div id="map-layout">
+    <!-- MapLibre GL map fills the area -->
+    <div id="map"></div>
+
+    <!-- Floating control card -->
+    <div id="map-control-card">
+      <div class="mcc-header">◈ LuxFin · Commune Map</div>
+
+      <div class="mcc-section">
+        <div class="mcc-label">Indicator</div>
+        <select id="indicator-select" class="mcc-select">
+          <option value="population">Population</option>
+          <option value="employment_rate" selected>Employment Rate (%)</option>
+          <option value="unemployment_rate">Unemployment Rate (%)</option>
+          <option value="income_index">Income Index (LU=100)</option>
+          <option value="foreign_pop_pct">Foreign Population (%)</option>
+          <option value="degurba">Urbanisation (DEGURBA)</option>
+        </select>
+      </div>
+
+      <div class="mcc-section">
+        <div class="mcc-label">Geographic Level</div>
+        <select id="geo-level-select" class="mcc-select">
+          <option value="communes" selected>Communes (~102)</option>
+          <option value="cantons">Cantons (12)</option>
+        </select>
+      </div>
+
+      <div class="mcc-section mcc-controls">
+        <button class="mcc-btn" id="map-reset-btn">Reset View</button>
+      </div>
+
+      <div class="mcc-section">
+        <div id="map-data-note" style="font-size:10px;color:#6b7280;line-height:1.5;">
+          Commune boundaries: Eurostat GISCO LAU 2021.<br>
+          Indicators: STATEC LUSTAT reference year 2021.
+        </div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div id="map-legend"></div>
+
+    <!-- Commune/canton profile popup -->
+    <div id="commune-popup">
+      <div class="commune-popup-header">
+        <div>
+          <div class="commune-popup-name" id="popup-name">–</div>
+          <div class="commune-popup-canton" id="popup-canton">–</div>
+        </div>
+        <button class="commune-popup-close" id="popup-close-btn">✕</button>
+      </div>
+      <div class="commune-popup-body" id="popup-body"></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ PANEL: STRESS INDICATORS ══════════════════════════════════════════════ -->
+<section id="panel-stress" class="panel">
+
+  <div class="panel-header">
+    <div class="panel-header-left">
+      <div class="panel-title">Sovereign-Bank Nexus — Baseline Heuristic Stress Index</div>
+      <div class="panel-desc">Descriptive composite index of bank exposure to government borrowing and fiscal vulnerability · Based on ECB BSI + Eurostat GFS · <em>Baseline heuristic only — not a validated early-warning or ML model</em></div>
+    </div>
+    <div class="panel-actions">
+      <label class="year-range" style="gap:.5rem">
+        Year:
+        <input type="range" id="stress-year-slider" min="0" max="9" value="9" step="1" style="width:120px">
+        <span id="stress-year-display" style="font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:600;min-width:36px">2023</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="stress-layout">
+    <!-- Left: summary + components -->
+    <div class="stress-summary">
+      <div class="stress-gauge-wrap">
+        <div class="stress-gauge-label">Composite Stress Score</div>
+        <svg id="stress-gauge-svg" width="160" height="100" viewBox="0 0 160 100"></svg>
+        <div class="stress-score-display" id="stress-score-num">–</div>
+        <div class="stress-level-badge" id="stress-level-badge">–</div>
+        <div style="font-size:.7rem;color:#94a3b8;text-align:center;margin-top:.5rem">0 = no stress · 1 = extreme stress</div>
+      </div>
+
+      <div>
+        <div class="mcc-label" style="margin-bottom:.5rem">Component Scores</div>
+        <div class="stress-components-list" id="stress-components-list"></div>
+      </div>
+
+      <div>
+        <div class="mcc-label" style="margin-bottom:.5rem">Methodology</div>
+        <div style="font-size:.72rem;color:#64748b;line-height:1.65">
+          Each component is normalised to [0,1] using domain-specific thresholds,
+          then aggregated with fixed weights:
+          Bond concentration (30%), Public credit share (30%),
+          Fiscal balance (25%), Sector size (15%).
+          A score below 0.25 is classified as <em>Low</em> stress.
+          <br><br>
+          <strong style="color:#92400e">Scope limitation:</strong>
+          This is a <em>deterministic descriptive index</em> with static weights and no prediction horizon.
+          Converting it to a forward-looking early-warning system (as proposed in the PhD research design)
+          requires: labelled stress events, a forecasting model, out-of-sample validation,
+          calibration, lead-time tests, and false-alarm rate analysis.
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: historical charts -->
+    <div class="stress-charts-area">
+
+      <div class="stress-history-card">
+        <div class="stress-history-header">
+          <div class="stress-history-title">Composite Stress Score — Historical (2014–2023)</div>
+        </div>
+        <div class="stress-history-body">
+          <div class="chart-wrap"><canvas id="chart-stress-history"></canvas></div>
+        </div>
+      </div>
+
+      <div class="charts-grid" style="padding:0;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">
+
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">Bond Concentration</div>
+              <div class="chart-card-subtitle">Govt bond holdings / total bank assets (%)</div>
+            </div>
+          </div>
+          <div class="chart-card-body">
+            <div class="chart-wrap" style="height:160px"><canvas id="chart-sc-bond-conc"></canvas></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">Public Credit Share</div>
+              <div class="chart-card-subtitle">Credit to govt / total credit (%)</div>
+            </div>
+          </div>
+          <div class="chart-card-body">
+            <div class="chart-wrap" style="height:160px"><canvas id="chart-sc-credit-shr"></canvas></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">Fiscal Balance</div>
+              <div class="chart-card-subtitle">General government B.9 (% of GDP)</div>
+            </div>
+          </div>
+          <div class="chart-card-body">
+            <div class="chart-wrap" style="height:160px"><canvas id="chart-sc-fiscal"></canvas></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <div class="chart-card-title">Banking Sector Size</div>
+              <div class="chart-card-subtitle">Total bank assets / GDP (x)</div>
+            </div>
+          </div>
+          <div class="chart-card-body">
+            <div class="chart-wrap" style="height:160px"><canvas id="chart-sc-sector-sz"></canvas></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="research-note">
+        <div class="research-note-title">Research Note — Bank-Sovereign Nexus in Luxembourg</div>
+        Luxembourg presents a <em>structurally atypical</em> case: despite a large banking sector (~12× GDP),
+        domestic sovereign risk is minimal (Maastricht debt ~25% GDP, AAA/Aaa rating, persistent surpluses).
+        The dominant transmission channel is therefore <em>outward</em> — Luxembourg banks hold EA sovereign bonds
+        (primarily French, Belgian, Italian, Spanish), and are exposed to contagion through the European sovereign risk channel.
+        The ECB's PSPP/PEPP programmes significantly increased government bond holdings post-2015,
+        a pattern visible in the bond concentration series.
+        The composite stress score remaining below 0.25 throughout the sample period reflects Luxembourg's
+        structural fiscal strength, though the large banking sector creates systemic risk at the EA level.
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ SCRIPTS ═══════════════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+
+<script>
+'use strict';
+
+// ─── Global state ─────────────────────────────────────────────────────────────
+let bankingData  = null;
+let fiscalData   = null;
+let communeData  = null;
+let stressScores = null;
+let chartInstances = {};
+let activePanel = 'banking';
+let communeGeoJSON = null;
+let selectedCommune = null;
+let activeIndicator = 'employment_rate';
+let mapInstance = null;
+let mapSourcesReady = false;
+
+// ─── Utility ──────────────────────────────────────────────────────────────────
+function destroyChart(id) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
+}
+
+function makeChart(id, config) {
+  destroyChart(id);
+  const canvas = document.getElementById(id);
+  if (!canvas) return null;
+  chartInstances[id] = new Chart(canvas, config);
+  return chartInstances[id];
+}
+
+// Default Chart.js config overrides
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size   = 11;
+Chart.defaults.color       = '#64748b';
+Chart.defaults.plugins.legend.labels.boxWidth = 10;
+Chart.defaults.plugins.legend.labels.padding  = 12;
+
+// ─── Panel navigation ─────────────────────────────────────────────────────────
+document.querySelectorAll('.nav-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const panel = btn.dataset.panel;
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + panel).classList.add('active');
+    activePanel = panel;
+    if (panel === 'map') initMap();
+    if (panel === 'stress') renderStressPanel();
+  });
+});
+
+// ─── Data loading ─────────────────────────────────────────────────────────────
+async function loadAllData() {
+  const [bData, fData, cData] = await Promise.all([
+    fetch('./data/banking.json').then(r => r.json()),
+    fetch('./data/fiscal.json').then(r => r.json()),
+    fetch('./data/communes.json').then(r => r.json())
+  ]);
+  bankingData  = bData;
+  fiscalData   = fData;
+  communeData  = cData;
+  stressScores = computeStressScores(bankingData, fiscalData);
+  renderBankingPanel();
+  renderFiscalPanel();
+}
+
+// ─── ─── BANKING PANEL ─── ───────────────────────────────────────────────────
+
+function renderBankingPanel() {
+  const b = bankingData.annual;
+  const f = fiscalData.annual;
+  const lastIdx = b.years.length - 1;
+
+  // ── KPIs
+  const totalAssets  = b.total_assets[lastIdx];
+  const govtBonds    = b.govt_bonds_held[lastIdx];
+  const creditGovt   = b.credit_govt[lastIdx];
+  const creditPriv   = b.credit_private[lastIdx];
+  const gdp          = b.gdp[lastIdx];
+  const numBanks     = b.num_banks[lastIdx];
+  const bondPct      = (govtBonds / totalAssets * 100).toFixed(1);
+  const creditShr    = (creditGovt / (creditGovt + creditPriv) * 100).toFixed(1);
+  const sectorRatio  = (totalAssets / gdp).toFixed(1);
+
+  document.getElementById('banking-kpis').innerHTML = `
+    <div class="kpi-card">
+      <div class="kpi-label">Total MFI Assets</div>
+      <div class="kpi-value">€${totalAssets}bn</div>
+      <div class="kpi-subtext">${sectorRatio}× nominal GDP (${b.years[lastIdx]})</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Govt Bond Holdings</div>
+      <div class="kpi-value">€${govtBonds}bn</div>
+      <div class="kpi-subtext">${bondPct}% of total assets</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Credit to Govt</div>
+      <div class="kpi-value">€${creditGovt}bn</div>
+      <div class="kpi-subtext">${creditShr}% of total credit</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Credit to Private Sector</div>
+      <div class="kpi-value">€${creditPriv}bn</div>
+      <div class="kpi-subtext">${(100 - +creditShr).toFixed(1)}% of total credit</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Resident Banks</div>
+      <div class="kpi-value">${numBanks}</div>
+      <div class="kpi-subtext">Down from 148 in 2014</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">LU Sovereign Bonds Held</div>
+      <div class="kpi-value">€${b.lu_govt_bonds[lastIdx]}bn</div>
+      <div class="kpi-subtext">Est. domestic banks' LU govt holdings</div>
+    </div>
+  `;
+
+  // ── Chart 1: Govt bonds + Credit to govt over time
+  makeChart('chart-bonds', {
+    type: 'line',
+    data: {
+      labels: b.years,
+      datasets: [
+        {
+          label: 'Govt Bond Holdings (all EA)',
+          data: b.govt_bonds_held,
+          borderColor: COLORS.govt,
+          backgroundColor: 'rgba(239,51,64,.08)',
+          fill: true,
+          tension: 0.3,
+          borderWidth: 2.5,
+          pointRadius: 3
+        },
+        {
+          label: 'Credit to General Government',
+          data: b.credit_govt,
+          borderColor: COLORS.amber,
+          backgroundColor: 'rgba(245,158,11,.07)',
+          fill: true,
+          tension: 0.3,
+          borderWidth: 2,
+          pointRadius: 3
+        },
+        {
+          label: 'Luxembourg Sovereign Bonds',
+          data: b.lu_govt_bonds,
+          borderColor: '#8b5cf6',
+          borderWidth: 2,
+          borderDash: [4, 3],
+          tension: 0.3,
+          pointRadius: 3,
+          fill: false
+        }
+      ]
+    },
+    options: buildLineOptions('€ billion')
+  });
+
+  // ── Chart 2: Credit ratio stacked bar
+  const govtShr  = b.years.map((_, i) => +((b.credit_govt[i]   / (b.credit_govt[i]+b.credit_private[i]))*100).toFixed(1));
+  const privShr  = b.years.map((_, i) => +((b.credit_private[i] / (b.credit_govt[i]+b.credit_private[i]))*100).toFixed(1));
+
+  makeChart('chart-credit-ratio', {
+    type: 'bar',
+    data: {
+      labels: b.years,
+      datasets: [
+        { label: 'Govt (%)', data: govtShr,  backgroundColor: 'rgba(239,51,64,.8)',  stack: 'a' },
+        { label: 'Private (%)', data: privShr, backgroundColor: 'rgba(29,78,216,.75)', stack: 'a' }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}%` } } },
+      scales: {
+        x: { stacked: true, grid: { display: false } },
+        y: { stacked: true, min: 0, max: 100, ticks: { callback: v => v + '%' } }
+      }
+    }
+  });
+
+  // ── Chart 3: Crowding-out indicator (YoY growth differential)
+  const crowdOut = b.years.map((y, i) => {
+    if (i === 0) return null;
+    const gGrowth = ((b.credit_govt[i] - b.credit_govt[i-1]) / b.credit_govt[i-1]) * 100;
+    const pGrowth = ((b.credit_private[i] - b.credit_private[i-1]) / b.credit_private[i-1]) * 100;
+    return +(gGrowth - pGrowth).toFixed(2);
+  });
+
+  makeChart('chart-crowding', {
+    type: 'bar',
+    data: {
+      labels: b.years,
+      datasets: [{
+        label: 'Govt credit growth minus private credit growth (pp)',
+        data: crowdOut,
+        backgroundColor: crowdOut.map(v => v === null ? 'transparent' : (v > 0 ? 'rgba(239,51,64,.75)' : 'rgba(29,78,216,.65)')),
+        borderRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => (ctx.raw ?? '–') + ' pp' } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          ticks: { callback: v => v + 'pp' },
+          grid: { color: '#f1f5f9' }
+        }
+      }
+    }
+  });
+
+  // ── Chart 4: Banking sector size ratio
+  const sectorSizeArr = b.years.map((_, i) => +(b.total_assets[i] / f.gdp_eur_bn[i]).toFixed(2));
+
+  makeChart('chart-sector-size', {
+    type: 'line',
+    data: {
+      labels: b.years,
+      datasets: [{
+        label: 'Total Assets / GDP',
+        data: sectorSizeArr,
+        borderColor: '#c8a135',
+        backgroundColor: 'rgba(200,161,53,.1)',
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2.5,
+        pointRadius: 3
+      }]
+    },
+    options: buildLineOptions('x GDP', 1)
+  });
+
+  // ── Chart 5: Number of banks
+  makeChart('chart-num-banks', {
+    type: 'bar',
+    data: {
+      labels: b.years,
+      datasets: [{
+        label: 'Authorised credit institutions',
+        data: b.num_banks,
+        backgroundColor: 'rgba(14,165,233,.7)',
+        borderRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { min: 100, grid: { color: '#f1f5f9' } }
+      }
+    }
+  });
+
+  // ── Chart 6: LU sovereign bonds
+  makeChart('chart-lu-bonds', {
+    type: 'line',
+    data: {
+      labels: b.years,
+      datasets: [{
+        label: 'LU Govt Bonds Held (€ bn)',
+        data: b.lu_govt_bonds,
+        borderColor: '#8b5cf6',
+        backgroundColor: 'rgba(139,92,246,.1)',
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2.5,
+        pointRadius: 3
+      }]
+    },
+    options: buildLineOptions('€ billion')
+  });
+}
+
+// ─── ─── FISCAL PANEL ─── ────────────────────────────────────────────────────
+
+function renderFiscalPanel() {
+  const f = fiscalData.annual;
+  const lastIdx = f.years.length - 1;
+
+  // ── KPIs
+  document.getElementById('fiscal-kpis').innerHTML = `
+    <div class="kpi-card">
+      <div class="kpi-label">Revenue (% GDP)</div>
+      <div class="kpi-value">${fmtPct(f.revenue_pct_gdp[lastIdx])}</div>
+      <div class="kpi-subtext">€${f.revenue_eur_bn[lastIdx].toFixed(1)}bn nominal</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Expenditure (% GDP)</div>
+      <div class="kpi-value">${fmtPct(f.expenditure_pct_gdp[lastIdx])}</div>
+      <div class="kpi-subtext">€${f.expenditure_eur_bn[lastIdx].toFixed(1)}bn nominal</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Fiscal Balance</div>
+      <div class="kpi-value" style="color:${f.balance_pct_gdp[lastIdx] >= 0 ? 'var(--green)' : 'var(--red)'}">${f.balance_pct_gdp[lastIdx] > 0 ? '+' : ''}${fmtPct(f.balance_pct_gdp[lastIdx])}</div>
+      <div class="kpi-subtext">€${(f.revenue_eur_bn[lastIdx]-f.expenditure_eur_bn[lastIdx]).toFixed(1)}bn surplus</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Debt / GDP</div>
+      <div class="kpi-value">${fmtPct(f.debt_pct_gdp[lastIdx])}</div>
+      <div class="kpi-subtext">€${f.debt_eur_bn[lastIdx].toFixed(1)}bn Maastricht debt</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Nominal GDP</div>
+      <div class="kpi-value">${fmtBn(f.gdp_eur_bn[lastIdx], 1)}</div>
+      <div class="kpi-subtext">${f.years[lastIdx]}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Central Govt Share</div>
+      <div class="kpi-value">${f.central_govt_pct[lastIdx]}%</div>
+      <div class="kpi-subtext">of general govt expenditure</div>
+    </div>
+  `;
+
+  // ── Chart 1: Revenue & Expenditure
+  makeChart('chart-fiscal-trajectory', {
+    type: 'line',
+    data: {
+      labels: f.years,
+      datasets: [
+        {
+          label: 'Revenue',
+          data: f.revenue_pct_gdp,
+          borderColor: COLORS.green,
+          backgroundColor: 'rgba(22,163,74,.1)',
+          fill: true,
+          tension: 0.3,
+          borderWidth: 2.5,
+          pointRadius: 3
+        },
+        {
+          label: 'Expenditure',
+          data: f.expenditure_pct_gdp,
+          borderColor: COLORS.red,
+          backgroundColor: 'rgba(239,51,64,.07)',
+          fill: true,
+          tension: 0.3,
+          borderWidth: 2.5,
+          pointRadius: 3
+        }
+      ]
+    },
+    options: buildLineOptions('% of GDP')
+  });
+
+  // ── Chart 2: Fiscal balance bar
+  makeChart('chart-balance', {
+    type: 'bar',
+    data: {
+      labels: f.years,
+      datasets: [{
+        label: 'Fiscal Balance (% GDP)',
+        data: f.balance_pct_gdp,
+        backgroundColor: f.balance_pct_gdp.map(v => v >= 0 ? 'rgba(22,163,74,.75)' : 'rgba(220,38,38,.75)'),
+        borderRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.raw.toFixed(1) + '% of GDP' } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          ticks: { callback: v => v + '%' },
+          grid: { color: '#f1f5f9' }
+        }
+      }
+    }
+  });
+
+  // ── Chart 3: Debt/GDP
+  makeChart('chart-debt', {
+    type: 'line',
+    data: {
+      labels: f.years,
+      datasets: [{
+        label: 'Maastricht Debt (% GDP)',
+        data: f.debt_pct_gdp,
+        borderColor: '#f59e0b',
+        backgroundColor: 'rgba(245,158,11,.1)',
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2.5,
+        pointRadius: 3
+      }]
+    },
+    options: buildLineOptions('% of GDP')
+  });
+
+  // ── Chart 4: Sub-sector shares
+  makeChart('chart-subsectors', {
+    type: 'line',
+    data: {
+      labels: f.years,
+      datasets: [
+        { label: 'Central govt',   data: f.central_govt_pct,  borderColor: '#1d4ed8', tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false },
+        { label: 'Local govt',     data: f.local_govt_pct,    borderColor: '#0891b2', tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false },
+        { label: 'Social security',data: f.social_security_pct,borderColor:'#16a34a', tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false }
+      ]
+    },
+    options: buildLineOptions('% of total')
+  });
+
+  // ── Chart 5: COFOG horizontal bars
+  const cofog = fiscalData.cofog_shares_2023;
+  const cofogColors = ['#1d4ed8','#0891b2','#16a34a','#f59e0b','#8b5cf6','#ef4444','#0d9488','#e879f9','#6366f1','#dc2626'];
+  const cofogLabels = {
+    general_services: 'General Services',
+    defence: 'Defence',
+    public_order_safety: 'Public Order & Safety',
+    economic_affairs: 'Economic Affairs',
+    environment: 'Environment Protection',
+    housing: 'Housing & Community',
+    health: 'Health',
+    recreation_culture: 'Recreation & Culture',
+    education: 'Education',
+    social_protection: 'Social Protection'
+  };
+
+  const cofogArea = document.getElementById('cofog-chart-area');
+  if (cofogArea) {
+    const rows = Object.entries(cofog).map(([key, pct], i) => `
+      <div class="cofog-row" style="padding:3px 0">
+        <div style="font-size:10px;color:#374151;width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(cofogLabels[key] || key)}</div>
+        <div class="cofog-bar-wrap">
+          <div class="cofog-bar" style="width:${pct * 3}%;background:${cofogColors[i]};max-width:100%"></div>
+        </div>
+        <div class="cofog-pct">${pct.toFixed(1)}%</div>
+      </div>
+    `).join('');
+    cofogArea.innerHTML = `<div style="padding:.5rem 0">${rows}</div>`;
+  }
+
+  // ── Chart 6: GDP & Debt nominal
+  makeChart('chart-gdp-debt-nominal', {
+    type: 'line',
+    data: {
+      labels: f.years,
+      datasets: [
+        { label: 'GDP (€ bn)', data: f.gdp_eur_bn,  borderColor: COLORS.accent, backgroundColor: 'rgba(29,78,216,.07)', fill: true, tension: 0.3, borderWidth: 2.5, pointRadius: 3 },
+        { label: 'Debt (€ bn)', data: f.debt_eur_bn, borderColor: COLORS.amber,  borderDash: [5,4], tension: 0.3, borderWidth: 2, pointRadius: 3, fill: false }
+      ]
+    },
+    options: buildLineOptions('€ billion')
+  });
+}
+
+// ─── ─── MAP PANEL ─── ───────────────────────────────────────────────────────
+
+let mapInitialised = false;
+
+function initMap() {
+  if (mapInitialised) return;
+  mapInitialised = true;
+
+  mapInstance = new maplibregl.Map({
+    container: 'map',
+    style: 'https://tiles.openfreemap.org/styles/bright',
+    center: MAP_CENTER_LU,
+    zoom: MAP_ZOOM_LU,
+    minZoom: 7,
+    maxZoom: 14,
+    maxBounds: [[5.5, 49.2], [6.9, 50.4]]
+  });
+
+  mapInstance.on('load', () => {
+    loadCommuneGeoJSON();
+  });
+
+  document.getElementById('map-reset-btn').addEventListener('click', () => {
+    mapInstance.easeTo({ center: MAP_CENTER_LU, zoom: MAP_ZOOM_LU, duration: 1500 });
+  });
+
+  document.getElementById('indicator-select').addEventListener('change', e => {
+    activeIndicator = e.target.value;
+    if (mapSourcesReady) updateChoropleth();
+    renderLegend();
+  });
+
+  document.getElementById('geo-level-select').addEventListener('change', e => {
+    if (e.target.value === 'cantons') {
+      e.target.value = 'communes';
+      document.getElementById('map-data-note').innerHTML =
+        'Canton aggregation layer not yet implemented — showing commune-level data.<br>' +
+        'Commune boundaries: Eurostat GISCO LAU 2021.<br>' +
+        'Indicators: STATEC LUSTAT reference year 2021.';
+    }
+  });
+
+  document.getElementById('popup-close-btn').addEventListener('click', () => {
+    document.getElementById('commune-popup').style.display = 'none';
+    selectedCommune = null;
+    if (mapSourcesReady) {
+      mapInstance.removeFeatureState({ source: 'communes' });
+    }
+  });
+}
+
+async function loadCommuneGeoJSON() {
+  const noteEl = document.getElementById('map-data-note');
+  noteEl.textContent = 'Loading commune boundaries…';
+
+  // Try local file first (fastest, no CORS issues)
+  try {
+    const res = await fetch('./data/lu_communes.geojson');
+    if (!res.ok) throw new Error('Local HTTP ' + res.status);
+    const geoJSON = await res.json();
+    if (!geoJSON.features?.length) throw new Error('Empty local file');
+    communeGeoJSON = geoJSON;
+    noteEl.textContent = `${geoJSON.features.length} communes loaded (LAU 2021)`;
+    addMapLayers();
+    return;
+  } catch (localErr) {
+    console.warn('Local GeoJSON failed:', localErr.message);
+  }
+
+  // Fallback: GISCO Eurostat distribution CDN
+  const GISCO_CDN = 'https://gisco-services.ec.europa.eu/distribution/v2/lau/geojson/LAU_RG_01M_2021_4326.geojson';
+  noteEl.textContent = 'Local file not found — fetching from GISCO CDN (may be slow)…';
+  try {
+    const res = await fetch(GISCO_CDN);
+    if (!res.ok) throw new Error('GISCO CDN HTTP ' + res.status);
+    const full = await res.json();
+    const features = full.features.filter(f => f.properties.CNTR_CODE === 'LU');
+    if (!features.length) throw new Error('No LU features in GISCO file');
+    communeGeoJSON = { type: 'FeatureCollection', features };
+    noteEl.textContent = `${features.length} communes loaded from GISCO CDN`;
+    addMapLayers();
+  } catch (err) {
+    console.warn('GISCO CDN failed:', err.message);
+    noteEl.innerHTML = `⚠ Could not load commune boundaries. Ensure <code>data/lu_communes.geojson</code> is present (GISCO LAU 2021, filtered for LU).`;
+  }
+}
+
+function addMapLayers() {
+  if (!communeGeoJSON) return;
+
+  // Annotate features with commune data values
+  communeGeoJSON.features.forEach(f => {
+    const name = f.properties.LAU_NAME;
+    const data = communeData?.communes?.[name];
+    if (data) {
+      Object.keys(COMMUNE_INDICATORS).forEach(ind => {
+        f.properties['_' + ind] = data[ind] ?? null;
+      });
+    }
+  });
+
+  mapInstance.addSource('communes', {
+    type: 'geojson',
+    data: communeGeoJSON,
+    generateId: true
+  });
+
+  mapInstance.addLayer({
+    id: 'commune-fill',
+    type: 'fill',
+    source: 'communes',
+    paint: {
+      'fill-color': buildFillExpression(),
+      'fill-opacity': ['case', ['boolean',['feature-state','selected'],false], 0.85, 0.68]
+    }
+  });
+
+  mapInstance.addLayer({
+    id: 'commune-outline',
+    type: 'line',
+    source: 'communes',
+    paint: {
+      'line-color': ['case', ['boolean',['feature-state','selected'],false], '#0f2242', '#94a3b8'],
+      'line-width':  ['case', ['boolean',['feature-state','selected'],false], 2, 0.6]
+    }
+  });
+
+  mapSourcesReady = true;
+  renderLegend();
+
+  // Hover tooltip
+  const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: [0,-8] });
+
+  mapInstance.on('mousemove', 'commune-fill', e => {
+    if (!e.features.length) return;
+    const f = e.features[0];
+    const name = f.properties.LAU_NAME;
+    const data = communeData?.communes?.[name];
+    const indCfg = COMMUNE_INDICATORS[activeIndicator];
+    const rawVal = f.properties['_' + activeIndicator];
+    const fmtVal = rawVal != null ? indCfg.format(rawVal) : '–';
+    popup.setLngLat(e.lngLat)
+      .setHTML(`<strong>${escapeHtml(name || '–')}</strong><br><span style="color:#64748b">${escapeHtml(indCfg.label)}: </span><strong>${escapeHtml(fmtVal)}</strong>${data ? `<br><span style="font-size:10px;color:#94a3b8">Canton: ${escapeHtml(data.canton)}</span>` : ''}`)
+      .addTo(mapInstance);
+    mapInstance.getCanvas().style.cursor = 'pointer';
+  });
+
+  mapInstance.on('mouseleave', 'commune-fill', () => {
+    popup.remove();
+    mapInstance.getCanvas().style.cursor = '';
+  });
+
+  mapInstance.on('click', 'commune-fill', e => {
+    if (!e.features.length) return;
+    mapInstance.removeFeatureState({ source: 'communes' });
+    const f = e.features[0];
+    mapInstance.setFeatureState({ source: 'communes', id: f.id }, { selected: true });
+    selectedCommune = f.properties.LAU_NAME;
+    showCommunePopup(f.properties.LAU_NAME);
+  });
+}
+
+function buildFillExpression() {
+  const cfg = COMMUNE_INDICATORS[activeIndicator];
+  const prop = '_' + activeIndicator;
+
+  if (cfg.categorical) {
+    const matchArgs = [];
+    cfg.classes.forEach(c => matchArgs.push(c.key, c.color));
+    return ['match', ['get', prop], ...matchArgs, '#e5e7eb'];
+  }
+
+  // Step expression based on breaks
+  const breaks = cfg.breaks;
+  const colors  = cfg.colors;
+  const expr = ['step', ['get', prop], colors[0]];
+  breaks.forEach((b, i) => { expr.push(b, colors[i + 1] || colors[colors.length - 1]); });
+  return ['case', ['==', ['get', prop], null], '#e5e7eb', expr];
+}
+
+function updateChoropleth() {
+  if (!mapSourcesReady) return;
+  mapInstance.setPaintProperty('commune-fill', 'fill-color', buildFillExpression());
+}
+
+function renderLegend() {
+  const legend = document.getElementById('map-legend');
+  const cfg = COMMUNE_INDICATORS[activeIndicator];
+  if (!cfg) return;
+
+  let rows = '';
+  if (cfg.categorical) {
+    rows = cfg.classes.map(c => `
+      <div class="legend-row">
+        <div class="legend-swatch" style="background:${c.color}"></div>
+        <span>${escapeHtml(c.label)}</span>
+      </div>`).join('');
+  } else {
+    const breaks = cfg.breaks;
+    const colors  = cfg.colors;
+    rows = colors.map((col, i) => {
+      const lo = i === 0 ? '' : (breaks[i-1] !== undefined ? cfg.format(breaks[i-1]) : '');
+      const hi = breaks[i] !== undefined ? cfg.format(breaks[i]) : '+';
+      const rangeLabel = i === 0 ? `< ${cfg.format(breaks[0])}` : (i >= colors.length - 1 ? `> ${cfg.format(breaks[breaks.length-1])}` : `${lo} – ${hi}`);
+      return `<div class="legend-row"><div class="legend-swatch" style="background:${col}"></div><span>${escapeHtml(rangeLabel)}</span></div>`;
+    }).join('');
+  }
+
+  legend.innerHTML = `<div class="legend-title">${escapeHtml(cfg.label)}</div>${rows}<div style="font-size:9px;color:#94a3b8;margin-top:4px">STATEC LUSTAT 2021</div>`;
+}
+
+function showCommunePopup(name) {
+  const popup = document.getElementById('commune-popup');
+  const data = communeData?.communes?.[name];
+  document.getElementById('popup-name').textContent = name;
+  document.getElementById('popup-canton').textContent = data ? 'Canton ' + data.canton : 'Luxembourg';
+
+  const degurbaLabels = { 1: 'Urban', 2: 'Town/Suburb', 3: 'Rural' };
+
+  if (data) {
+    document.getElementById('popup-body').innerHTML = `
+      <div class="commune-stat-row">
+        <span class="commune-stat-label">Population</span>
+        <span class="commune-stat-value">${data.population.toLocaleString('en-LU')}</span>
+      </div>
+      <div class="commune-stat-row">
+        <span class="commune-stat-label">Employment rate</span>
+        <span class="commune-stat-value">${data.employment_rate.toFixed(1)}%</span>
+      </div>
+      <div class="commune-stat-row">
+        <span class="commune-stat-label">Unemployment rate</span>
+        <span class="commune-stat-value">${data.unemployment_rate.toFixed(1)}%</span>
+      </div>
+      <div class="commune-stat-row">
+        <span class="commune-stat-label">Income index</span>
+        <span class="commune-stat-value">${data.income_index} (LU=100)</span>
+      </div>
+      <div class="commune-stat-row">
+        <span class="commune-stat-label">Foreign population</span>
+        <span class="commune-stat-value">${data.foreign_pop_pct.toFixed(1)}%</span>
+      </div>
+      <div class="commune-stat-row">
+        <span class="commune-stat-label">Urbanisation</span>
+        <span class="commune-stat-value">
+          <span class="degurba-pill degurba-${data.degurba}">${degurbaLabels[data.degurba] || data.degurba}</span>
+        </span>
+      </div>
+      <div class="commune-stat-row">
+        <span class="commune-stat-label">Area</span>
+        <span class="commune-stat-value">${data.area_km2} km²</span>
+      </div>
+    `;
+  } else {
+    document.getElementById('popup-body').innerHTML = `<div style="font-size:11px;color:#94a3b8;padding:.5rem 0">No STATEC data matched for this commune.</div>`;
+  }
+
+  popup.style.display = 'block';
+}
+
+// ─── ─── STRESS PANEL ─── ────────────────────────────────────────────────────
+
+function renderStressPanel() {
+  if (!stressScores) return;
+
+  const slider = document.getElementById('stress-year-slider');
+  slider.max = stressScores.length - 1;
+  slider.value = stressScores.length - 1;
+
+  slider.addEventListener('input', () => {
+    const idx = +slider.value;
+    document.getElementById('stress-year-display').textContent = stressScores[idx].year;
+    updateStressSummary(idx);
+  });
+
+  updateStressSummary(stressScores.length - 1);
+  renderStressHistoryChart();
+  renderStressComponentCharts();
+}
+
+function updateStressSummary(idx) {
+  const s = stressScores[idx];
+  const lvl = stressLevel(s.composite);
+  const scoreNum = document.getElementById('stress-score-num');
+  const badge    = document.getElementById('stress-level-badge');
+
+  scoreNum.textContent = s.composite.toFixed(3);
+  scoreNum.style.color = lvl.color;
+  badge.textContent = lvl.label;
+  badge.style.background = lvl.bg;
+  badge.style.color = lvl.color;
+
+  // SVG gauge arc
+  drawGaugeArc(s.composite, lvl.color);
+
+  // Component rows
+  const list = document.getElementById('stress-components-list');
+  list.innerHTML = STRESS_COMPONENTS.map(comp => {
+    const sc = s.components.find(c => c.id === comp.id);
+    if (!sc) return '';
+    const barColor = sc.norm < 0.25 ? '#16a34a' : sc.norm < 0.5 ? '#f59e0b' : sc.norm < 0.75 ? '#ea580c' : '#dc2626';
+    let valDisplay;
+    if (comp.id === 'bond_concentration') valDisplay = fmtPct(s.bondConc);
+    else if (comp.id === 'credit_govt_share') valDisplay = fmtPct(s.creditShr);
+    else if (comp.id === 'fiscal_balance')   valDisplay = fmtPct(s.fiscalBal) + ' GDP';
+    else if (comp.id === 'sector_size')      valDisplay = fmtMultiple(s.sectorSz);
+    return `
+      <div class="stress-comp-row">
+        <div class="stress-comp-name">
+          <span>${escapeHtml(comp.label)}</span>
+          <span class="stress-comp-value" style="color:${barColor}">${escapeHtml(valDisplay)}</span>
+        </div>
+        <div class="stress-comp-bar-track">
+          <div class="stress-comp-bar-fill" style="width:${(sc.norm*100).toFixed(1)}%;background:${barColor}"></div>
+        </div>
+        <div class="stress-comp-desc">${escapeHtml(comp.desc)} · weight ${(comp.weight*100).toFixed(0)}%</div>
+      </div>`;
+  }).join('');
+}
+
+function drawGaugeArc(score, color) {
+  const svg = document.getElementById('stress-gauge-svg');
+  if (!svg) return;
+  const R=65, CX=80, CY=95;
+  const startAngle = Math.PI;
+  const endAngle   = 2 * Math.PI;
+  const angle = startAngle + (endAngle - startAngle) * Math.min(score, 1);
+  const bgX1 = CX + R * Math.cos(startAngle), bgY1 = CY + R * Math.sin(startAngle);
+  const bgX2 = CX + R * Math.cos(endAngle),   bgY2 = CY + R * Math.sin(endAngle);
+  const fillX = CX + R * Math.cos(angle),     fillY = CY + R * Math.sin(angle);
+  const largeArc = score > 0.5 ? 1 : 0;
+  svg.innerHTML = `
+    <path d="M ${bgX1} ${bgY1} A ${R} ${R} 0 1 1 ${bgX2} ${bgY2}" fill="none" stroke="#e2e8f0" stroke-width="10" stroke-linecap="round"/>
+    <path d="M ${bgX1} ${bgY1} A ${R} ${R} 0 ${largeArc} 1 ${fillX} ${fillY}" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round"/>
+  `;
+}
+
+function renderStressHistoryChart() {
+  const years  = stressScores.map(s => s.year);
+  const scores = stressScores.map(s => +s.composite.toFixed(3));
+
+  makeChart('chart-stress-history', {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [{
+        label: 'Composite Stress Score',
+        data: scores,
+        borderColor: '#c8a135',
+        backgroundColor: 'rgba(200,161,53,.12)',
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2.5,
+        pointRadius: 4,
+        pointBackgroundColor: scores.map(v => stressLevel(v).color)
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => 'Score: ' + ctx.raw + ' (' + stressLevel(ctx.raw).label + ')' } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          min: 0, max: 1,
+          grid: { color: '#f1f5f9' },
+          ticks: { callback: v => v.toFixed(2) }
+        }
+      }
+    }
+  });
+}
+
+function renderStressComponentCharts() {
+  const years = stressScores.map(s => s.year);
+
+  makeChart('chart-sc-bond-conc', {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [{
+        label: 'Bond Concentration (%)',
+        data: stressScores.map(s => +s.bondConc.toFixed(2)),
+        backgroundColor: 'rgba(239,51,64,.7)',
+        borderRadius: 3
+      }]
+    },
+    options: buildMiniBarOptions('%')
+  });
+
+  makeChart('chart-sc-credit-shr', {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [{
+        label: 'Public Credit Share (%)',
+        data: stressScores.map(s => +s.creditShr.toFixed(2)),
+        backgroundColor: 'rgba(245,158,11,.7)',
+        borderRadius: 3
+      }]
+    },
+    options: buildMiniBarOptions('%')
+  });
+
+  makeChart('chart-sc-fiscal', {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [{
+        label: 'Fiscal Balance (% GDP)',
+        data: stressScores.map(s => +s.fiscalBal.toFixed(2)),
+        backgroundColor: stressScores.map(s => s.fiscalBal >= 0 ? 'rgba(22,163,74,.75)' : 'rgba(220,38,38,.75)'),
+        borderRadius: 3
+      }]
+    },
+    options: buildMiniBarOptions('% GDP')
+  });
+
+  makeChart('chart-sc-sector-sz', {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [{
+        label: 'Bank Assets / GDP',
+        data: stressScores.map(s => +s.sectorSz.toFixed(2)),
+        borderColor: '#c8a135',
+        backgroundColor: 'rgba(200,161,53,.1)',
+        fill: true,
+        tension: 0.3,
+        borderWidth: 2,
+        pointRadius: 2
+      }]
+    },
+    options: buildMiniLineOptions('x GDP')
+  });
+}
+
+// ─── ─── LIVE API REFRESH ─── ────────────────────────────────────────────────
+
+// Merges live series into an existing annual data object in-place.
+// ECB BSI returns values in EUR millions; local data is EUR billions → scale by 1e-3.
+// Returns count of years actually updated.
+function mergeLiveSeries(annualObj, fieldName, liveYears, liveValues, scaleFactor = 1) {
+  let updated = 0;
+  liveYears.forEach((y, i) => {
+    if (liveValues[i] == null) return;
+    const idx = annualObj.years.indexOf(y);
+    if (idx >= 0) { annualObj[fieldName][idx] = liveValues[i] * scaleFactor; updated++; }
+  });
+  return updated;
+}
+
+document.getElementById('btn-fetch-banking').addEventListener('click', async function() {
+  this.textContent = '↻ Fetching…';
+  this.classList.add('loading');
+  try {
+    // ECB Data Portal returns BSI total assets in EUR millions; local data in EUR bn → /1000
+    const { years, values } = await fetchECBSeries('BSI/A.LU.N.A.T.A.1.U2.2240.Z01.E');
+    const updated = mergeLiveSeries(bankingData.annual, 'total_assets', years, values, 1 / 1000);
+    stressScores = computeStressScores(bankingData, fiscalData);
+    renderBankingPanel();
+    if (activePanel === 'stress') refreshStressCharts();
+    alert(`Updated ${updated} year(s) of total assets from ECB Data Portal.`);
+  } catch (err) {
+    alert('ECB fetch failed: ' + err.message + '\n\nNote: the ECB Data Portal API requires HTTPS and may have CORS restrictions in some browsers.');
+  } finally {
+    this.textContent = '↻ Refresh from ECB SDW';
+    this.classList.remove('loading');
+  }
+});
+
+document.getElementById('btn-fetch-fiscal').addEventListener('click', async function() {
+  this.textContent = '↻ Fetching…';
+  this.classList.add('loading');
+  try {
+    // Eurostat returns fiscal balance already in % of GDP — no scaling needed
+    const { years, values } = await fetchEurostatSeries('gov_10q_ggnfa', { geo: 'LU', na_item: 'B9', sector: 'S13', freq: 'A', unit: 'PC_GDP' });
+    const updated = mergeLiveSeries(fiscalData.annual, 'balance_pct_gdp', years, values, 1);
+    stressScores = computeStressScores(bankingData, fiscalData);
+    renderFiscalPanel();
+    if (activePanel === 'stress') refreshStressCharts();
+    alert(`Updated ${updated} year(s) of fiscal balance (% GDP) from Eurostat.`);
+  } catch (err) {
+    alert('Eurostat fetch failed: ' + err.message + '\n\nTry using the static data for offline work.');
+  } finally {
+    this.textContent = '↻ Refresh from Eurostat';
+    this.classList.remove('loading');
+  }
+});
+
+// Re-renders stress charts (history + components + summary) without re-attaching slider events.
+function refreshStressCharts() {
+  if (!stressScores) return;
+  const slider = document.getElementById('stress-year-slider');
+  const idx = slider ? +slider.value : stressScores.length - 1;
+  updateStressSummary(Math.min(idx, stressScores.length - 1));
+  renderStressHistoryChart();
+  renderStressComponentCharts();
+}
+
+// ─── ─── CHART HELPERS ─── ────────────────────────────────────────────────────
+
+function buildLineOptions(yLabel, decimals = 1) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'top' },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: ${ctx.raw != null ? Number(ctx.raw).toFixed(decimals) + ' ' + yLabel : '–'}`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        title: { display: true, text: yLabel, font: { size: 10 }, color: '#94a3b8' },
+        grid: { color: '#f1f5f9' },
+        ticks: { callback: v => Number(v).toFixed(decimals) }
+      }
+    }
+  };
+}
+
+function buildMiniBarOptions(unit) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + ' ' + unit } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+      y: { ticks: { callback: v => v + unit, font: { size: 9 } }, grid: { color: '#f1f5f9' } }
+    }
+  };
+}
+
+function buildMiniLineOptions(unit) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + unit } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+      y: { ticks: { callback: v => v + unit, font: { size: 9 } }, grid: { color: '#f1f5f9' } }
+    }
+  };
+}
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
+loadAllData().catch(err => console.error('LuxFin data load error:', err));
+
+</script>
+</body>
+</html>

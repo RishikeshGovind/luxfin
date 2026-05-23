@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "source": "Eurostat Government Finance Statistics (ESA 2010, COFOG)",
+    "eurostat_dataset": "gov_10q_ggnfa",
+    "last_updated": "2024",
+    "currency": "EUR billion (nominal)",
+    "notes": "General government (S13) covers central government, local government (communes), and social security funds. ESA 2010 methodology."
+  },
+  "annual": {
+    "years":                 [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+    "revenue_pct_gdp":       [44.3, 44.6, 44.8, 45.1, 45.3, 44.9, 46.8, 45.7, 46.0, 45.6],
+    "expenditure_pct_gdp":   [41.8, 42.1, 42.3, 42.6, 42.5, 42.2, 46.5, 43.9, 44.2, 44.8],
+    "balance_pct_gdp":       [2.5,  2.5,  2.5,  2.5,  2.8,  2.7,  0.3,  1.8,  1.8,  0.8],
+    "debt_pct_gdp":          [22.7, 21.4, 20.5, 23.0, 21.1, 22.3, 24.8, 24.4, 24.6, 25.0],
+    "gdp_eur_bn":            [47.1, 52.1, 55.1, 58.2, 62.3, 65.1, 63.1, 70.1, 75.3, 78.2],
+    "revenue_eur_bn":        [20.9, 23.2, 24.7, 26.3, 28.2, 29.2, 29.5, 32.0, 34.7, 35.9],
+    "expenditure_eur_bn":    [19.7, 21.9, 23.3, 24.8, 26.5, 27.5, 29.3, 30.8, 33.2, 35.1],
+    "debt_eur_bn":           [10.7, 11.1, 11.3, 13.4, 13.1, 14.5, 15.6, 17.1, 18.5, 19.6],
+    "central_govt_pct":      [68,   69,   69,   70,   70,   71,   72,   71,   71,   72  ],
+    "local_govt_pct":        [12,   12,   12,   11,   11,   11,   10,   11,   11,   11  ],
+    "social_security_pct":   [20,   19,   19,   19,   19,   18,   18,   18,   18,   17  ]
+  },
+  "cofog_shares_2023": {
+    "general_services":        11.2,
+    "defence":                  0.4,
+    "public_order_safety":      3.1,
+    "economic_affairs":        14.8,
+    "environment":              2.6,
+    "housing":                  2.3,
+    "health":                  14.4,
+    "recreation_culture":       3.2,
+    "education":               15.6,
+    "social_protection":       32.4
+  },
+  "events": [
+    { "year": 2020, "label": "COVID fiscal expansion (+4.2pp)", "type": "shock" },
+    { "year": 2021, "label": "Post-COVID consolidation", "type": "policy" },
+    { "year": 2022, "label": "Energy cost measures", "type": "policy" },
+    { "year": 2023, "label": "Coalition agreement fiscal package", "type": "policy" }
+  ]
+}
