@@ -995,6 +995,45 @@
     </div>
   </div>
 
+  <hr class="prose-divider">
+
+  <div class="prose">
+    <p class="prose-eyebrow">Baseline Empirical Results</p>
+    <h2 class="prose-h2">Proxy-panel logit: non-circular predictors (N = 102)</h2>
+    <p class="prose-p">To demonstrate pipeline viability at the proposal stage, a logistic regression was estimated on the 2021 cross-section using commune-level predictors that do <em>not</em> enter the proxy label construction. The three label-defining variables (unemployment rate, income index, employment rate) are excluded to avoid circular prediction. The five-variable model achieves AUC-ROC of 0.697 against a majority-class baseline of 0.500, confirming that commune structural characteristics carry genuine predictive signal for the proxy outcome beyond its direct construction rules.</p>
+    <div class="prose-note" style="border-color:#f59e0b;background:#fffbeb"><strong>Proxy label warning:</strong> These results demonstrate the pipeline and feature relevance only. The dependent variable is a socioeconomic proxy, not a fiscal distress event from commune accounts. Coefficients reflect structural correlates of the proxy label and should not be interpreted as evidence for any research hypothesis until replaced by STATEC commune account data.</div>
+  </div>
+  <div class="prose-wide">
+    <div class="rtable-wrap" style="margin-bottom:1.25rem">
+      <table class="rtable">
+        <thead>
+          <tr><th colspan="5" style="background:#1e3a8a;color:#fff;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase">Logit · Dep. variable: FiscalDistressProxy · N = 102 · 2021 cross-section · All predictors standardised</th></tr>
+          <tr><th>Predictor</th><th>Coef.</th><th>Std. Error</th><th>p-value</th><th>Sig.</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Intercept</td><td>−1.473</td><td>0.281</td><td>&lt; 0.001</td><td>***</td></tr>
+          <tr><td>Foreign population share (%)</td><td>−1.397</td><td>0.550</td><td>0.011</td><td>*</td></tr>
+          <tr><td>Population density (per km²)</td><td>1.107</td><td>0.668</td><td>0.097</td><td>.</td></tr>
+          <tr><td>DEGURBA (urbanisation class)</td><td>−0.909</td><td>0.612</td><td>0.137</td><td></td></tr>
+          <tr><td>Population (total)</td><td>−4.836</td><td>3.674</td><td>0.188</td><td></td></tr>
+          <tr><td>Cross-border worker share</td><td>4.202</td><td>3.236</td><td>0.194</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem">
+      <div class="metric-card" style="min-width:130px"><div class="metric-name">AUC-ROC</div><div class="metric-value" style="color:var(--accent)">0.697</div><div class="metric-note">vs. 0.500 baseline</div></div>
+      <div class="metric-card" style="min-width:130px"><div class="metric-name">Pseudo R²</div><div class="metric-value" style="color:var(--accent)">0.092</div><div class="metric-note">McFadden</div></div>
+      <div class="metric-card" style="min-width:120px"><div class="metric-name">AIC</div><div class="metric-value" style="color:var(--text-muted)">108.6</div><div class="metric-note">5-predictor</div></div>
+      <div class="metric-card" style="min-width:130px"><div class="metric-name">Prevalence</div><div class="metric-value" style="color:var(--text-muted)">21.6%</div><div class="metric-note">22/102 flagged</div></div>
+      <div class="metric-card" style="min-width:160px"><div class="metric-name">Label type</div><div class="metric-value" style="color:#b91c1c;font-size:.75rem;font-family:inherit;font-weight:700;line-height:1.3">Proxy only</div><div class="metric-note">Not fiscal distress</div></div>
+    </div>
+  </div>
+  <div class="prose">
+    <p class="prose-p">The negative coefficient on foreign population share is geographically intuitive: communes with high foreign-resident shares tend to be economically active peri-urban areas (Esch-sur-Alzette, Differdange, Schifflange), while proxy-flagged communes are predominantly rural northern communes (Oesling region) with below-average income and above-average unemployment. The positive effect of population density reflects high per-capita expenditure pressure in smaller, denser communes with limited own-source revenue. When true fiscal account data from STATEC replace the proxy label, these structural controls will enter the full commune-year panel regression as baseline covariates.</p>
+  </div>
+
+  <hr class="prose-divider">
+
   <div class="prose">
     <p class="prose-eyebrow">SHAP Interpretability</p>
     <h2 class="prose-h2">Two layers: global feature importance and per-commune explanations</h2>
@@ -1656,6 +1695,140 @@
         <div class="wp-deliverable">Deliverable: 2 journal papers + BCL policy note + thesis</div>
       </div>
 
+    </div>
+  </div>
+
+  <hr class="prose-divider">
+
+  <div class="prose">
+    <div class="section-eyebrow">Critical Path &amp; Contingency Design</div>
+    <h2>BCL MOU as the binding constraint — two execution scenarios</h2>
+    <p>The core nexus test (H1) and the supervised ML model (H3) both require supervisory data currently held by the Banque centrale du Luxembourg and the CSSF. Access is obtained via a formal Memorandum of Understanding whose timeline is institution-dependent and cannot be guaranteed. The table below maps each work-package activity to its BCL dependency and identifies which activities remain executable under a delayed or refused MOU.</p>
+  </div>
+
+  <div class="prose-wide">
+    <table class="rtable">
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Months</th>
+          <th>BCL-dependent?</th>
+          <th>Plan B if MOU delayed / refused</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>STATEC formal data request (commune fiscal accounts)</td>
+          <td>0–4</td>
+          <td><span class="rr-pill" style="background:#fef3c7;color:#92400e;">Partial</span></td>
+          <td>Use existing proxy panel; expand with STATEC open releases</td>
+        </tr>
+        <tr>
+          <td>BCL/CSSF MOU submission &amp; negotiation</td>
+          <td>0–6</td>
+          <td><span class="rr-pill" style="background:#fee2e2;color:#991b1b;">Yes — core</span></td>
+          <td>Begin H2 aggregate analysis (Eurostat/ECB public data)</td>
+        </tr>
+        <tr>
+          <td>Commune panel construction &amp; harmonisation (WP1)</td>
+          <td>2–8</td>
+          <td><span class="rr-pill" style="background:#fef3c7;color:#92400e;">Partial</span></td>
+          <td>Prototype panel (N=102, proxy labels) sufficient for methods paper</td>
+        </tr>
+        <tr>
+          <td>Spatial adjacency &amp; spillover tests</td>
+          <td>6–14</td>
+          <td><span class="rr-pill" style="background:#dcfce7;color:#15803d;">No</span></td>
+          <td>Fully executable — uses public GIS data (GISCO/LUSTAT)</td>
+        </tr>
+        <tr>
+          <td>H2 aggregate: fiscal stress → banking credit (WP2)</td>
+          <td>6–18</td>
+          <td><span class="rr-pill" style="background:#dcfce7;color:#15803d;">No</span></td>
+          <td>Uses ECB BSI + Eurostat GFS — fully public. <strong>Publishable independently.</strong></td>
+        </tr>
+        <tr>
+          <td>H1 panel regression: exposure → fiscal outcomes (WP2)</td>
+          <td>8–22</td>
+          <td><span class="rr-pill" style="background:#fee2e2;color:#991b1b;">Yes — core</span></td>
+          <td>Replace with commune-level proxy panel logit (preliminary results exist)</td>
+        </tr>
+        <tr>
+          <td>H3 XGBoost early-warning model (WP3)</td>
+          <td>14–28</td>
+          <td><span class="rr-pill" style="background:#fee2e2;color:#991b1b;">Yes — core</span></td>
+          <td>Substitute with heuristic benchmark + logit ladder; document as WP3 placeholder</td>
+        </tr>
+        <tr>
+          <td>Journal submission (Working Papers 1 &amp; 2)</td>
+          <td>24–36</td>
+          <td><span class="rr-pill" style="background:#fef3c7;color:#92400e;">Partial</span></td>
+          <td>Plan B paper (H2 + methods) submittable by month 20 without MOU</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <div class="section-eyebrow">Plan B — Minimum Viable Publishable Paper</div>
+    <h2>What is testable without BCL supervisory data</h2>
+    <p>If the MOU is refused or delayed beyond 18 months, a coherent, independently publishable paper remains achievable using only public data. The Plan B design focuses on the aggregate feedback channel (H2) and the methodological contribution of the heuristic stress index, supplemented by the prototype commune-level analysis already implemented in this platform.</p>
+  </div>
+
+  <div class="prose-wide">
+    <table class="rtable">
+      <thead>
+        <tr>
+          <th>Element</th>
+          <th>Full Design (MOU obtained)</th>
+          <th>Plan B (public data only)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Core contribution</strong></td>
+          <td>Subnational sovereign-bank nexus identification at commune level</td>
+          <td>Aggregate nexus evidence + reproducible heuristic stress benchmark</td>
+        </tr>
+        <tr>
+          <td><strong>H1 — Exposure → fiscal outcomes</strong></td>
+          <td>Bank-commune credit register panel regression</td>
+          <td>Proxy-panel logit (N=102 communes, AUC=0.697); framed as pilot</td>
+        </tr>
+        <tr>
+          <td><strong>H2 — Fiscal stress → banking credit</strong></td>
+          <td>Bank-level credit supply test (Khwaja-Mian design)</td>
+          <td>Aggregate VAR/Granger: ECB BSI + Eurostat GFS — fully testable now</td>
+        </tr>
+        <tr>
+          <td><strong>H3 — ML early warning</strong></td>
+          <td>XGBoost + SHAP on labelled commune-year panel</td>
+          <td>Logit model ladder + heuristic benchmark; published as "methodology proposal"</td>
+        </tr>
+        <tr>
+          <td><strong>Target journal</strong></td>
+          <td><em>Journal of Financial Stability</em> / <em>Review of Finance</em></td>
+          <td><em>Public Finance Review</em> / <em>Regional Studies</em></td>
+        </tr>
+        <tr>
+          <td><strong>Data requirement</strong></td>
+          <td>BCL credit register + CSSF COREP + STATEC fiscal accounts</td>
+          <td>ECB Data Portal + Eurostat GFS + STATEC open releases (all available)</td>
+        </tr>
+        <tr>
+          <td><strong>Estimated submission</strong></td>
+          <td>Month 28–32 (conditional on MOU by month 6)</td>
+          <td>Month 18–22 (unconditional — can start immediately)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <div class="finding-callout finding-callout--insight">
+      <div class="fc-label">Strategy</div>
+      <div class="fc-text"><strong>Plan B is not a fallback — it is a parallel track.</strong> The H2 aggregate VAR test and the heuristic stress benchmark are executable now using data already in this repository. Beginning that analysis immediately de-risks the PhD timeline: if the MOU arrives on schedule, Plan B results become a robustness check in the full paper; if the MOU is delayed or refused, Plan B is a complete, submittable contribution. The preliminary logit (AUC=0.697) also provides an empirical anchor for the methods discussion regardless of MOU outcome.
+      </div>
     </div>
   </div>
 
