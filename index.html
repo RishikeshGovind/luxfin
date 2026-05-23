@@ -1422,6 +1422,10 @@
           <option value="income_index">Income Index (LU=100)</option>
           <option value="foreign_pop_pct">Foreign Population (%)</option>
           <option value="degurba">Urbanisation (DEGURBA)</option>
+          <option value="proxy_risk">Prototype Proxy Risk</option>
+          <option value="unemp_z">Unemployment z-score</option>
+          <option value="income_z">Income z-score</option>
+          <option value="emp_z">Employment z-score</option>
         </select>
       </div>
 
@@ -1440,7 +1444,7 @@
       <div class="mcc-section">
         <div id="map-data-note" style="font-size:10px;color:#6b7280;line-height:1.5;">
           Commune boundaries: Eurostat GISCO LAU 2021.<br>
-          Indicators: STATEC LUSTAT reference year 2021.
+          Indicators: STATEC LUSTAT 2021 + prototype panel.
         </div>
       </div>
     </div>
@@ -1740,6 +1744,7 @@
 let bankingData    = null;
 let fiscalData     = null;
 let communeData    = null;
+let communePanelData = null;
 let stressScores   = null;
 let chartInstances = {};
 let activePanel    = 'overview';
@@ -1761,6 +1766,29 @@ function makeChart(id, config) {
   if (!canvas) return null;
   chartInstances[id] = new Chart(canvas, config);
   return chartInstances[id];
+}
+
+function parseCsv(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if (!lines.length) return [];
+  const headers = lines[0].split(',');
+  return lines.slice(1).filter(Boolean).map(line => {
+    const values = line.split(',');
+    return headers.reduce((row, header, i) => {
+      const raw = values[i] ?? '';
+      const value = raw === '' ? null : raw;
+      const numeric = value !== null && value !== 'NA' && value.trim() !== '' && !Number.isNaN(Number(value));
+      row[header] = numeric ? Number(value) : value;
+      return row;
+    }, {});
+  });
+}
+
+function indexPanelByCommune(rows) {
+  return rows.reduce((acc, row) => {
+    if (row.commune) acc[row.commune] = row;
+    return acc;
+  }, {});
 }
 
 Chart.defaults.font.family = "'Inter', sans-serif";
@@ -1807,14 +1835,16 @@ document.querySelectorAll('.evidence-sub-tab').forEach(btn => {
 
 // ── Data loading ──────────────────────────────────────────────────────────
 async function loadAllData() {
-  const [bData, fData, cData] = await Promise.all([
+  const [bData, fData, cData, panelRows] = await Promise.all([
     fetch('./data/banking.json').then(r => r.json()),
     fetch('./data/fiscal.json').then(r => r.json()),
-    fetch('./data/communes.json').then(r => r.json())
+    fetch('./data/communes.json').then(r => r.json()),
+    fetch('./data/panel_dataset.csv').then(r => r.ok ? r.text() : '').then(txt => txt ? parseCsv(txt) : []).catch(() => [])
   ]);
   bankingData  = bData;
   fiscalData   = fData;
   communeData  = cData;
+  communePanelData = indexPanelByCommune(panelRows);
   stressScores = computeStressScores(bankingData, fiscalData);
   renderBankingPanel();
   renderFiscalPanel();
@@ -2029,7 +2059,7 @@ function initMap() {
   document.getElementById('geo-level-select').addEventListener('change', e => {
     if (e.target.value === 'cantons') {
       e.target.value = 'communes';
-      document.getElementById('map-data-note').innerHTML = 'Canton aggregation layer not yet implemented — showing commune-level data.<br>Commune boundaries: Eurostat GISCO LAU 2021.<br>Indicators: STATEC LUSTAT 2021.';
+      document.getElementById('map-data-note').innerHTML = 'Canton aggregation layer not yet implemented — showing commune-level data.<br>Proxy risk layer: socioeconomic pipeline test, not fiscal distress.';
     }
   });
   document.getElementById('popup-close-btn').addEventListener('click', () => { document.getElementById('commune-popup').style.display = 'none'; selectedCommune = null; if (mapSourcesReady) mapInstance.removeFeatureState({ source: 'communes' }); });
@@ -2044,7 +2074,7 @@ async function loadCommuneGeoJSON() {
     const geoJSON = await res.json();
     if (!geoJSON.features?.length) throw new Error('Empty file');
     communeGeoJSON = geoJSON;
-    noteEl.textContent = `${geoJSON.features.length} communes loaded (LAU 2021)`;
+    noteEl.innerHTML = `${geoJSON.features.length} communes loaded (LAU 2021).<br>Proxy risk layer uses <code>panel_dataset.csv</code>; labels are socioeconomic pipeline tests.`;
     addMapLayers();
   } catch (localErr) {
     const GISCO_CDN = 'https://gisco-services.ec.europa.eu/distribution/v2/lau/geojson/LAU_RG_01M_2021_4326.geojson';
@@ -2055,7 +2085,7 @@ async function loadCommuneGeoJSON() {
       const full = await res.json();
       const features = full.features.filter(f => f.properties.CNTR_CODE === 'LU');
       communeGeoJSON = { type: 'FeatureCollection', features };
-      noteEl.textContent = `${features.length} communes loaded from GISCO CDN`;
+      noteEl.innerHTML = `${features.length} communes loaded from GISCO CDN.<br>Proxy risk layer uses <code>panel_dataset.csv</code>; labels are socioeconomic pipeline tests.`;
       addMapLayers();
     } catch (err) {
       noteEl.innerHTML = `⚠ Could not load commune boundaries. Ensure <code>data/lu_communes.geojson</code> is present.`;
@@ -2066,8 +2096,16 @@ async function loadCommuneGeoJSON() {
 function addMapLayers() {
   if (!communeGeoJSON) return;
   communeGeoJSON.features.forEach(f => {
-    const data = communeData?.communes?.[f.properties.LAU_NAME];
+    const name = f.properties.LAU_NAME;
+    const data = communeData?.communes?.[name];
+    const panel = communePanelData?.[name];
     if (data) Object.keys(COMMUNE_INDICATORS).forEach(ind => { f.properties['_' + ind] = data[ind] ?? null; });
+    if (panel) {
+      f.properties._proxy_risk = panel.fiscal_distress_proxy ?? null;
+      f.properties._unemp_z = panel.unemp_z ?? null;
+      f.properties._income_z = panel.income_z ?? null;
+      f.properties._emp_z = panel.emp_z ?? null;
+    }
   });
   mapInstance.addSource('communes', { type: 'geojson', data: communeGeoJSON, generateId: true });
   mapInstance.addLayer({ id: 'commune-fill', type: 'fill', source: 'communes', paint: { 'fill-color': buildFillExpression(), 'fill-opacity': ['case', ['boolean', ['feature-state','selected'], false], 0.85, 0.68] } });
@@ -2126,25 +2164,58 @@ function renderLegend() {
       return `<div class="legend-row"><div class="legend-swatch" style="background:${col}"></div><span>${escapeHtml(rangeLabel)}</span></div>`;
     }).join('');
   }
-  legend.innerHTML = `<div class="legend-title">${escapeHtml(cfg.label)}</div>${rows}<div style="font-size:9px;color:#94a3b8;margin-top:4px">STATEC LUSTAT 2021</div>`;
+  const source = ['proxy_risk','unemp_z','income_z','emp_z'].includes(activeIndicator)
+    ? 'Prototype panel · not fiscal distress'
+    : 'STATEC LUSTAT 2021';
+  const note = cfg.note ? `<div class="legend-note">${escapeHtml(cfg.note)}</div>` : '';
+  legend.innerHTML = `<div class="legend-title">${escapeHtml(cfg.label)}</div>${rows}<div style="font-size:9px;color:#94a3b8;margin-top:4px">${escapeHtml(source)}</div>${note}`;
 }
 
 function showCommunePopup(name) {
   const popup = document.getElementById('commune-popup');
   const data  = communeData?.communes?.[name];
+  const panel = communePanelData?.[name];
   document.getElementById('popup-name').textContent   = name;
   document.getElementById('popup-canton').textContent = data ? 'Canton ' + data.canton : 'Luxembourg';
   const degurbaLabels = { 1: 'Urban', 2: 'Town/Suburb', 3: 'Rural' };
+  const riskFlag = Number(panel?.fiscal_distress_proxy) === 1;
+  const drivers = panel ? proxyRiskDrivers(panel) : [];
+  const driverRows = drivers.length
+    ? drivers.map(d => `<div class="proxy-driver-row"><span>${escapeHtml(d.label)}</span><strong>${escapeHtml(d.value)}</strong></div>`).join('')
+    : '<div class="proxy-driver-row muted">No proxy vulnerability trigger in the 2021 panel.</div>';
   document.getElementById('popup-body').innerHTML = data ? `
+    <div class="proxy-risk-card ${riskFlag ? 'flagged' : 'clear'}">
+      <div class="proxy-risk-top">
+        <span>Prototype proxy risk</span>
+        <strong>${riskFlag ? 'Flagged' : 'Not flagged'}</strong>
+      </div>
+      <div class="proxy-risk-note">Socioeconomic pipeline label only — not a fiscal distress event.</div>
+    </div>
     <div class="commune-stat-row"><span class="commune-stat-label">Population</span><span class="commune-stat-value">${data.population.toLocaleString('en-LU')}</span></div>
     <div class="commune-stat-row"><span class="commune-stat-label">Employment rate</span><span class="commune-stat-value">${data.employment_rate.toFixed(1)}%</span></div>
     <div class="commune-stat-row"><span class="commune-stat-label">Unemployment rate</span><span class="commune-stat-value">${data.unemployment_rate.toFixed(1)}%</span></div>
     <div class="commune-stat-row"><span class="commune-stat-label">Income index</span><span class="commune-stat-value">${data.income_index} (LU=100)</span></div>
     <div class="commune-stat-row"><span class="commune-stat-label">Foreign population</span><span class="commune-stat-value">${data.foreign_pop_pct.toFixed(1)}%</span></div>
     <div class="commune-stat-row"><span class="commune-stat-label">Urbanisation</span><span class="commune-stat-value"><span class="degurba-pill degurba-${data.degurba}">${degurbaLabels[data.degurba]||data.degurba}</span></span></div>
-    <div class="commune-stat-row"><span class="commune-stat-label">Area</span><span class="commune-stat-value">${data.area_km2} km²</span></div>` :
+    <div class="commune-stat-row"><span class="commune-stat-label">Area</span><span class="commune-stat-value">${data.area_km2} km²</span></div>
+    <div class="proxy-driver-block">
+      <div class="proxy-driver-title">Proxy drivers</div>
+      ${driverRows}
+    </div>
+    <div class="proxy-gap-block">
+      <div class="proxy-driver-title">Needed for full model</div>
+      <div>Commune revenue, expenditure, debt, debt service, and bank-commune credit exposure.</div>
+    </div>` :
     `<div style="font-size:11px;color:#94a3b8;padding:.5rem 0">No STATEC data matched for this commune.</div>`;
   popup.style.display = 'block';
+}
+
+function proxyRiskDrivers(panel) {
+  const drivers = [];
+  if (Number(panel.unemp_z) > 0.75) drivers.push({ label: 'High unemployment', value: `z=${Number(panel.unemp_z).toFixed(2)}` });
+  if (Number(panel.income_z) < -0.75) drivers.push({ label: 'Low income index', value: `z=${Number(panel.income_z).toFixed(2)}` });
+  if (Number(panel.emp_z) < -0.75) drivers.push({ label: 'Low employment', value: `z=${Number(panel.emp_z).toFixed(2)}` });
+  return drivers;
 }
 
 // ── Live refresh ──────────────────────────────────────────────────────────

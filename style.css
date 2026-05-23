@@ -250,10 +250,11 @@ h1, h2, h3, h4, h5 {
 .legend-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 4px; }
 .legend-row { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text); }
 .legend-swatch { width: 14px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.legend-note { font-size: 9px; color: #92400e; line-height: 1.35; margin-top: 5px; max-width: 176px; }
 
 #commune-popup {
   position: absolute; right: 14px; top: 14px; z-index: 10;
-  width: 260px;
+  width: 300px;
   background: rgba(255,255,255,0.97);
   border: 1px solid #d1d5db;
   border-radius: 10px;
@@ -273,6 +274,40 @@ h1, h2, h3, h4, h5 {
 .degurba-1 { background: #dbeafe; color: #1d4ed8; }
 .degurba-2 { background: #e0f2fe; color: #0369a1; }
 .degurba-3 { background: #dcfce7; color: #16a34a; }
+.proxy-risk-card {
+  border-radius: 6px;
+  padding: .55rem .65rem;
+  margin-bottom: .45rem;
+  border: 1px solid;
+}
+.proxy-risk-card.clear { background: #eff6ff; border-color: #bfdbfe; color: #1e3a8a; }
+.proxy-risk-card.flagged { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+.proxy-risk-top { display: flex; justify-content: space-between; gap: .5rem; align-items: center; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+.proxy-risk-top strong { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.proxy-risk-note { margin-top: .3rem; font-size: 10px; line-height: 1.35; opacity: .82; text-transform: none; letter-spacing: 0; }
+.proxy-driver-block, .proxy-gap-block {
+  margin-top: .55rem;
+  padding-top: .55rem;
+  border-top: 1px solid #f0f4f8;
+}
+.proxy-driver-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-muted);
+  margin-bottom: .35rem;
+}
+.proxy-driver-row {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  font-size: 11px;
+  color: var(--text);
+  padding: 2px 0;
+}
+.proxy-driver-row strong { font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+.proxy-driver-row.muted, .proxy-gap-block { color: var(--text-xmuted); font-size: 10px; line-height: 1.45; }
 
 .maplibregl-popup-content { border-radius: 8px !important; padding: .6rem .9rem !important; font-size: .82rem !important; font-family: 'Inter', sans-serif !important; box-shadow: 0 4px 16px rgba(0,0,0,.15) !important; border: 1px solid var(--border) !important; }
 

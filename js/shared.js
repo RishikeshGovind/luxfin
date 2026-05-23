@@ -59,6 +59,41 @@ const COMMUNE_INDICATORS = {
       { key: 2, label: 'Town/Suburb', color: '#0891b2' },
       { key: 3, label: 'Rural',       color: '#4ade80' }
     ]
+  },
+  proxy_risk: {
+    label: 'Prototype Proxy Risk',
+    unit: '',
+    format: v => Number(v) === 1 ? 'Flagged' : 'Not flagged',
+    categorical: true,
+    classes: [
+      { key: 0, label: 'Not flagged', color: '#dbeafe' },
+      { key: 1, label: 'Proxy flagged', color: '#dc2626' }
+    ],
+    note: 'Socioeconomic proxy only — not a fiscal distress event.'
+  },
+  unemp_z: {
+    label: 'Unemployment z-score',
+    unit: '',
+    format: v => Number(v).toFixed(2),
+    breaks: [-1.0, -0.5, 0, 0.5, 1.0, 1.5],
+    colors: ['#dbeafe','#bfdbfe','#fde68a','#fbbf24','#fb923c','#ef4444','#991b1b'],
+    note: 'Higher values indicate above-average unemployment relative to the 2021 commune distribution.'
+  },
+  income_z: {
+    label: 'Income z-score',
+    unit: '',
+    format: v => Number(v).toFixed(2),
+    breaks: [-1.5, -1.0, -0.5, 0, 0.5, 1.0],
+    colors: ['#991b1b','#ef4444','#fb923c','#fde68a','#bfdbfe','#60a5fa','#1d4ed8'],
+    note: 'Lower values indicate below-average income index relative to the 2021 commune distribution.'
+  },
+  emp_z: {
+    label: 'Employment z-score',
+    unit: '',
+    format: v => Number(v).toFixed(2),
+    breaks: [-1.5, -1.0, -0.5, 0, 0.5, 1.0],
+    colors: ['#991b1b','#ef4444','#fb923c','#fde68a','#bbf7d0','#4ade80','#15803d'],
+    note: 'Lower values indicate below-average employment relative to the 2021 commune distribution.'
   }
 };
 
